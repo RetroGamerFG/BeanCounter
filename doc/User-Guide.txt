@@ -1,0 +1,4 @@
+BeanCounter User Guide
+
+I - Initial Setup
+At the program's first boot,
