@@ -176,7 +176,7 @@ public class Ledger implements Serializable
 
         if(transactions.size() > 0)
         {
-            result = transactions.getLast().getTransactionNumber();
+            result = transactions.getLast().getTransactionNumber(); //crucial to account for deleted entries
             result++;
         }
 

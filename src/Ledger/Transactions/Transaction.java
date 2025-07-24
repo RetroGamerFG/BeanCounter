@@ -22,6 +22,7 @@ public class Transaction implements Serializable
     private String postStatus;
     private String formattedTotal;
     private String transactionDescription;
+    private String postSignature;
 
     private ArrayList<TransactionEntry> transactionEntries;
 
@@ -32,13 +33,14 @@ public class Transaction implements Serializable
 
     public Transaction()
     {
-        transactionNumber = 0;
+        transactionNumber = -1;
         transactionDate = new Date();
         postDate = null;
         postStatus = null;
         transactionEntries = new ArrayList<>();
         formattedTotal = "$0.00";
         transactionDescription = null;
+        postSignature = null;
     }
 
     public int getTransactionNumber()
@@ -89,6 +91,16 @@ public class Transaction implements Serializable
     public void setTransactionDescription(String transactionDescription)
     {
         this.transactionDescription = transactionDescription;
+    }
+
+    public String getPostSignature()
+    {
+        return postSignature;
+    }
+
+    public void setPostSignature(String postSignature)
+    {
+        this.postSignature = postSignature;
     }
 
     public ArrayList<TransactionEntry> getTransactionEntries()

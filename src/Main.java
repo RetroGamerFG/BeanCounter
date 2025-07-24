@@ -36,6 +36,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -175,8 +176,14 @@ public class Main extends Application
 
         ChoiceBox<String> searchType = new ChoiceBox<>(FXCollections.observableArrayList(searchTerms));
 
+        HBox postCheckBoxLayer = new HBox(4);
+        CheckBox seePosted = new CheckBox();
+        Label postedCheckBoxLabel = new Label("Show Posted");
+
+        postCheckBoxLayer.getChildren().addAll(seePosted, postedCheckBoxLabel);
+
         searchLayer.getChildren().addAll(searchTypeLabel, searchType, searchButton);
-        topButtons.getChildren().addAll(backButton, createButton, searchLayer);
+        topButtons.getChildren().addAll(backButton, createButton, searchLayer, postCheckBoxLayer);
 
         searchLayer.setDisable(true); //disabled while still being implemented
 
@@ -203,13 +210,32 @@ public class Main extends Application
         //Transaction History Table
         TableView<Transaction> transactionTable = TransactionTable.createAccountTable(ledger.getAllUnpostedTransactions());
 
+        //seePosted checkbox, which can show/hide posted transactions.
+        seePosted.setOnAction(e ->
+        {
+            if(seePosted.isSelected())
+            {
+                transactionTable.setItems(FXCollections.observableArrayList(ledger.getTransactions()));
+            }
+            else
+            {
+                transactionTable.setItems(FXCollections.observableArrayList(ledger.getAllUnpostedTransactions()));
+            }
+        });
+
         transactionTable.setOnMouseClicked(e ->
         {
             if (e.getClickCount() == 2 ) 
             {
                 Transaction selectedAccount = transactionTable.getSelectionModel().getSelectedItem();
             
+                //"Review" will add extra controls but prevent entry changes
+                //"Posted" will prevent any controls and prevent entry changes
                 if (selectedAccount.getPostStatus().compareTo("Review") == 0)
+                {
+                    setTransactionScene(selectedAccount, false);
+                }
+                else if (selectedAccount.getPostStatus().compareTo("Posted") == 0)
                 {
                     setTransactionScene(selectedAccount, false);
                 }
@@ -386,7 +412,11 @@ public class Main extends Application
             if(ledger.validateTransaction(transaction))
             {
                 transaction.setPostStatus("Review");
-                ledger.setTransactionNumber(transaction);
+
+                if(transaction.getTransactionNumber() == -1)
+                {
+                    ledger.setTransactionNumber(transaction);
+                }
 
                 if(inTransaction == null)
                 {
@@ -428,6 +458,7 @@ public class Main extends Application
             postButton.setOnAction(e -> 
             {
                 inTransaction.setPostStatus("Posted");
+                inTransaction.setPostSignature(userSignatureInput.getText());
                 setJournalEntryScene();
                 saveLedger();
             });
@@ -454,6 +485,14 @@ public class Main extends Application
                 setJournalEntryScene();
                 saveLedger();
             });
+
+            //if transaction is already posted, append the post signature, and prevent the review buttons from appearing
+            if(inTransaction.getPostStatus().compareTo("Posted") == 0)
+            {
+                userSignatureInput.setText(inTransaction.getPostSignature());
+                reviewButtonsLayer.setVisible(false);
+                reviewLayer.setDisable(true);
+            }
 
             reviewButtonsLayer.getChildren().addAll(postButton, editButton, trashButton);
             reviewLayer.getChildren().addAll(userReviewLayer, reviewButtonsLayer);
@@ -503,6 +542,22 @@ public class Main extends Application
     }
 
 //
+// Ledger History View
+//
+
+    public void setLedgerHistoryScene()
+    {
+        BorderPane layout = new BorderPane();
+        HBox navigationLayer = new HBox();
+
+        Button backButton, generateButton;
+        TextField searchInput = new TextField();
+
+        backButton = new Button("Back");
+        generateButton = new Button("Generate");
+    }
+
+//
 // Ledger Save/Load Functions
 //
 
@@ -544,7 +599,6 @@ public class Main extends Application
             e.printStackTrace();
         }
     }
-
 
 //
 // Additional functions
