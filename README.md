@@ -7,7 +7,7 @@ Log transactions, generate statements, and perform additional functions.
 
 • [X] Create, edit, review, & post journal entries
 
-• [ ] Lookup posted entries
+• [X] Lookup posted entries
 
 • [ ] Add custom new account codes
 
