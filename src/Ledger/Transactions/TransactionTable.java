@@ -20,8 +20,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class TransactionTable
 {
-    //createAccountTable() - creates a "TableView" object based on passed transactions.
-    public static TableView<Transaction> createAccountTable(ArrayList<Transaction> transactions)
+    //createTransactionTable() - creates a "TableView" object based on passed transactions.
+    public static TableView<Transaction> createTransactionTable(ArrayList<Transaction> transactions)
     {
         TableView<Transaction> tableView = new TableView<>();
 

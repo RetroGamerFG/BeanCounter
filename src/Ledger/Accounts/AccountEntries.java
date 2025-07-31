@@ -5,11 +5,11 @@
 // AccountEntries - used to hold multiple instances of "Account". Includes ability to load predefined accounts, as well as 
 // create new custom accounts.
 
+
 package Ledger.Accounts;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class AccountEntries implements Serializable
 {
@@ -83,6 +83,20 @@ public class AccountEntries implements Serializable
         }
 
         return output;
+    }
+
+    //getAccountByDescription() - returns the account code if a description is passed, or null if no match is found.
+    public String getAccountCodeByDescription(String description)
+    {
+        for(Account current : accountItems)
+        {
+            if(current.getAccountDescription().compareToIgnoreCase(description) == 0)
+            {
+                return current.getAccountCode();
+            }
+        }
+
+        return null;
     }
 
     //createDefaults() - for first-time program usage, creates default accounts. These should meet the basic needs of most users, but extra functionality to add custom
