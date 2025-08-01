@@ -11,6 +11,8 @@ package Forms;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import Forms.Statement.AccountDetail;
+
 public class Form implements Serializable
 {
     private ArrayList<AccountDetail> accountDetail;

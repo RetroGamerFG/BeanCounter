@@ -58,9 +58,9 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import Business.Business;
-import Forms.AccountDetail;
-import Forms.AccountDetailTable;
 import Forms.Form;
+import Forms.Statement.AccountDetail;
+import Forms.Statement.AccountDetailTable;
 import Ledger.Ledger;
 import Ledger.Transactions.Transaction;
 import Ledger.Transactions.TransactionEntry;
@@ -130,9 +130,6 @@ public class Main extends Application
         accountDetail = new Button("Account Detail");
         statements = new Button("Statements");
 
-        //Disabled while still being made...
-        statements.setDisable(true);
-
         menuButtonsLayer.getChildren().addAll(journalEntry, accountDetail, statements);
         menuButtonsLayer.setAlignment(Pos.CENTER);
 
@@ -150,7 +147,7 @@ public class Main extends Application
 
         statements.setOnAction(e -> 
         {
-            //setStatementsScene();
+            setStatementsScene();
         });
 
         Label versionLabel = new Label(version);
@@ -906,6 +903,55 @@ public class Main extends Application
     }
 
 //
+// Statements Scenes
+//
+
+    //setStatementsScene() - displays a user input scene for choosing the type of statement to generate and a specified date range of which
+    //transactions should be included. These include the income statement, balance sheet, and statement of retained earnings.
+    public void setStatementsScene()
+    {
+        BorderPane layout = new BorderPane();
+
+        VBox topLayer = new VBox();
+        Button backButton = new Button("Back");
+
+        backButton.setOnAction(e ->
+        {
+            setStartingScene();
+        });
+
+        topLayer.getChildren().add(backButton);
+        layout.setTop(topLayer);
+
+        VBox centerLayer = new VBox();
+
+        ComboBox<String> formSelection = new ComboBox<>();
+        ArrayList<String> formOptions = new ArrayList<>();
+        formOptions.add("Income Statement");
+        formOptions.add("Balance Sheet");
+        formOptions.add("Statement of Retained Earnings");
+        formSelection.setItems(FXCollections.observableList(null));
+
+
+    }
+
+    public void setGeneratedIncomeStatementScene()
+    {
+
+    }
+
+    public void setGeneratedBalanceSheetScene()
+    {
+
+    }
+
+    public void setGeneratedStatementOfRetainedEarningsScene()
+    {
+
+    }
+
+
+//
 // Ledger Save/Load Functions
 //
 
@@ -1195,8 +1241,8 @@ public class Main extends Application
         Label accountDescriptionLabel = new Label(ledger.getAccountDescriptionByCode(currentCode));
         codeAndDescriptionLayer.getChildren().addAll(accountCodeLabel, accountDescriptionLabel);
 
-        Label detailStartDateRangeLabel = new Label("Start Date: " + inDetail.getStartDateString());
-        Label detailEndDateRangeLabel = new Label("End Date: " + inDetail.getEndDateString());
+        Label detailStartDateRangeLabel = new Label("Start Date: " + inDetail.printStartDate());
+        Label detailEndDateRangeLabel = new Label("End Date: " + inDetail.printEndDate());
             
         headerLayer.getChildren().addAll(codeAndDescriptionLayer, detailStartDateRangeLabel, detailEndDateRangeLabel);
         return headerLayer;
@@ -1214,7 +1260,7 @@ public class Main extends Application
         footerLayer.setPadding(new Insets(10));
 
         Label businessNameLabel = new Label("Placeholder");
-        Label formDateLabel = new Label(inDetail.getDetailDate().toString());
+        Label formDateLabel = new Label(inDetail.printGeneratedDate());
         
         businessNameLabel.setPrefWidth(375);
         formDateLabel.setPrefWidth(220);

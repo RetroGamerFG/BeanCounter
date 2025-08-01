@@ -6,65 +6,26 @@
 // that allow user(s) to see all posted transactions for one or many codes and within a specified time frame.
 
 
-package Forms;
+package Forms.Statement;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class AccountDetail implements Serializable
+public class AccountDetail extends Statement
 {
-    private LocalDate startDate;
-    private LocalDate endDate;
     private String startCode;
     private String endCode;
-    private Date detailDate;
 
-    private String startDateString;
-    private String endDateString;
-
-    private ArrayList<Integer> referencedTransactions;
     private ArrayList<String> referencedAccountCodes;
 
     public AccountDetail(LocalDate startDate, LocalDate endDate, String startCode, String endCode)
     {
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.setStartDate(startDate);
+        this.setEndDate(endDate);
         this.startCode = startCode;
         this.endCode = endCode;
-        this.detailDate = new Date();
 
-        referencedTransactions = new ArrayList<>();
         referencedAccountCodes = new ArrayList<>();
-
-        this.startDateString = formattedStartDate();
-        this.endDateString = formattedEndDate();
-    }
-
-    public void insertReferencedTransaction(int reference)
-    {
-        referencedTransactions.add(reference);
-    }
-
-    public void insertReferencedAccountCode(String reference)
-    {
-        referencedAccountCodes.add(reference);
-    }
-
-    public ArrayList<Integer> getReferencedTransactions()
-    {
-        return referencedTransactions;
-    }
-
-    public String formattedStartDate()
-    {
-        return startDate.toString();
-    }
-
-    public String formattedEndDate()
-    {
-        return endDate.toString();
     }
 
     public String getStartCode()
@@ -77,24 +38,23 @@ public class AccountDetail implements Serializable
         return endCode;
     }
 
-    public Date getDetailDate()
-    {
-        return detailDate;
-    }
-
-    public String getStartDateString()
-    {
-        return startDateString;
-    }
-
-    public String getEndDateString()
-    {
-        return endDateString;
-    }
-
     public ArrayList<String> getReferencedAccountCodes()
     {
         return referencedAccountCodes;
+    }
+
+//
+// Referenced Account Codes Functions
+//
+
+    public void insertReferencedAccountCode(String reference)
+    {
+        referencedAccountCodes.add(reference);
+    }
+
+    public void removeReferencedAccountCode(String reference)
+    {
+        referencedAccountCodes.remove(reference);
     }
 
     //setReferencedAccountCodes() - creates an array of all account codes between the starting and ending codes, and stored as a member.

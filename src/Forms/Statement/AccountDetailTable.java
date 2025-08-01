@@ -6,7 +6,7 @@
 // Account Detail page.
 
 
-package Forms;
+package Forms.Statement;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class AccountDetailTable
         TableView<AccountDetail> tableView = new TableView<>();
 
         TableColumn<AccountDetail, Date> creationDateCol = new TableColumn<>("Created");
-        creationDateCol.setCellValueFactory(new PropertyValueFactory<>("detailDate"));
+        creationDateCol.setCellValueFactory(new PropertyValueFactory<>("generatedDate"));
 
         TableColumn<AccountDetail, String> startAccountCol = new TableColumn<>("Starting Account");
         startAccountCol.setCellValueFactory(new PropertyValueFactory<>("startCode"));
@@ -35,10 +35,10 @@ public class AccountDetailTable
         endAccountCol.setCellValueFactory(new PropertyValueFactory<>("endCode"));
 
         TableColumn<AccountDetail, LocalDate> startDateCol = new TableColumn<>("Starting Date");
-        startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDateString"));
+        startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
 
         TableColumn<AccountDetail, LocalDate> endDateCol = new TableColumn<>("Ending Date");
-        endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDateString"));
+        endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
         tableView.getColumns().addAll(creationDateCol, startAccountCol, endAccountCol, startDateCol, endDateCol);
 
