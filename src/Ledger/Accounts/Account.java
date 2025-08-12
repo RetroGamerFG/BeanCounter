@@ -16,16 +16,17 @@ public class Account implements Serializable
     private String accountName;
     private String accountType;
     private String accountDescription;
-    private boolean current;
+
+    private boolean allowCurrentStatus; //if enabled, forms can calculate amounts deemed current (within a year's timeframe)
     private String contraAccountCode;
 
-    public Account(String accountCode, String accountName, String accountType, String accountDescription, boolean current, String contraAccountCode)
+    public Account(String accountCode, String accountName, String accountType, String accountDescription, boolean allowCurrentStatus, String contraAccountCode)
     {
         this.accountCode = accountCode;
         this.accountName = accountName;
         this.accountType = accountName;
         this.accountDescription = accountDescription;
-        this.current = current;
+        this.allowCurrentStatus = allowCurrentStatus;
         this.contraAccountCode = contraAccountCode;
     }
 
@@ -59,14 +60,14 @@ public class Account implements Serializable
         this.accountType = accountType;
     }
 
-    public boolean getCurrentStatus()
+    public boolean getAllowCurrentStatus()
     {
-        return current;
+        return allowCurrentStatus;
     }
 
-    public void setCurrentStatus(boolean input)
+    public void setCurrentStatus(boolean allowCurrentStatus)
     {
-        this.current = input;
+        this.allowCurrentStatus = allowCurrentStatus;
     }
 
     public String getAccountDescription()
@@ -83,6 +84,10 @@ public class Account implements Serializable
     {
         return this.contraAccountCode;
     }
+
+//
+// Additional Functions
+//
 
     //hasContraAccount() - returns a boolean based on whether the contraAccountCode member is/isn't null.
     public boolean hasContraAccount()

@@ -2,7 +2,7 @@
 // BeanCounter
 // Copyright (c) 2025 Bailey "itsRetro" Manczko
 //
-// AccountDetail - the base class for account details. Takes user inputs and creates referenced ArrayLists as to keep operating memory to a minimum. Account detail are forms
+// AccountDetail - takes user inputs and creates referenced ArrayLists as to keep operating memory to a minimum. Account detail are forms
 // that allow user(s) to see all posted transactions for one or many codes and within a specified time frame.
 
 

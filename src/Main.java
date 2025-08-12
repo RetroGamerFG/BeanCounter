@@ -16,6 +16,7 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 // SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,8 +24,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 
 import javafx.application.Application;
@@ -60,11 +66,12 @@ import org.controlsfx.control.textfield.TextFields;
 import Business.Business;
 import Forms.Form;
 import Forms.Statement.AccountDetail;
-import Forms.Statement.AccountDetailTable;
+import Forms.Statement.DatedStatement;
 import Ledger.Ledger;
+import Ledger.Accounts.ProcessedAccount;
 import Ledger.Transactions.Transaction;
 import Ledger.Transactions.TransactionEntry;
-import Ledger.Transactions.TransactionTable;
+import TableViews.CustomTableViews;
 
 public class Main extends Application
 {
@@ -73,7 +80,7 @@ public class Main extends Application
     private Form form; //holds all information regarding generated reports
     private Business business; //holds all information regarding the user/business used in forms
 
-    private String version = "Ver. 0.2"; //application version
+    private String version = "Ver. 0.3"; //application version
 
     @Override
     public void start(Stage primaryStage)
@@ -81,7 +88,8 @@ public class Main extends Application
         window = primaryStage;
         window.setTitle("BeanCounter");
 
-        loadBusinessDetail();
+        //loadBusinessDetail();
+        business = new Business("Demo Business", Month.JANUARY, Year.of(2020));
         loadLedger();
         loadForm();
 
@@ -223,7 +231,7 @@ public class Main extends Application
 
         //
         //Transaction History Table
-        TableView<Transaction> transactionTable = TransactionTable.createTransactionTable(ledger.getAllUnpostedTransactions());
+        TableView<Transaction> transactionTable = CustomTableViews.createTransactionTable(ledger.getAllUnpostedTransactions());
 
         //seePosted checkbox, which can show/hide posted transactions.
         seePosted.setOnAction(e ->
@@ -530,7 +538,8 @@ public class Main extends Application
 //
 
     //setErrorScene() - a placeholder error page that can detail an error message and code for debug purposes.
-    public void setErrorScene(String error)
+    //Will need to incorporate a better error page that can save trace logs leading to error.
+    public void setErrorScene(int errorCode, String error)
     {
         StackPane layout = new StackPane();
 
@@ -538,10 +547,11 @@ public class Main extends Application
         //Labels
         VBox errorMessageLayer = new VBox(4);
 
-        Label errorReport = new Label("Program Error. Please restart the program.");
+        Label errorCodeLabel = new Label("ERR " + errorCode);
+        Label errorReport = new Label("A fatal error has caused the program to stop.");
         Label errorMessage = new Label(error);
 
-        errorMessageLayer.getChildren().addAll(errorReport, errorMessage);
+        errorMessageLayer.getChildren().addAll(errorCodeLabel, errorReport, errorMessage);
         layout.getChildren().add(errorMessageLayer);
 
         //
@@ -613,7 +623,7 @@ public class Main extends Application
 
         //
         //Account Detail History (Pulls up previous searches)
-        TableView<AccountDetail> accountDetailTable = AccountDetailTable.createAccountDetailTable(form.getAccountDetail());
+        TableView<AccountDetail> accountDetailTable = CustomTableViews.createAccountDetailTable(form.getAccountDetail());
 
         accountDetailTable.setOnMouseClicked(e ->
         {
@@ -874,11 +884,9 @@ public class Main extends Application
             totalRow.setPadding(new Insets(10));
             totalRow.setSpacing(5);
 
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US); //used for currency formatting
-
             Label totalLabel = new Label("Totals: ");
-            Label debitValueTotalLabel = new Label(currencyFormatter.format(codeDebitTotal));
-            Label creditValueTotalLabel = new Label(currencyFormatter.format(codeCreditTotal));
+            Label debitValueTotalLabel = new Label(printCurrency(codeDebitTotal));
+            Label creditValueTotalLabel = new Label(printCurrency(codeCreditTotal));
             Label spacerLabel = new Label(""); //used to keep consistant with entry rows
 
             totalLabel.setPrefWidth(setWidth3);
@@ -913,6 +921,9 @@ public class Main extends Application
         BorderPane layout = new BorderPane();
 
         VBox topLayer = new VBox();
+
+        //
+        //Back Button
         Button backButton = new Button("Back");
 
         backButton.setOnAction(e ->
@@ -925,31 +936,544 @@ public class Main extends Application
 
         VBox centerLayer = new VBox();
 
-        ComboBox<String> formSelection = new ComboBox<>();
-        ArrayList<String> formOptions = new ArrayList<>();
-        formOptions.add("Income Statement");
-        formOptions.add("Balance Sheet");
-        formOptions.add("Statement of Retained Earnings");
-        formSelection.setItems(FXCollections.observableList(null));
+        //preset widths for labels/inputs
+        int setWidth1 = 150;
+        int setWidth2 = 300;
 
+        //
+        //Statement Type Input
+        HBox statementTypeLayer = new HBox();
+        Label statementTypeLabel = new Label("Statement Type: ");
 
+        ComboBox<String> statementTypeInput = new ComboBox<>();
+        ArrayList<String> statementOptions = new ArrayList<>();
+        statementOptions.add("Income Statement");
+        statementOptions.add("Balance Sheet");
+        statementOptions.add("Statement of Retained Earnings");
+
+        statementTypeInput.setItems(FXCollections.observableList(statementOptions));
+
+        statementTypeLayer.setPrefWidth(setWidth1);
+        statementTypeInput.setPrefWidth(setWidth2);
+
+        statementTypeLayer.getChildren().addAll(statementTypeLabel, statementTypeInput);
+
+        //
+        //Statement Range/Type
+        HBox datedRangeLayer = new HBox();
+        Label datedRangeLabel = new Label("Date Range");
+
+        ComboBox<String> datedRangeInput = new ComboBox<>();
+        ArrayList<String> rangeOptions = new ArrayList<>();
+        rangeOptions.add("Month");
+        rangeOptions.add("Quarter");
+        rangeOptions.add("Year");
+
+        datedRangeInput.setItems(FXCollections.observableList(rangeOptions));
+
+        datedRangeLabel.setPrefWidth(setWidth1);
+        datedRangeInput.setPrefWidth(setWidth2);
+
+        datedRangeLayer.getChildren().addAll(datedRangeLabel, datedRangeInput);
+
+        //
+        //Note: Based on the statement range, the following options may not all be available.
+
+        //
+        //Selected Month Input
+        HBox selectedMonthLayer = new HBox();
+        Label selectedMonthLabel = new Label("Selected Month: ");
+
+        ComboBox<Month> selectedMonthInput = new ComboBox<>();
+        selectedMonthInput.getItems().addAll(Month.values());
+
+        selectedMonthLabel.setPrefWidth(setWidth1);
+        selectedMonthInput.setPrefWidth(setWidth2);
+
+        selectedMonthLayer.getChildren().addAll(selectedMonthLabel, selectedMonthInput);
+
+        //
+        //Selected Quarter Input
+        HBox selectedQuarterLayer = new HBox();
+        Label selectedQuarterLabel = new Label("Selected Quarter: ");
+
+        ComboBox<String> selectedQuarterInput = new ComboBox<>();
+        ArrayList<String> quarterOptions = new ArrayList<>();
+        quarterOptions.add("Q1");
+        quarterOptions.add("Q2");
+        quarterOptions.add("Q3");
+        quarterOptions.add("Q4");
+        selectedQuarterInput.setItems(FXCollections.observableList(quarterOptions));
+
+        selectedQuarterLabel.setPrefWidth(setWidth1);
+        selectedQuarterInput.setPrefWidth(setWidth2);
+
+        selectedQuarterLayer.getChildren().addAll(selectedQuarterLabel, selectedQuarterInput);
+
+        //
+        //Selected Year Input
+        HBox selectedYearLayer = new HBox();
+        Label selectedYearLabel = new Label("Selected Fiscal Year: ");
+
+        ComboBox<Year> selectedYearInput = new ComboBox<>();
+
+        //add only from the business's starting point to the current year.
+        for(int current = business.getStartingYear().getValue(); current <= Year.now().getValue(); current++)
+        {
+            selectedYearInput.getItems().add(Year.of(current));
+        }
+
+        selectedYearLayer.getChildren().addAll(selectedYearLabel, selectedYearInput);
+
+        //set all input layers other than type and range to hidden.
+        selectedMonthLayer.setVisible(false);
+        selectedMonthLayer.setManaged(false);
+        selectedQuarterLayer.setVisible(false);
+        selectedQuarterLayer.setManaged(false);
+        selectedYearLayer.setVisible(false);
+        selectedYearLayer.setManaged(false);
+
+        //This control must occur after all inputs are created.
+        datedRangeInput.setOnAction(e ->
+        {
+            //Month-to-Date: includes the month and year to generate.
+            if(datedRangeInput.getValue().compareTo("Month") == 0)
+            {
+                selectedMonthLayer.setVisible(true);
+                selectedMonthLayer.setManaged(true);
+                selectedQuarterLayer.setVisible(false);
+                selectedQuarterLayer.setManaged(false);
+                selectedYearLayer.setVisible(true);
+                selectedYearLayer.setManaged(true);
+            }
+            //Quarter-to-Date: includes the quarter and year to generate.
+            else if(datedRangeInput.getValue().compareTo("Quarter") == 0)
+            {
+                selectedMonthLayer.setVisible(false);
+                selectedMonthLayer.setManaged(false);
+                selectedQuarterLayer.setVisible(true);
+                selectedQuarterLayer.setManaged(true);
+                selectedYearLayer.setVisible(true);
+                selectedYearLayer.setManaged(true);
+            }
+            //Year-to-Date: includes only the year to generate.
+            else if(datedRangeInput.getValue().compareTo("Year") == 0)
+            {
+                selectedMonthLayer.setVisible(false);
+                selectedMonthLayer.setManaged(false);
+                selectedQuarterLayer.setVisible(false);
+                selectedQuarterLayer.setManaged(false);
+                selectedYearLayer.setVisible(true);
+                selectedYearLayer.setManaged(true);
+            }
+        });
+
+        //assign widths for all inputs and labels
+        statementTypeLabel.setPrefWidth(setWidth1);
+        statementTypeInput.setPrefWidth(setWidth2);
+        selectedQuarterLabel.setPrefWidth(setWidth1);
+        selectedQuarterInput.setPrefWidth(setWidth2);
+        selectedMonthLabel.setPrefWidth(setWidth1);
+        selectedMonthInput.setPrefWidth(setWidth2);
+        selectedQuarterLabel.setPrefWidth(setWidth1);
+        selectedQuarterInput.setPrefWidth(setWidth2);
+        selectedYearLabel.setPrefWidth(setWidth1);
+        selectedYearInput.setPrefWidth(setWidth2);
+
+        TableView<DatedStatement> statementTable = CustomTableViews.createDatedStatementTable(form.getDatedStatement());
+        layout.setBottom(statementTable);
+
+        statementTable.setOnMouseClicked(e ->
+        {
+            //on double click, generate form for previous instance, opens as new window.
+            if (e.getClickCount() == 2 )
+            {
+                determineStatementScene(statementTable.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        //
+        //Generate Button
+        Button generateButton = new Button("Generate");
+
+        generateButton.setOnAction(e -> 
+        {
+            //
+            //DatedStatement Object Creation
+
+            //create the DatedStatement object, assign values based on type
+            DatedStatement datedStatement = new DatedStatement();
+
+            //validate a statement type was selected, then assign to datedStatement if not null.
+            if(statementTypeInput.getValue() == null)
+            {
+                Alert alert = new Alert(AlertType.ERROR, "No statement type was selected...");
+                alert.showAndWait();
+                return;
+            }
+            
+            datedStatement.setStatementType(statementTypeInput.getValue());
+
+            //determine date range type based on inputs
+            if(datedRangeInput.getValue().compareTo("Month") == 0)
+            {
+                //validate a month and year were selected
+                if(selectedMonthInput.getValue() == null || selectedYearInput.getValue() == null)
+                {
+                    Alert alert = new Alert(AlertType.ERROR, "One or more inputs are empty.");
+                    alert.showAndWait();
+                    return;
+                }
+
+                //if the selected month is less than the business's starting month, roll forward a year, due to the fiscal year still ocurring
+                //I.E. if a business starts in April, their fiscal year ends in March of the next year.
+                if(selectedMonthInput.getValue().getValue() <= business.getStartingMonth().getValue())
+                {
+                    datedStatement.setDateRangeMonth(selectedMonthInput.getValue(), selectedYearInput.getValue(), true);
+                }
+                else
+                {
+                    datedStatement.setDateRangeMonth(selectedMonthInput.getValue(), selectedYearInput.getValue(), false);
+                }
+
+                datedStatement.setStatementPeriodDesc(selectedMonthInput.getValue().toString());
+            }
+            else if(datedRangeInput.getValue().compareTo("Quarter") == 0)
+            {
+                //validate a quarter and year were selected
+                if(selectedQuarterInput.getValue() == null || selectedYearInput.getValue() == null)
+                {
+                    Alert alert = new Alert(AlertType.ERROR, "One or more inputs are empty.");
+                    alert.showAndWait();
+                    return;
+                }
+
+                if(business.getQuarterStartMonth(selectedQuarterInput.getValue()).getValue() <= business.getStartingMonth().getValue())
+                {
+                    datedStatement.setDateRangeQuarter(business.getQuarterStartMonth(selectedQuarterInput.getValue()), selectedYearInput.getValue(), true);
+                }
+                else
+                {
+                    datedStatement.setDateRangeQuarter(business.getQuarterStartMonth(selectedQuarterInput.getValue()), selectedYearInput.getValue(), false);
+                }
+
+                datedStatement.setStatementPeriodDesc(selectedQuarterInput.getValue());
+            }
+            else if(datedRangeInput.getValue().compareTo("Year") == 0)
+            {
+                //validate a year was selected
+                if(selectedYearInput.getValue() == null)
+                {
+                    Alert alert = new Alert(AlertType.ERROR, "One or more inputs are empty.");
+                    alert.showAndWait();
+                    return;
+                }
+
+                datedStatement.setDateRangeYear(business.getStartingMonth(), selectedYearInput.getValue());
+            }
+            else //if this point is reached, no type was selected, so show alert.
+            {
+                Alert alert = new Alert(AlertType.ERROR, "No date range was selected...");
+                alert.showAndWait();
+                return;
+            }
+
+            //if working with a balance sheet, override the start date to the company's starting date.
+            //the balance sheet is a snapshot of all a company's transactions to the specified date.
+            if(datedStatement.getStatementType().compareTo("Balance Sheet") == 0)
+            {
+                datedStatement.setStartDate(LocalDate.of(business.getStartingYear().getValue(), business.getStartingMonth(), 1));
+            }
+
+            //fetch posted transactions within date range
+            ArrayList<Transaction> fetchedTransactions = ledger.getTransactionsByDateRange(datedStatement.getStartDate(), datedStatement.getEndDate());
+            ledger.filterTransactionsByStatus(fetchedTransactions, "Posted");
+
+            //filter transactions based on the statement type; not all accounts are needed for specific statements. A statement should be selected by this point.
+            if(statementTypeInput.getValue().compareTo("Income Statement") == 0)
+            {
+                ledger.filterTransactionsByAccountCodeRange(fetchedTransactions, "6000.001", "8999.999");
+            }
+            else if(statementTypeInput.getValue().compareTo("Balance Sheet") == 0)
+            {
+                ledger.filterTransactionsByAccountCodeRange(fetchedTransactions, "1000.001", "4999.999");
+            }
+            else if(statementTypeInput.getValue().compareTo("Statement of Retained Earnings") == 0)
+            {
+                ledger.filterTransactionsByAccountCodeRange(fetchedTransactions, "5000.001", "5999.999");
+            }
+            else
+            {
+                setErrorScene(2, "An unexpected error in generating a statement has ocurred. Please note this error, then restart the program.");
+            }
+
+            //confirm at least one transaction was found by filtered search
+            if(fetchedTransactions.size() <= 0)
+            {
+                Alert alert = new Alert(AlertType.ERROR, "No transactions were in the dated range. Confirm the date range has posted transactions and statement" + " type has transactions that would appear, then try again.");
+                alert.showAndWait();
+                return;
+            }
+
+            //for each transaction that was found, add to the IncomeStatement object's ArrayList
+            for(Transaction current : fetchedTransactions)
+            {
+                datedStatement.insertReferencedTransaction(current.getTransactionNumber());
+            }
+
+            //add the new AccountDetail to the form object, then call to save
+            form.insertStatement(datedStatement);
+            saveForm();
+            System.out.println("Created a statement with " + datedStatement.getReferencedTransactions().size() + " ref transactions");
+
+            determineStatementScene(datedStatement);
+            statementTable.setItems(FXCollections.observableArrayList(form.getDatedStatement()));
+        });
+
+        centerLayer.getChildren().addAll(statementTypeLayer, datedRangeLayer, selectedMonthLayer, selectedQuarterLayer, selectedYearLayer, generateButton);
+        layout.setCenter(centerLayer);
+
+        Scene output = new Scene(layout, 640, 480);
+        window.setScene(output);
+        window.show();
     }
 
-    public void setGeneratedIncomeStatementScene()
+    //setGeneratedIncomeStatementScene() - creates an income statement for an applicable DatedStatement selected.
+    //This appears in a separate window from the main window.
+    public void setGeneratedIncomeStatementScene(DatedStatement passedStatement)
     {
+        //setup the second window
+        Stage secondWindow = new Stage();
+        VBox mainView = new VBox();
 
+        //preset widths used for content layer, array for functions
+        int[] setWidth = new int[3];
+        setWidth[0] = 300;
+        setWidth[1] = 20;
+        setWidth[2] = 100;
+
+        //setup the form and VBox to hold all pages
+        ScrollPane document = new ScrollPane();
+        VBox allPages = new VBox();
+
+        //
+        //Print Button
+        Button printButton = new Button("Print");
+        mainView.getChildren().addAll(printButton, document);
+
+        printButton.setOnAction(e ->
+        {
+            printDocument(allPages);
+        });
+
+        //
+        //Header Layer
+        VBox headerLayer = new VBox();
+        Label businessNameLabel = new Label(business.getBusinessName());
+        Label statementTypeLabel = new Label("Income Statement");
+        Label statementDateLabel = new Label(passedStatement.printDateHeader());
+
+        headerLayer.setAlignment(Pos.CENTER);
+        headerLayer.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 16px;");
+
+        headerLayer.getChildren().addAll(businessNameLabel, statementTypeLabel, statementDateLabel);
+        allPages.getChildren().add(headerLayer);
+
+        //retrieve transactions contained within the account detail's referenced account array.
+        //note that it is still possible no entries can exist with the given search criteria.
+        ArrayList<Transaction> fetchedTransactions = ledger.getTransactionByCodeArray(passedStatement.getReferencedTransactions());
+        ArrayList<ProcessedAccount> processedAccounts = ledger.processReferencedTransactions(fetchedTransactions);
+
+        //separate processed accounts into revenue and expense ArrayList
+        ArrayList<ProcessedAccount> revenueAccounts = new ArrayList<>();
+        ArrayList<ProcessedAccount> expenseAccounts = new ArrayList<>();
+
+        for(ProcessedAccount currentAccount : processedAccounts)
+        {
+            //if the processed account is a revenue account (codes starting in 6), assign to revenue ArrayList.
+            if(currentAccount.getAccountRef().compareTo("6000.001") >= 0 && currentAccount.getAccountRef().compareTo("6999.999") <= 0)
+            {
+                revenueAccounts.add(currentAccount);
+            }
+            //else if the processed account is an expense account (codes starting in 7 or 8), assign to expense ArrayList.
+            else if(currentAccount.getAccountRef().compareTo("7000.001") >= 0 && currentAccount.getAccountRef().compareTo("8999.999") <= 0)
+            {
+                expenseAccounts.add(currentAccount);
+            }
+            
+            //if neither, the processed account is ignored, as it is not applicable to the income statement.
+        }
+
+        //
+        //Revenue & Expense Headers
+        VBox revenueLayer = new VBox();
+        Label revenueLabel = new Label("Revenue:");
+        revenueLabel.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 16px;");
+
+        VBox expenseLayer = new VBox();
+        Label expenseLabel = new Label("Expenses:");
+        expenseLabel.setStyle("-fx-font-family: 'Arial'; -fx-font-size: 16px;");
+
+        revenueLayer.getChildren().add(revenueLabel);
+        expenseLayer.getChildren().add(expenseLabel);
+
+        //Row spacers used during creation of entry rows.
+        Label[] spacer = new Label[2];
+        spacer[0] = new Label("");
+        spacer[1] = new Label("");
+
+        spacer[0].setPrefWidth(setWidth[1]);
+        spacer[1].setPrefWidth(setWidth[1]);
+
+        //BigDecimals to hold total amounts
+        BigDecimal revBigDecimal = new BigDecimal(0);
+        BigDecimal expBigDecimal = new BigDecimal(0);
+
+        //for each item in the revenue and expense ArrayList, an HBox is generated and stored in their respective VBox layer, and BigDecimal total is incremented/decremented.
+        Iterator<ProcessedAccount> revIterator = revenueAccounts.iterator();
+        ArrayList<ProcessedAccount> skipList = new ArrayList<>();
+
+        //for each revenue item, create an entry row. Increment revenue subtotal.
+        while(revIterator.hasNext())
+        {
+            ProcessedAccount currentRevAccount = revIterator.next();
+
+            if(!skipList.contains(currentRevAccount))
+            {
+                //if an account has references to contra-revenue accounts, extra work will be necessary, otherwise handle account normally.
+                if(currentRevAccount.getHasContra())
+                {
+                    createStatementLayers(currentRevAccount, revenueLayer, spacer, setWidth, false);
+
+                    ArrayList<ProcessedAccount> matchedContraAccounts = ProcessedAccount.getProcessedContraAccounts(revenueAccounts, currentRevAccount.getAccountRef());
+
+                    for(ProcessedAccount contraAccount : matchedContraAccounts)
+                    {
+                        createStatementLayers(contraAccount, revenueLayer, spacer, setWidth, true);
+                        revBigDecimal.subtract(contraAccount.getBalance());
+                        skipList.add(contraAccount);
+                    }
+                }
+                else
+                {
+                    createStatementLayers(currentRevAccount, revenueLayer, spacer, setWidth, false);
+                }
+            }
+
+            revBigDecimal = revBigDecimal.add(currentRevAccount.getBalance());
+            revIterator.remove();
+        }
+
+        //repeat the process for the expense processed accounts.
+        Iterator<ProcessedAccount> expIterator = expenseAccounts.iterator();
+        skipList = new ArrayList<>(); //reset the skipList;
+
+        //for each expense item, create an entry row. Increment expense subtotal.
+        while(expIterator.hasNext())
+        {
+            ProcessedAccount currentExpAccount = expIterator.next();
+
+            if(!skipList.contains(currentExpAccount))
+            {
+                //if an account has references to contra-expense accounts (rare), extra work will be necessary, otherwise handle account normally.
+                if(currentExpAccount.getHasContra())
+                {
+                    createStatementLayers(currentExpAccount, expenseLayer, spacer, setWidth, false);
+
+                    ArrayList<ProcessedAccount> matchedContraAccounts = ProcessedAccount.getProcessedContraAccounts(revenueAccounts, currentExpAccount.getAccountRef());
+
+                    for(ProcessedAccount contraAccount : matchedContraAccounts)
+                    {
+                        createStatementLayers(contraAccount, expenseLayer, spacer, setWidth, true);
+                        expBigDecimal.subtract(contraAccount.getBalance());
+                        skipList.add(contraAccount);
+                    }
+                }
+                else
+                {
+                    createStatementLayers(currentExpAccount, expenseLayer, spacer, setWidth, false);
+                }
+            }
+
+            expBigDecimal = revBigDecimal.add(currentExpAccount.getBalance());
+            expIterator.remove();
+        }
+
+        //
+        //Revenue Total Layer w/ Styling
+        HBox revTotalLayer = new HBox();
+        revTotalLayer.setStyle("-fx-background-color:rgb(187, 187, 187); -fx-border-color: #cccccc; -fx-border-width: 0 0 1 0;");
+        revTotalLayer.setSpacing(5);
+
+        Label revTotalDescLabel = new Label("Total Revenue: ");
+        Label revTotalLabel = new Label(printCurrency(revBigDecimal));
+
+        revTotalDescLabel.setPrefWidth(setWidth[0]);
+        revTotalLabel.setPrefWidth(setWidth[2]);
+        revTotalLabel.setAlignment(Pos.CENTER_RIGHT);
+
+        revTotalLayer.getChildren().addAll(revTotalDescLabel, revTotalLabel);
+
+        //
+        //Expense Total Layer w/ Styling
+        HBox expTotalLayer = new HBox();
+        expTotalLayer.setStyle("-fx-background-color:rgb(187, 187, 187); -fx-border-color: #cccccc; -fx-border-width: 0 0 1 0;");
+        expTotalLayer.setSpacing(5);
+
+        Label expTotalDescLabel = new Label("Total Expenses: ");
+        Label expTotalLabel = new Label(printCurrency(expBigDecimal));
+
+        expTotalDescLabel.setPrefWidth(setWidth[0]);
+        expTotalLabel.setPrefWidth(setWidth[2]);
+        expTotalLabel.setAlignment(Pos.CENTER_RIGHT);
+
+        expTotalLayer.getChildren().addAll(expTotalDescLabel, expTotalLabel);
+
+        //
+        //Net Income Layer
+        HBox netIncomeLayer = new HBox();
+        netIncomeLayer.setStyle("-fx-background-color:rgb(187, 187, 187); -fx-border-color: #cccccc; -fx-border-width: 0 0 1 0;");
+        netIncomeLayer.setSpacing(5);
+
+        BigDecimal netIncome = new BigDecimal(0);
+        netIncome = netIncome.add(revBigDecimal);
+        netIncome = netIncome.subtract(expBigDecimal);
+
+        Label netIncomeDescLabel = new Label("Net Income (Loss): ");
+        Label netIncomeLabel = new Label(printCurrency(netIncome));
+
+        netIncomeDescLabel.setPrefWidth(setWidth[0]);
+        netIncomeLabel.setPrefWidth(setWidth[2]);
+        netIncomeLabel.setAlignment(Pos.CENTER_RIGHT);
+
+        netIncomeLayer.getChildren().addAll(netIncomeDescLabel, netIncomeLabel);
+
+        //
+        // Current implementation does not account for multiple pages. This will need to be revisited following testing with extensive journal entry data.
+        //
+
+        //Combine all layers and create document
+        allPages.getChildren().addAll(revenueLayer, revTotalLayer, expenseLayer, expTotalLayer, netIncomeLayer);
+        document.setContent(allPages);
+
+        Scene output = new Scene(mainView, 640, 480);
+        secondWindow.setScene(output);
+        secondWindow.show();
     }
 
-    public void setGeneratedBalanceSheetScene()
+    //setGeneratedBalanceSheetScene() - creates a balance sheet for an applicable DatedStatement selected.
+    //This appears in a separate window from the main window.
+    public void setGeneratedBalanceSheetScene(DatedStatement passedStatement)
     {
-
+        //to be added in future update
     }
 
-    public void setGeneratedStatementOfRetainedEarningsScene()
+    //setGeneratedStatementOfRetainedEarningsScene() - creates a statement of retained earnings for an applicable DatedStatement selected.
+    //This appears in a separate window from the main window.
+    public void setGeneratedStatementOfRetainedEarningsScene(DatedStatement passedStatement)
     {
-
+        //to be added in future update
     }
-
 
 //
 // Ledger Save/Load Functions
@@ -1325,8 +1849,72 @@ public class Main extends Application
             job.endJob();
         }
     }
+
+    //determineStatementScene() - takes a DatedStatement and based on statement type calls function to set appropriate statement scene.
+    public void determineStatementScene(DatedStatement passedStatement)
+    {
+        if(passedStatement.getStatementType().compareTo("Income Statement") == 0)
+        {
+            setGeneratedIncomeStatementScene(passedStatement);
+        }
+        else if(passedStatement.getStatementType().compareTo("Balance Sheet") == 0)
+        {
+            setGeneratedBalanceSheetScene(passedStatement);
+        }
+        else if(passedStatement.getStatementType().compareTo("Statement of Retained Earnings") == 0)
+        {
+            setGeneratedStatementOfRetainedEarningsScene(passedStatement);
+        }
+        else
+        {
+            Alert alert = new Alert(AlertType.ERROR, "Failed to determine the statement type.");
+            alert.showAndWait();
+        }
+    }
+
+    //createStatementLayers() - creates an HBox of a processed account item row for forms, stores into passed VBox layer.
+    public void createStatementLayers(ProcessedAccount inAccount, VBox passedLayer, Label[] spacers, int[] setWidth, boolean isContra)
+    {
+        HBox currentAccountLayer = new HBox();
+        Label accountDescLabel, accountTotalLabel;
+        
+        if(isContra)
+        {
+            accountDescLabel = new Label("Less: " + ledger.getAccountDescriptionByCode(inAccount.getAccountRef()));
+            accountTotalLabel = new Label(printCurrency(inAccount.getBalance().multiply(new BigDecimal(-1))));
+        }
+        else
+        {
+            accountDescLabel = new Label(ledger.getAccountDescriptionByCode(inAccount.getAccountRef()));
+            accountTotalLabel = new Label(printCurrency(inAccount.getBalance()));
+        }
+
+        accountDescLabel.setPrefWidth(setWidth[0]);
+        accountTotalLabel.setPrefWidth(setWidth[2]);
+
+        accountTotalLabel.setAlignment(Pos.CENTER_RIGHT);
+
+        //currentAccountLayer.getChildren().addAll(accountDescLabel, spacers[0], accountTotalLabel, spacers[1]);    //may need to swap
+        currentAccountLayer.getChildren().addAll(accountDescLabel, accountTotalLabel);
+        passedLayer.getChildren().add(currentAccountLayer);
+    }
+
+//
+// Other Functions
+//
+
+    //printCurrency() - takes a BigDecimal and returns as a string formatted to accounting currency including parenthesis for negatives.
+    public String printCurrency(BigDecimal value)
+    {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.US); //used for currency formatting
+        DecimalFormat df = (DecimalFormat) nf;
+
+        df.applyPattern("$#,##0.00;($#,##0.00)");
+        return df.format(value);
+    }
 }
 
 //Programmer Notes for future reference
     //Consider revising account detail section to incorporate different page sizes, allowing different dimensions as necessary
     //Make a Save to PDF button. Will likely require additional dependencies.
+    //Need to sort processed accounts for use with statements

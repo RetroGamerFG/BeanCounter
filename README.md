@@ -12,16 +12,23 @@ Log transactions, generate statements, and perform additional functions.
 • [ ] Add custom new account codes
 
 • [ ] Generate statements such as income, balance sheet, etc.
-    • [X] Account Detail
-    • [ ] Income Statement
-    • [ ] Balance Sheet
+<ul>
+<li> [X] Account Detail </li>
+<li> [X] Income Statement </li>
+<li> [ ] Balance Sheet </li>
+</ul>
 
 • [ ] Manual backup of all transactions and generated 
+
+• [ ] Business setup for name and fiscal year setup used by statements
 
 • [ ] Additional functionaly specified by users
 
 <h2>Testers Wanted!</h2>
 I'm looking for users that can test out the program. This includes general usage, bug finding, possible calculation errors, and anything else that throws a wrench into the machine. Any feedback during development is valuable, and is greatly appreciated.
+
+<h2>Next Update</h2>
+The next update will incorporate setting the business's name and start date to better align with statement generation to fiscal year start/end. This will also prompt for a first-time program start for new users to enter their details.
 
 <h2>Notice</h2>
 While this software is still being developed, it is likely for bugs or unintended errors to occur. Please use this software at your own risk and liability in the event of such a problem occurring.

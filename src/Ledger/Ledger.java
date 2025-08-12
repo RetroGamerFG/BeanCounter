@@ -5,6 +5,7 @@
 // Ledger - the base class for all operations regarding the use of journal entries and transactions. Used to call operations
 // that involve the use of account codes and transactions.
 
+
 package Ledger;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.Iterator;
 
 import Ledger.Accounts.Account;
 import Ledger.Accounts.AccountEntries;
+import Ledger.Accounts.ProcessedAccount;
 import Ledger.Transactions.Transaction;
 import Ledger.Transactions.TransactionEntry;
 import javafx.scene.control.Alert;
@@ -218,6 +220,101 @@ public class Ledger implements Serializable
             return null;
         }
 
+    }
+
+//
+// Transaction Processing Functions
+//
+
+    //processReferencedTransactions() - for all transactions passed, an ArrayList of ProcessedAccount is created for each
+    //unique account found within. 
+    public ArrayList<ProcessedAccount> processReferencedTransactions(ArrayList<Transaction> refTransactions)
+    {
+        ArrayList<ProcessedAccount> output = new ArrayList<>();
+
+        for(Transaction currentTransaction : refTransactions)
+        {
+            for(TransactionEntry currentEntry : currentTransaction.getTransactionEntries())
+            {
+                boolean found = false;
+
+                for(ProcessedAccount currentAccount : output)
+                {
+                    //if the current transaction entry has an existing account, append existing value
+                    if(currentAccount.getAccountRef().compareTo(currentEntry.getAccountCode()) == 0)
+                    {
+                        if(currentEntry.getDebitAmount() != null)
+                        {
+                            //if getValuesReverse() is true, account is likey a revenue or contra account
+                            if(currentAccount.getValuesReverse() == false)
+                            {
+                                currentAccount.add(currentEntry.getDebitAmount());
+                            }
+                            else
+                            {
+                                currentAccount.subtract(currentEntry.getDebitAmount());
+                            }
+                        }
+                        else
+                        {
+                            //if getValuesReverse() is true, account is likey a revenue or contra account
+                            if(currentAccount.getValuesReverse() == false)
+                            {
+                                currentAccount.add(currentEntry.getCreditAmount());
+                            }
+                            else
+                            {
+                                currentAccount.subtract(currentEntry.getCreditAmount());
+                            }
+                        }
+
+                        found = true;
+                    }
+                }
+
+                //if account does not exist as processed, create new instance of processed account.
+                if(found == false)
+                {
+                    ProcessedAccount newProcessedAccount = null;
+                    String fetchedAccountType = accountItems.getAccountByCode(currentEntry.getAccountCode()).getAccountType();
+
+                    //confirm the account's default value (Assets & Expense are debits, all else are credits)
+                    if(fetchedAccountType.compareToIgnoreCase("Asset") == 0 || fetchedAccountType.compareToIgnoreCase("Expense") == 0)
+                    {
+                        newProcessedAccount = new ProcessedAccount(currentEntry.getAccountCode(), false);
+                    }
+                    else
+                    {
+                        newProcessedAccount = new ProcessedAccount(currentEntry.getAccountCode(), true);
+                    }
+
+                    //determine if the account is a contra account
+                    if(accountItems.isContraAccount(newProcessedAccount.getAccountRef()))
+                    {
+                        newProcessedAccount.setHasContra(true);
+                    }
+
+                    //determine if the account references a contra account
+                    if(accountItems.hasContraAccount(newProcessedAccount.getAccountRef()))
+                    {
+                        newProcessedAccount.setContraRef(accountItems.getContraAccountReferenceByCode(newProcessedAccount.getAccountRef()));
+                    }
+
+                    if(currentEntry.getDebitAmount() != null)
+                    {
+                        newProcessedAccount.add(currentEntry.getDebitAmount());
+                    }
+                    else
+                    {
+                        newProcessedAccount.add(currentEntry.getCreditAmount());
+                    }
+
+                    output.add(newProcessedAccount);
+                }
+            }
+        }
+
+        return output;
     }
 
 //

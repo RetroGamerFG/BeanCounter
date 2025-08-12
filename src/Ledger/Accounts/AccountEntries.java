@@ -69,7 +69,6 @@ public class AccountEntries implements Serializable
     }
 
     //getAccountsByType() - returns an ArrayList of all "Account" objects that match the type criteria.
-    //notice - does not currently consider the contra-accounts. FIX NEEDED
     public ArrayList<Account> getAccountsByType(String type)
     {
         ArrayList<Account> output = new ArrayList<>();
@@ -106,47 +105,39 @@ public class AccountEntries implements Serializable
         accountItems = new ArrayList<>();
 
         //Assets
-        accountItems.add(new Account("1000.001", "Cash", "Asset", "Cash", true, null));
-        accountItems.add(new Account("1001.001", "Accounts Receivable", "Asset", "Accounts Receivable: Short-Term", true, null));
-        accountItems.add(new Account("1001.002", "Accounts Receivable", "Asset", "Accounts Receivable: Long-Term", false, null));
-        accountItems.add(new Account("1002.001", "Inventory", "Asset", "Inventory", true, null));
-        accountItems.add(new Account("1003.001", "Marketable Securities", "Asset", "Marketable Securities: Short-Term", true, null));
-        accountItems.add(new Account("1003.002", "Marketable Securities", "Asset", "Marketable Securities: Long-Term", false, null));
-        accountItems.add(new Account("1004.001", "Notes Receivable", "Asset", "Notes Receivable: Short-Term", true, null));
-        accountItems.add(new Account("1004.002", "Notes Receivable", "Asset", "Notes Receivable: Long-Term", false, null));
-        accountItems.add(new Account("1005.001", "Prepaid Expenses", "Asset", "Prepaid Expenses: Short-Term", true, null));
-        accountItems.add(new Account("1005.002", "Prepaid Expenses", "Asset", "Prepaid Expenses: Long-Term", false, null));
-        accountItems.add(new Account("1006.001", "Goodwill", "Asset", "Goodwill", false, null));
-        accountItems.add(new Account("1007.001", "Patents", "Asset", "Patents", false, "4003.001")); //contra = accumulated amortization
-        accountItems.add(new Account("1008.001", "Licenses", "Asset", "Licenses and Franchises", false, "4004.001")); //contra = accumulated amortization
+        accountItems.add(new Account("1001.001", "Cash", "Asset", "Cash", true, null));
+        accountItems.add(new Account("1002.001", "Accounts Receivable", "Asset", "Accounts Receivable: Short-Term", true, null));
+        accountItems.add(new Account("1003.001", "Inventory", "Asset", "Inventory", true, null));
+        accountItems.add(new Account("1004.001", "Marketable Securities", "Asset", "Marketable Securities", true, null));
+        accountItems.add(new Account("1005.001", "Notes Receivable", "Asset", "Notes Receivable", true, null));
+        accountItems.add(new Account("1006.001", "Prepaid Expenses", "Asset", "Prepaid Expenses", true, null));
+        accountItems.add(new Account("1007.001", "Goodwill", "Asset", "Goodwill", false, null));
+        accountItems.add(new Account("1008.001", "Patents", "Asset", "Patents", false, null));
+        accountItems.add(new Account("1009.001", "Licenses", "Asset", "Licenses and Franchises", false, null));
 
-        accountItems.add(new Account("3001.001", "Equipment", "Asset", "Equipment", false, "4001.001")); //contra = accumulated depreciation
-        accountItems.add(new Account("3002.001", "Building & Property", "Asset", "Building & Property", false, "4002.001")); //contra = accumulated depreciation
+        accountItems.add(new Account("3001.001", "Equipment", "Asset", "Equipment", false, null));
+        accountItems.add(new Account("3002.001", "Building & Property", "Asset", "Building & Property", false, null));
         accountItems.add(new Account("3003.001", "Land", "Asset", "Land", false, null));
 
         //Liabilities
-        accountItems.add(new Account("2001.001", "Accounts Payable", "Liability", "Accounts Payable: Short-Term", true, null));
-        accountItems.add(new Account("2001.002", "Accounts Payable", "Liability", "Accounts Payable: Long-Term", false, null));
-        accountItems.add(new Account("2002.001", "Securities Issued", "Liability", "Securities Issued: Short-Term", true, null));
-        accountItems.add(new Account("2002.002", "Securities Issued", "Liability", "Securities Issued: Long-Term", false, null));
+        accountItems.add(new Account("2001.001", "Accounts Payable", "Liability", "Accounts Payable", true, null));
+        accountItems.add(new Account("2002.001", "Securities Issued", "Liability", "Securities Issued", true, null));
         accountItems.add(new Account("2003.001", "Notes Payable", "Liability", "Notes Payable: Short-Term", true, null));
-        accountItems.add(new Account("2003.002", "Notes Payable", "Liability", "Notes Payable: Long-Term", false, null));
-        accountItems.add(new Account("2004.001", "Interest Payable", "Liability", "Interest Payable: Short-Term", true, null));
-        accountItems.add(new Account("2004.002", "Interest Payable", "Liability", "Interest Payable: Long-Term", false, null));
-        accountItems.add(new Account("2005.001", "Wages Payable", "Liability", "Wages Payable", true, null));
+        accountItems.add(new Account("2004.001", "Interest Payable", "Liability", "Interest Payable", true, null));
+        accountItems.add(new Account("2005.001", "Wages Payable", "Liability", "Wages Payable", false, null));
         accountItems.add(new Account("2006.001", "Unearned Revenue", "Liability", "Unearned Revenue", true, null));
 
-        accountItems.add(new Account("4001.001", "Accumulated Depreciation", "Contra-Asset", "Accumulated Depreciation: Equipment", false, null));
-        accountItems.add(new Account("4002.001", "Accumulated Depreciation", "Contra-Asset", "Accumulated Depreciation: Building & Property", false, null));
-        accountItems.add(new Account("4003.001", "Accumulated Amortization", "Contra-Asset", "Accumulated Amortization: Patents", false, null));
-        accountItems.add(new Account("4004.001", "Accumulated Amortization", "Contra-Asset", "Accumulated Amortization: Licenses & Franchises", false, null));
+        accountItems.add(new Account("4001.001", "Accumulated Depreciation: Equipment", "Asset", "Accumulated Depreciation: Equipment", false, "3001.001"));
+        accountItems.add(new Account("4002.001", "Accumulated Depreciation: Building & Property", "Asset", "Accumulated Depreciation: Building & Property", false, "3002.001"));
+        accountItems.add(new Account("4003.001", "Accumulated Amortization: Patents", "Asset", "Accumulated Amortization: Patents", false, "1007.001"));
+        accountItems.add(new Account("4004.001", "Accumulated Amortization: Licenses", "Asset", "Accumulated Amortization: Licenses", false, "1008.001"));
 
         //Shareholders Equity
         accountItems.add(new Account("5001.001", "Common Stock", "Stockholders Equity", "Common Stock", false, null));
         accountItems.add(new Account("5002.001", "Preferred Stock", "Stockholders Equity", "Preferred Stock", false, null));
         accountItems.add(new Account("5003.001", "Additional Paid-In Capital", "Stockholders Equity", "Additional Paid-In Capital", false, null));
         accountItems.add(new Account("5004.001", "Retained Earnings", "Stockholders Equity", "Retained Earnings", false, null));
-        accountItems.add(new Account("5005.001", "Treasury Stock", "Contra-Stockholders Equity", "Treasury Stock", false, null));
+        accountItems.add(new Account("5005.001", "Treasury Stock", "Stockholders Equity", "Treasury Stock", false, "5004.001"));
         accountItems.add(new Account("5006.001", "Other Comprehensive Income", "Stockholders Equity", "Treasury Stock", false, null));
 
         //Revenue
@@ -157,6 +148,10 @@ public class AccountEntries implements Serializable
         accountItems.add(new Account("6005.001", "Gain on Sale of Asset", "Revenue", "Gain on Sale of Asset", false, null));
         accountItems.add(new Account("6006.001", "Dividend Income", "Revenue", "Dividend Income", false, null));
         accountItems.add(new Account("6007.001", "Misc Income", "Revenue", "Misc Income", false, null));
+        accountItems.add(new Account("6008.001", "Sales Returns & Allowances", "Revenue", "Sales Returns & Allowances", false, "6001.001"));
+        accountItems.add(new Account("6009.001", "Sales Discounts", "Revenue", "Sales Discounts", false, "6001.001"));
+        accountItems.add(new Account("6010.001", "Service Discounts", "Revenue", "Service Discounts", false, "6002.001"));
+        accountItems.add(new Account("6011.001", "Rental Discounts", "Revenue", "Rental Discounts", false, "6003.001"));
 
         //Expenses
         accountItems.add(new Account("7001.001", "Cost of Goods Sold", "Expense", "Cost of Goods Sold", false, null));
@@ -177,5 +172,62 @@ public class AccountEntries implements Serializable
 
         accountItems.add(new Account("8001.001", "Depreciation Expense", "Expense", "Depreciation Expense", false, null));
         accountItems.add(new Account("8002.001", "Amortization Expense", "Expense", "Amortization Expense", false, null));
+    }
+
+    //hasContraAccount() - determines if the passed account has any contra account(s), returns result as boolean.
+    public boolean hasContraAccount(String code)
+    {
+        Account foundAccount = getAccountByCode(code);
+
+        if(foundAccount == null)
+        {
+            return false;
+        }
+
+        if(foundAccount.hasContraAccount())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    //isContraAccount() - determines if the passed account is a contra account (other accounts reference account code), returns result as boolean.
+    public boolean isContraAccount(String code)
+    {
+        Account foundAccount = getAccountByCode(code);
+
+        if(foundAccount == null)
+        {
+            return false;
+        }
+
+        for(Account currentAccount : accountItems)
+        {
+            if(currentAccount.getContraAccountCode() != null)
+            {
+                if(currentAccount.getContraAccountCode().compareTo(foundAccount.getAccountCode()) == 0)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //getContraAccountReferenceByCode() - returns a String containing the account code of the referenced contra-account for the passed account's code.
+    public String getContraAccountReferenceByCode(String code)
+    {
+        Account foundAccount = getAccountByCode(code);
+
+        if(foundAccount == null)
+        {
+            return null;
+        }
+
+        return foundAccount.getContraAccountCode();
     }
 }

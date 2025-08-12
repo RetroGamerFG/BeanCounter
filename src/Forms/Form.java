@@ -12,14 +12,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import Forms.Statement.AccountDetail;
+import Forms.Statement.DatedStatement;
 
 public class Form implements Serializable
 {
     private ArrayList<AccountDetail> accountDetail;
+    private ArrayList<DatedStatement> datedStatement;
 
     public Form()
     {
         accountDetail = new ArrayList<>();
+        datedStatement = new ArrayList<>();
     }
 
     public ArrayList<AccountDetail> getAccountDetail()
@@ -27,8 +30,22 @@ public class Form implements Serializable
         return accountDetail;
     }
 
+    public ArrayList<DatedStatement> getDatedStatement()
+    {
+        return datedStatement;
+    }
+
+//
+// Additional Functions
+//
+
     public void insertAccountDetail(AccountDetail inAccountDetail)
     {
         accountDetail.add(inAccountDetail);
+    }
+
+    public void insertStatement(DatedStatement inStatement)
+    {
+        datedStatement.add(inStatement);
     }
 }

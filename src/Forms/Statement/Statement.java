@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2025 Bailey "itsRetro" Manczko
+//
+// CustomTableViews - the base class for generated statements. Used by DatedStatement and AccountDetail, contains base members and
+// functions that are utilized in the statement creation.
+
+
 package Forms.Statement;
 
 import java.io.Serializable;
