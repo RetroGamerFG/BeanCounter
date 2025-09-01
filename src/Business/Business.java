@@ -6,35 +6,43 @@
 
 package Business;
 
+import java.io.Serializable;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Business
+public class Business implements Serializable
 {
     private String businessName;
     private Month startingMonth; //month business started
     private Year startingYear; //year business started
 
+    private boolean multipleUsers;
+    private ArrayList<User> users;
+
     private LinkedHashMap<Month, String> quarterMonths;
     
     //need to figure out more about what this class would entail.
 
-    public Business()
-    {
-        businessName = "Placeholder";
-        startingMonth = Month.JANUARY;
-        startingYear = Year.of(1969);
-        determineQuarterMonths();
-    }
-
-    public Business(String businessName, Month startingMonth, Year startingYear)
+    public Business(String businessName, Month startingMonth, Year startingYear, boolean hasMultipleUsers)
     {
         this.businessName = businessName;
         this.startingMonth = startingMonth;
         this.startingYear = startingYear;
+
+        this.multipleUsers = hasMultipleUsers;
+
+        if(hasMultipleUsers)
+        {
+            this.users = new ArrayList<>();
+        }
+        else
+        {
+            this.users = null;
+        }
+
         determineQuarterMonths();
     }
 
@@ -184,5 +192,31 @@ public class Business
         }
 
         return null;
+    }
+
+    public boolean hasMultipleUsers()
+    {
+        return multipleUsers;
+    }
+
+    public void addNewUser(User passedUser)
+    {
+        users.add(passedUser);
+    }
+
+    public boolean validateLogin(String username, String password)
+    {
+        for(User currentUser : users)
+        {
+            if(currentUser.getUsername().compareTo(username) == 0)
+            {
+                if(currentUser.getPassword().compareTo(password) == 0)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

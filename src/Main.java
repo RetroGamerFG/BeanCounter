@@ -35,6 +35,8 @@ import java.util.Locale;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.print.PrinterJob;
@@ -45,6 +47,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
@@ -55,15 +59,18 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.*;
+import javafx.scene.input.KeyEvent;
 
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import Business.Business;
+import Business.User;
 import Forms.Form;
 import Forms.Statement.AccountDetail;
 import Forms.Statement.DatedStatement;
@@ -72,15 +79,18 @@ import Ledger.Accounts.ProcessedAccount;
 import Ledger.Transactions.Transaction;
 import Ledger.Transactions.TransactionEntry;
 import TableViews.CustomTableViews;
+import UI.FontPresets;
+import UI.SceneTabs;
 
 public class Main extends Application
 {
     private Stage window; //main window used by JavaFX
+
     private Ledger ledger; //holds all information regarding transactions and accounts
     private Form form; //holds all information regarding generated reports
     private Business business; //holds all information regarding the user/business used in forms
 
-    private String version = "Ver. 0.3"; //application version
+    private String version = "Ver. 0.4"; //application version
 
     @Override
     public void start(Stage primaryStage)
@@ -88,12 +98,26 @@ public class Main extends Application
         window = primaryStage;
         window.setTitle("BeanCounter");
 
-        //loadBusinessDetail();
-        business = new Business("Demo Business", Month.JANUARY, Year.of(2020));
-        loadLedger();
-        loadForm();
+        loadBusiness();
 
-        setStartingScene();
+        //if no business was loaded, initialize to first-time setup
+        if(business == null)
+        {
+            setFirstTimeSetupScene();
+        }
+        else
+        {
+            if(business.hasMultipleUsers())
+            {
+                setLoginScene();
+            }
+            else
+            {
+                loadLedger();
+                loadForm();
+                setMainMenuScene();
+            }
+        }
     }
 
     public static void main(String[] args)
@@ -105,11 +129,9 @@ public class Main extends Application
 // Main Menu / Starting Scene
 //
 
-    //setStartingScene() - the first page the user sees during program start. Includes navigation buttons for core program functions.
-    public void setStartingScene()
+    public void setLoginScene()
     {
         BorderPane layout = new BorderPane();
-        layout.setPadding(new Insets(0, 0, 0, 14));
 
         //
         //Logo
@@ -123,6 +145,69 @@ public class Main extends Application
             logoView.setPreserveRatio(true);
 
             layout.setTop(logoView);
+            BorderPane.setAlignment(logoView, Pos.CENTER);
+        }
+        catch (FileNotFoundException readError)
+        {
+            System.out.println("Error: Failed to get logo image.");
+        }
+
+        VBox userInputLayer = new VBox();
+        TextField usernameInput = new TextField("username");
+        TextField passwordInput = new TextField("password");
+
+        Button loginButton = new Button("Log In");
+
+        userInputLayer.getChildren().addAll(usernameInput, passwordInput, loginButton);
+        layout.setCenter(userInputLayer);
+        BorderPane.setAlignment(userInputLayer, Pos.CENTER);
+
+        Label registeredLabel = new Label("Initialized for use by: " + business.getBusinessName());
+        FontPresets.setContent(registeredLabel);
+
+        layout.setBottom(registeredLabel);
+        BorderPane.setAlignment(registeredLabel, Pos.CENTER);
+
+        loginButton.setOnAction(e ->
+        {
+            //validate the user is registered and password matches
+            if(business.validateLogin(usernameInput.getText(), passwordInput.getText()))
+            {
+                loadLedger();
+                loadForm();
+                setMainMenuScene();
+            }
+            else
+            {
+                Alert alert = new Alert(AlertType.ERROR, "Sign-in credentials are incorrect.");
+                alert.showAndWait();
+            }
+        });
+
+        Scene output = new Scene(layout, 640, 480);
+
+        window.setScene(output);
+        window.show();
+    }
+
+    //setMainMenuScene() - the software's main menu. Includes navigation buttons for core program functions.
+    public void setMainMenuScene()
+    {
+        BorderPane layout = new BorderPane();
+
+        //
+        //Logo
+        try 
+        {
+            FileInputStream logoStream = new FileInputStream("img/logo.png");
+            Image logo = new Image(logoStream);
+            ImageView logoView = new ImageView(logo);
+
+            logoView.setFitWidth(400);
+            logoView.setPreserveRatio(true);
+
+            layout.setTop(logoView);
+            BorderPane.setAlignment(logoView, Pos.CENTER);
         }
         catch (FileNotFoundException readError)
         {
@@ -132,13 +217,14 @@ public class Main extends Application
         //
         //Menu Buttons
         VBox menuButtonsLayer = new VBox(4);
-        Button journalEntry, accountDetail, statements;
+        Button journalEntry, accountDetail, statements, settingsButton;
 
         journalEntry = new Button("General Ledger");
         accountDetail = new Button("Account Detail");
         statements = new Button("Statements");
+        settingsButton = new Button("Settings");
 
-        menuButtonsLayer.getChildren().addAll(journalEntry, accountDetail, statements);
+        menuButtonsLayer.getChildren().addAll(journalEntry, accountDetail, statements, settingsButton);
         menuButtonsLayer.setAlignment(Pos.CENTER);
 
         layout.setCenter(menuButtonsLayer);
@@ -158,12 +244,437 @@ public class Main extends Application
             setStatementsScene();
         });
 
+        settingsButton.setOnAction(e -> 
+        {
+            setSettingsScene();
+        });
+
         Label versionLabel = new Label(version);
-        versionLabel.setAlignment(Pos.BOTTOM_LEFT);
+
         layout.setBottom(versionLabel);
+        BorderPane.setAlignment(versionLabel, Pos.BOTTOM_LEFT);
 
         Scene output = new Scene(layout, 640, 480);
 
+        window.setScene(output);
+        window.show();
+    }
+
+//
+// Settings Scenes
+//
+
+    //setFirstTimeSetupScene() - if a "Business.dat" file fails to initialize, the software will boot into the first-time setup.
+    public void setFirstTimeSetupScene()
+    {
+        SceneTabs setupSceneTab = new SceneTabs(5);
+        BorderPane layout = new BorderPane();
+        VBox[] contentArray = new VBox[setupSceneTab.getMaxTabs()];
+
+        //initialize the contentArray and add alignment and padding presets
+        for(int c = 0; c < setupSceneTab.getMaxTabs(); c++)
+        {
+            contentArray[c] = new VBox();
+            contentArray[c].setAlignment(Pos.CENTER);
+            contentArray[c].setPadding(new Insets(15));
+        }
+
+        layout.setCenter(contentArray[0]);
+
+        //
+        //Page 1
+        //Welcome Message
+
+        //
+        //Welcome Layer
+        TextFlow welcomeTextFlow = new TextFlow();
+        Text welcomeText1 = new Text("Welcome to BeanCounter!\n");
+        Text welcomeText2 = new Text("Please fill out the following details for the first time setup.");
+
+        FontPresets.setTitle(welcomeText1);
+        FontPresets.setContent(welcomeText2);
+
+        welcomeTextFlow.getChildren().add(welcomeText1);
+        welcomeTextFlow.getChildren().add(welcomeText2);
+        contentArray[0].getChildren().addAll(welcomeTextFlow);
+
+        //
+        //Page 2
+        //Business Info
+
+        //
+        //Business Info Message
+        TextFlow businessMessageTextFlow = new TextFlow();
+        Text businessMessageText = new Text("Enter your business information.\n");
+
+        FontPresets.setTitle(businessMessageText);
+        businessMessageTextFlow.getChildren().add(businessMessageText);
+
+        //
+        //Business Name Input
+        HBox businessNameLayer = new HBox();
+        Label businessNameLabel = new Label("Business Name: ");
+        TextField businessNameInput = new TextField();
+
+        FontPresets.setTextField(businessNameInput);
+
+        businessNameLayer.getChildren().addAll(businessNameLabel, businessNameInput);
+
+        //
+        //Business Start Date Input
+        HBox businessStartMonthLayer = new HBox();
+        Label businessStartMonthLabel = new Label("Start Month: ");
+
+        ComboBox<Month> selectedMonthInput = new ComboBox<>();
+        selectedMonthInput.getItems().addAll(Month.values());
+
+        FontPresets.setComboBox(selectedMonthInput);
+
+        businessStartMonthLayer.getChildren().addAll(businessStartMonthLabel, selectedMonthInput);
+
+        HBox businessStartYearLayer = new HBox();
+        Label businessStartYearLabel = new Label("Start Year: ");
+        
+        ComboBox<Year> selectedYearInput = new ComboBox<>();
+
+        //add only from a default of 1969 to the current year.
+        for(int current = 1969; current <= Year.now().getValue(); current++)
+        {
+            selectedYearInput.getItems().add(Year.of(current));
+        }
+
+        FontPresets.setComboBox(selectedYearInput);
+
+        businessStartYearLayer.getChildren().addAll(businessStartYearLabel, selectedYearInput);
+
+        contentArray[1].getChildren().addAll(businessMessageTextFlow, businessNameLayer, businessStartMonthLayer, businessStartYearLayer);
+
+        businessNameInput.setOnKeyPressed(textFieldStyleHandler);
+        selectedMonthInput.setOnAction(comboBoxStyleHandler);
+        selectedYearInput.setOnAction(comboBoxStyleHandler);
+
+        //
+        //Page 3
+        //User Type (Multiple Users)
+
+        //
+        //User Type Layer
+        HBox userTypeDescriptionLayer = new HBox();
+        TextFlow userTypeTextFlow = new TextFlow();
+        Text userTypeText1 = new Text("How many users will access this software?\n");
+        Text userTypeText2 = new Text("(You can change this later in the settings)\n");
+
+        userTypeTextFlow.getChildren().add(userTypeText1);
+        userTypeTextFlow.getChildren().add(userTypeText2);
+
+        FontPresets.setFormatting(userTypeTextFlow);
+        FontPresets.setTitle(userTypeText1);
+        FontPresets.setContent(userTypeText2);
+
+        userTypeDescriptionLayer.getChildren().add(userTypeTextFlow);
+
+        VBox userTypeSelectionLayer = new VBox(16);
+
+        HBox userTypeMultipleLayer = new HBox(8);
+        RadioButton userTypeSelectionMultiple = new RadioButton();
+        TextFlow userTypeMultipleTextFlow = new TextFlow();
+        Text userTypeMultipleText1 = new Text("Multiple Users\n");
+        Text userTypeMultipleText2 = new Text("Can specify multiple users with sign-in and passwords.\n");
+        Text userTypeMultipleText3 = new Text("Recommended for businesses.\n");
+
+        userTypeMultipleTextFlow.getChildren().add(userTypeMultipleText1);
+        userTypeMultipleTextFlow.getChildren().add(userTypeMultipleText2);
+        userTypeMultipleTextFlow.getChildren().add(userTypeMultipleText3);
+        
+        FontPresets.setFormatting(userTypeMultipleTextFlow);
+        FontPresets.setHeader(userTypeMultipleText1);
+        FontPresets.setContent(userTypeMultipleText2);
+        FontPresets.setContent(userTypeMultipleText3);
+
+        userTypeMultipleLayer.getChildren().addAll(userTypeSelectionMultiple, userTypeMultipleTextFlow);
+
+        HBox userTypeSingleLayer = new HBox(8);
+        RadioButton userTypeSelectionSingle = new RadioButton();
+        TextFlow userTypeSingleTextFlow = new TextFlow();
+        Text userTypeSingleText1 = new Text("Single User\n");
+        Text userTypeSingleText2 = new Text("Use the software freely without any user account(s).\n");
+        Text userTypeSingleText3 = new Text("Recommended for individuals.");
+
+        userTypeSingleTextFlow.getChildren().add(userTypeSingleText1);
+        userTypeSingleTextFlow.getChildren().add(userTypeSingleText2);
+        userTypeSingleTextFlow.getChildren().add(userTypeSingleText3);
+        
+        FontPresets.setFormatting(userTypeSingleTextFlow);
+        FontPresets.setHeader(userTypeSingleText1);
+        FontPresets.setContent(userTypeSingleText2);
+        FontPresets.setContent(userTypeSingleText3);
+
+        userTypeSingleLayer.getChildren().addAll(userTypeSelectionSingle, userTypeSingleTextFlow);
+        userTypeSelectionLayer.getChildren().addAll(userTypeMultipleLayer, userTypeSingleLayer);
+
+        contentArray[2].getChildren().addAll(userTypeDescriptionLayer, userTypeSelectionLayer);
+
+        //
+        //Page 4
+        //First User Entry (Optional)
+
+        //
+        //First User Creation Message
+        TextFlow firstUserTextFlow = new TextFlow();
+        Text firstUserText1 = new Text("Create the first user.\n");
+        Text firstUserText2 = new Text("Note: This user will also have admin privileges!\n");
+
+        FontPresets.setFormatting(firstUserTextFlow);
+        FontPresets.setTitle(firstUserText1);
+        FontPresets.setContent(firstUserText2);
+
+        firstUserTextFlow.getChildren().add(firstUserText1);
+        firstUserTextFlow.getChildren().add(firstUserText2);
+
+        //
+        //First User Creation
+        HBox firstUsernameLayer = new HBox();
+        Label firstUsernameLabel = new Label("Username: ");
+        TextField firstUsernameInput = new TextField();
+
+        FontPresets.setTextField(firstUsernameInput);
+
+        HBox firstUserPasswordLayer = new HBox();
+        Label firstUserPasswordLabel = new Label("Password: ");
+        TextField firstUserPasswordInput = new TextField();
+
+        FontPresets.setTextField(firstUserPasswordInput);
+
+        HBox firstUserFirstNameLayer = new HBox();
+        Label firstUserFirstNameLabel = new Label("First Name: ");
+        TextField firstUserFirstNameInput = new TextField();
+
+        FontPresets.setTextField(firstUserFirstNameInput);
+
+        HBox firstUserLastNameLayer = new HBox();
+        Label firstUserLastNameLabel = new Label("Last Name: ");
+        TextField firstUserLastNameInput = new TextField();
+
+        FontPresets.setTextField(firstUserLastNameInput);
+
+        firstUsernameLayer.getChildren().addAll(firstUsernameLabel, firstUsernameInput);
+        firstUserPasswordLayer.getChildren().addAll(firstUserPasswordLabel, firstUserPasswordInput);
+        firstUserFirstNameLayer.getChildren().addAll(firstUserFirstNameLabel, firstUserFirstNameInput);
+        firstUserLastNameLayer.getChildren().addAll(firstUserLastNameLabel, firstUserLastNameInput);
+
+        contentArray[3].getChildren().addAll(firstUserTextFlow, firstUsernameLayer, firstUserPasswordLayer, firstUserFirstNameLayer, firstUserLastNameLayer);
+
+        firstUsernameInput.setOnKeyPressed(textFieldStyleHandler);
+        firstUserPasswordInput.setOnKeyPressed(textFieldStyleHandler);
+        firstUserFirstNameInput.setOnKeyPressed(textFieldStyleHandler);
+        firstUserLastNameInput.setOnKeyPressed(textFieldStyleHandler);
+
+        //
+        //Page 5
+        //Final Message
+
+        //
+        //Finalize Message
+        TextFlow finalMessageTextFlow = new TextFlow();
+        Text finalMessageText1 = new Text("You're all set!\n");
+        Text finalMessageText2 = new Text("Click \"Finish\" to start program.");
+
+        FontPresets.setTitle(finalMessageText1);
+        FontPresets.setContent(finalMessageText2);
+
+        finalMessageTextFlow.getChildren().add(finalMessageText1);
+        finalMessageTextFlow.getChildren().add(finalMessageText2);
+
+        contentArray[4].getChildren().add(finalMessageTextFlow);
+
+        //
+        //Navigation Buttons
+        HBox navigationLayer = new HBox();
+        Button previousButton = new Button("Prev");
+        Button nextButton = new Button("Next");
+
+        HBox progressBar = setupSceneTab.createProgressBar();
+
+        navigationLayer.getChildren().addAll(previousButton, progressBar, nextButton);
+        layout.setBottom(navigationLayer);
+
+        previousButton.setOnAction(e->
+        {
+            setupSceneTab.decrementScene();
+
+            //if the single user option is selected, bypass the following page, as it is not needed.
+            if(userTypeSelectionSingle.isSelected() && setupSceneTab.getCurrentTab() == 3)
+            {
+                setupSceneTab.decrementScene();
+            }
+
+            setupSceneTab.updateProgressBar(progressBar);
+
+            setupSceneTab.setPreviousButtonActive(previousButton);
+            setupSceneTab.setNextButtonText(nextButton);
+
+            layout.setCenter(setupSceneTab.setActiveTab(contentArray));
+        });
+
+        nextButton.setOnAction(e ->
+        {
+            //validate inputs to determine proceeding
+            boolean validEntries = true;
+
+            switch(setupSceneTab.getCurrentTab())
+            {
+                case 1:
+                    if(businessNameInput.getText().isBlank())
+                    {
+                        validEntries = false;
+                        FontPresets.setIncorrectTextField(businessNameInput);
+                    }
+
+                    if(selectedMonthInput.getValue() == null)
+                    {
+                        validEntries = false;
+                        FontPresets.setIncorrectComboBox(selectedMonthInput);
+                    }
+
+                    if(selectedYearInput.getValue() == null)
+                    {
+                        validEntries = false;
+                        FontPresets.setIncorrectComboBox(selectedYearInput);
+                    }
+
+                    break;
+
+                case 2:
+                    if(!userTypeSelectionMultiple.isSelected() && !userTypeSelectionSingle.isSelected())
+                    {
+                        validEntries = false;
+                    }
+                    
+                    break;
+
+                case 3:
+                    if(firstUsernameInput.getText().isBlank())
+                    {
+                        validEntries = false;
+                        FontPresets.setIncorrectTextField(firstUsernameInput);
+                    }
+
+                    if(firstUserPasswordInput.getText().isBlank())
+                    {
+                        validEntries = false;
+                        FontPresets.setIncorrectTextField(firstUserPasswordInput);
+                    }
+
+                    if(firstUserFirstNameInput.getText().isBlank())
+                    {
+                        validEntries = false;
+                        FontPresets.setIncorrectTextField(firstUserFirstNameInput);
+                    }
+
+                    if(firstUserLastNameInput.getText().isBlank())
+                    {
+                        validEntries = false;
+                        FontPresets.setIncorrectTextField(firstUserLastNameInput);
+                    }
+
+                    break;
+
+                case 4:
+                    if(userTypeSelectionMultiple.isSelected())
+                    {
+                        business = new Business(businessNameInput.getText(), selectedMonthInput.getValue(), selectedYearInput.getValue(), true);
+                        
+                        User firstUser = new User(firstUsernameInput.getText(), firstUserPasswordInput.getText(), firstUserFirstNameInput.getText(), firstUserLastNameInput.getText());
+                        business.addNewUser(firstUser);
+                        
+                        saveBusiness();
+                        setLoginScene();
+                    }
+                    else
+                    {
+                        business = new Business(businessNameInput.getText(), selectedMonthInput.getValue(), selectedYearInput.getValue(), false);
+
+                        saveBusiness();
+                        loadLedger();
+                        loadForm();
+                        setMainMenuScene();
+                    }
+
+                    break;
+
+                default:
+                    //do nothing
+                    break;
+            }
+
+            if(validEntries)
+            {
+                setupSceneTab.incrementScene();
+
+                //if the single user option is selected, bypass the following page, as it is not needed.
+                if(userTypeSelectionSingle.isSelected() && setupSceneTab.getCurrentTab() == 3)
+                {
+                    setupSceneTab.incrementScene();
+                }
+
+                setupSceneTab.updateProgressBar(progressBar);
+
+                setupSceneTab.setPreviousButtonActive(previousButton);
+                setupSceneTab.setNextButtonText(nextButton);
+
+                layout.setCenter(setupSceneTab.setActiveTab(contentArray));
+            }
+            else
+            {
+                Alert alert = new Alert(AlertType.ERROR, "One or more required fields are missing.");
+                alert.showAndWait();
+            }
+        });
+
+        Scene output = new Scene(layout, 640, 480);
+        window.setScene(output);
+        window.show();
+    }
+
+    //setSettingsScene() - the main page for the settings, includes navigation buttons to specific software settings to change.
+    public void setSettingsScene()
+    {
+        BorderPane layout = new BorderPane();
+
+        Button backButton = new Button("Back");
+        layout.setTop(backButton);
+
+        VBox navigationButtonsLayer = new VBox();
+        
+        Button businessSettingsButton = new Button("Business Settings");
+        Button accountsSettingsButton = new Button("Accounts Settings");
+        Button uiSettings = new Button("UI Settings");
+
+        navigationButtonsLayer.getChildren().addAll(businessSettingsButton, accountsSettingsButton, uiSettings);
+        navigationButtonsLayer.setAlignment(Pos.CENTER);
+        layout.setCenter(navigationButtonsLayer);
+
+        backButton.setOnAction(e ->
+        {
+            setMainMenuScene();
+        });
+
+        businessSettingsButton.setOnAction(e ->
+        {
+            //setBusinessSettingsScene();
+        });
+
+        accountsSettingsButton.setOnAction(e -> 
+        {
+            //setAccountsSettingsScene();
+        });
+
+        uiSettings.setOnAction(e -> 
+        {
+            //to be implemented later...
+        });
+
+        Scene output = new Scene(layout, 640, 480);
         window.setScene(output);
         window.show();
     }
@@ -214,7 +725,7 @@ public class Main extends Application
         //Top Buttons Actions
         backButton.setOnAction(e -> 
         {
-            setStartingScene();
+            setMainMenuScene();
         });
 
         //creates a new transaction from scratch
@@ -576,7 +1087,7 @@ public class Main extends Application
 
         backButton.setOnAction(e -> 
         {
-            setStartingScene();
+            setMainMenuScene();
         });
 
         layout.setTop(backButton);
@@ -928,7 +1439,7 @@ public class Main extends Application
 
         backButton.setOnAction(e ->
         {
-            setStartingScene();
+            setMainMenuScene();
         });
 
         topLayer.getChildren().add(backButton);
@@ -1557,13 +2068,29 @@ public class Main extends Application
         }
     }
 
+    public void saveBusiness()
+    {
+        try 
+        {
+            FileOutputStream fileOut = new FileOutputStream("Business.dat");
+            ObjectOutputStream outStream = new ObjectOutputStream(fileOut);
+
+            outStream.writeObject(business);
+            outStream.close();
+        } 
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     //loadBusinessDetail() - if a "business.dat" file exists, the program will load it's serialized values at runtime.
     //If it does not exist, program should flag first runtime instance and run setup.
-    public void loadBusinessDetail()
+    public void loadBusiness()
     {
         try
         {
-            FileInputStream fileIn = new FileInputStream("business.dat");
+            FileInputStream fileIn = new FileInputStream("Business.dat");
             ObjectInputStream inStream = new ObjectInputStream(fileIn);
 
             business = (Business) inStream.readObject();
@@ -1571,8 +2098,8 @@ public class Main extends Application
         }
         catch (FileNotFoundException e)
         {
-            //NEED TO IMPLEMEMENT FIRST TIME SETUP SCENE
-            business = new Business();
+            //force business to null to flag for first-time setup
+            business = null;
         }
         catch (IOException | ClassNotFoundException e)
         {
@@ -1912,6 +2439,21 @@ public class Main extends Application
         df.applyPattern("$#,##0.00;($#,##0.00)");
         return df.format(value);
     }
+
+//
+// Event Handlers
+//
+
+    EventHandler<KeyEvent> textFieldStyleHandler = event -> {
+        TextField tf = (TextField) event.getSource();
+        FontPresets.setTextField(tf);
+    };
+
+    EventHandler<ActionEvent> comboBoxStyleHandler = event -> {
+        ComboBox cb = (ComboBox) event.getSource();
+        FontPresets.setComboBox(cb);
+    };
+
 }
 
 //Programmer Notes for future reference
