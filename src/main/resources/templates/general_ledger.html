@@ -1,0 +1,31 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <button id="backButton" onclick="window.location.href='http://localhost:8080/'">Back</button>
+        <p>This is the general ledger page</p>
+        <button id="placeholder" onclick="window.location.href='http://localhost:8080/general_ledger/journal_entry_view'">Demo</button>
+
+        <table>
+        <thead>
+            <tr>
+                <th>JournalEntryID</th>
+                <th>Creation Date</th>
+                <th>Post Date</th>
+                <th>Transaction Description</th>
+                <th>Is Editable</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${journalEntries}">
+                <td th:text="${entry.journalEntryID}"></td>
+                <td th:text="${entry.creationDate}"></td>
+                <td th:text="${entry.postDate}"></td>
+                <td th:text="${entry.transactionDescription}"></td>
+                <td th:text="${entry.isEditable ? 'Yes' : 'No'}"></td>
+            </tr>
+        </tbody>
+    </table>
+    </body>
+</html>

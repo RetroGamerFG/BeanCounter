@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html 
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <head>
+        <!-- <link rel="stylesheet" href="/src/main/resources/static/css/journal_entry_view.css"/> -->
+        <link rel="stylesheet" th:href="@{/css/journal_entry_view.css}">
+        <script src="/js/entryLines.js"></script>
+    </head>
+<body>
+
+  <!-- Container for buttons and the fields -->
+  <form th:action="@{/save_journal_entry}" th:object="${journalEntry}" method="post">
+  <div class="container">
+    <!-- Buttons Section -->
+    <div class="button-section">
+      <button id="backButton" onclick="window.location.href='http://localhost:8080/general_ledger'">Back</button>
+      <div class="spacer"></div>
+      <button type="submit">Submit</button>
+      <button id="editButton">Edit</button>
+    </div>
+
+    <!-- Fields Section -->
+    <div class="fields-section">
+      <!-- Date Picker and Text Field (next to each other) -->
+      <div class="inline-field">
+        <div class="field">
+          <label for="datepicker">Post Date:</label>
+          <input type="date" th:field="*{postDate}"/>
+        </div>
+      </div>
+      <div class="inline-field">
+        <div class="field">
+          <label for="description">Description:</label>
+          <input type="text" th:field="*{transactionDescription}"/>
+        </div>
+      </div>
+
+      <!-- Account Fields (grid layout) -->
+      <table id="lineTable">
+        <thead>
+            <tr>
+                <th>Account</th>
+                <th>Amount</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="lineItems">
+            <tr th:each="line, stat : *{lines}" class="line-row">
+                <td>
+                    <select th:field="*{lines[__${stat.index}__].account}">
+                        <option th:each="acc : ${allAccounts}" 
+                                th:value="${acc.accountId}" th:text="${acc.accountName}"></option>
+                    </select>
+                </td>
+                <td><input type="number" step="0.01" th:field="*{lines[__${stat.index}__].amount}" /></td>
+                <td><button type="button" onclick="removeRow(this)" class="btn-remove">Remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="button" onclick="addRow()">Add Row</button>
+    </div>
+  </div>
+  </form>
+
+</body>
+</html>
