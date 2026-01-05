@@ -1,3 +1,6 @@
 2026-01-05 08:37:40.888915-06:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM ACCOUNT[*]:"; SQL statement:
 SELECT * FROM ACCOUNT: [42000-240]
+2026-01-05 11:41:04.015752-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "JOURNAL_ENTRY_LINES" not found; SQL statement:
+SELECT * FROM JOURNAL_ENTRY_LINES [42102-240]

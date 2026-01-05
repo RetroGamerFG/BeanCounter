@@ -1,6 +1,6 @@
 package com.itsretro.beancounter.Model;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +24,10 @@ public class JournalEntry
     private Integer journalEntryID;
 
     @Column(name = "CreationDate", nullable = false)
-    private Timestamp creationDate;// = Timestamp.from(Instant.now());
+    private LocalDate creationDate;
 
     @Column(name = "PostDate")
-    private Timestamp postDate;
+    private LocalDate postDate;
 
     @Column(name = "TransactionDescription", length = 64)
     private String transactionDescription;
@@ -53,22 +53,22 @@ public class JournalEntry
         this.journalEntryID = journalEntryID;
     }
 
-    public Timestamp getCreationDate()
+    public LocalDate getCreationDate()
     {
         return this.creationDate;
     }
 
-    public void setCreationDate(Timestamp creationDate)
+    public void setCreationDate(LocalDate creationDate)
     {
         this.creationDate = creationDate;
     }
 
-    public Timestamp getPostDate()
+    public LocalDate getPostDate()
     {
         return this.postDate;
     }
 
-    public void setPostDate(Timestamp postDate)
+    public void setPostDate(LocalDate postDate)
     {
         this.postDate = postDate;
     }

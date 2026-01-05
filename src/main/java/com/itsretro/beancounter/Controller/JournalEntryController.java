@@ -1,5 +1,7 @@
 package com.itsretro.beancounter.Controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,12 +51,14 @@ public class JournalEntryController
     @PostMapping("/save_journal_entry")
     public String submitForm(@ModelAttribute("journalEntry") JournalEntry journalEntry, BindingResult bindingResult, Model model)
     {
+        journalEntry.setCreationDate(LocalDate.now());
+
         if(bindingResult.hasErrors())
         {
             model.addAttribute("journalEntry", journalEntry);
             model.addAttribute("allAccounts", accountRepository.findAll());
 
-            return "journal_entry_view";
+            return "redirect:journal_entry_view";
         }
 
         journalEntryRepository.save(journalEntry);

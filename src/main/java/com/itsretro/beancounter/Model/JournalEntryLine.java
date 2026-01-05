@@ -28,8 +28,11 @@ public class JournalEntryLine {
     @Column(name = "TransactionType", length = 1)
     private String transactionType;
 
-    @Column(name = "Amount", precision = 19, scale = 4)
-    private BigDecimal amount;
+    @Column(name = "DebitAmount", precision = 19, scale = 4, nullable = true)
+    private BigDecimal debitAmount;
+
+    @Column(name = "CreditAmount", precision = 19, scale = 4, nullable = true)
+    private BigDecimal creditAmount;
 
     //
     // Getter & Setter Methods
@@ -65,13 +68,42 @@ public class JournalEntryLine {
         this.transactionType = transactionType;
     }
 
-    public BigDecimal getAmount()
+    public BigDecimal getDebitAmount()
     {
-        return this.amount;
+        return this.debitAmount;
     }
 
-    public void setAmount(BigDecimal amount)
+    public void setDebitAmount(BigDecimal debitAmount)
     {
-        this.amount = amount;
+        this.debitAmount = debitAmount;
+
+        if(debitAmount != null)
+        {
+            this.setTransactionType("D");
+        }
+    }
+
+    public BigDecimal getcreditAmount()
+    {
+        return this.creditAmount;
+    }
+
+    public void setCreditAmount(BigDecimal creditAmount)
+    {
+        this.creditAmount = creditAmount;
+
+        if(creditAmount != null)
+        {
+            this.setTransactionType("C");
+        }
+    }
+
+    //
+    // Additional Methods
+    //
+
+    public boolean validJournalEntryLines()
+    {
+        return false;
     }
 }
