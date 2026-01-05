@@ -3,6 +3,7 @@ package com.itsretro.beancounter.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,9 +47,18 @@ public class JournalEntryController
     }
 
     @PostMapping("/save_journal_entry")
-    public String submitForm(@ModelAttribute("journalEntry") JournalEntry journalEntry)
+    public String submitForm(@ModelAttribute("journalEntry") JournalEntry journalEntry, BindingResult bindingResult, Model model)
     {
+        if(bindingResult.hasErrors())
+        {
+            model.addAttribute("journalEntry", journalEntry);
+            model.addAttribute("allAccounts", accountRepository.findAll());
+
+            return "journal_entry_view";
+        }
+
         journalEntryRepository.save(journalEntry);
-        return "redirect:/journal_entry_list";
+
+        return "redirect:/general_ledger";
     }
 }
