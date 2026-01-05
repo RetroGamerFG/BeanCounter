@@ -41,8 +41,9 @@
         <thead>
             <tr>
                 <th>Account</th>
-                <th>Amount</th>
-                <th>Action</th>
+                <th>Debit</th>
+                <th>Credit</th>
+                <th></th>
             </tr>
         </thead>
         <tbody id="lineItems">
@@ -50,10 +51,11 @@
                 <td>
                     <select th:field="*{lines[__${stat.index}__].account}">
                         <option th:each="acc : ${allAccounts}" 
-                                th:value="${acc.accountId}" th:text="${acc.accountName}"></option>
+                                th:value="${acc.AccountID}" th:text="${acc.AccountName}"></option>
                     </select>
                 </td>
-                <td><input type="number" step="0.01" th:field="*{lines[__${stat.index}__].amount}" /></td>
+                <td><input id="debit" type="number" step="0.01" th:field="*{lines[__${stat.index}__].amount}" /></td>
+                <td><input id="credit" type="number" step="0.01" th:field="*{lines[__${stat.index}__].amount}" /></td>
                 <td><button type="button" onclick="removeRow(this)" class="btn-remove">Remove</button></td>
             </tr>
         </tbody>

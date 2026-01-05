@@ -1,0 +1,3 @@
+2026-01-05 08:37:40.888915-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM ACCOUNT[*]:"; SQL statement:
+SELECT * FROM ACCOUNT: [42000-240]

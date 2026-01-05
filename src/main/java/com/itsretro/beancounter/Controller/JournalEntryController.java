@@ -40,7 +40,7 @@ public class JournalEntryController
         journalEntry.getLines().add(new JournalEntryLine());
 
         model.addAttribute("journalEntry", journalEntry);
-        model.addAttribute("accounts", accountRepository.findAll());
+        model.addAttribute("allAccounts", accountRepository.findAll());
         
         return "journal_entry_view";
     }
