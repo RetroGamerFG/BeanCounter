@@ -1,13 +1,42 @@
-document.getElementById('backButton').addEventListener('click', function(event)
-{
-    event.preventDefault();  // Prevent the form from being submitted
-    window.location.href = 'http://localhost:8080/general_ledger'; // Perform the navigation
-});
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('backButton').addEventListener('click', function(event)
+    {
+        event.preventDefault();  // Prevent the form from being submitted
+        window.location.href = 'http://localhost:8080/general_ledger'; // Perform the navigation
+    });
 
-document.getElementById('editButton').addEventListener('click', function(event)
-{
-    event.preventDefault();  // Prevent form submission
-    // Your edit logic here
+    if(document.getElementById('submitButton').value === 'p')
+    {
+        document.getElementById('editButton').addEventListener('click', function(event)
+        {
+            event.preventDefault();  // Prevent form submission
+
+            submitButton = document.getElementById('submitButton');
+            submitButton.value = "s";
+            submitButton.innerHTML = "Submit";
+
+            //editButton.disabled = true;
+            //editButton.classList.add('disabled');
+            //editButton.remove();
+        });
+    }
+
+    document.getElementById('submitButton').addEventListener('click', function(event)
+    {
+        console.log("listener for submit/post was pressed");
+        if(submitButton.value === 'p')
+        {
+            console.log("Submit was pressed with value post")
+            document.getElementById('journalForm').action = '/post_journal_entry';
+        }
+        else if (submitButton.value === 's')
+        {
+            console.log("Submit was pressed with value save")
+            document.getElementById('journalForm').action = '/save_journal_entry';
+        }
+
+        journalForm.submit();
+    });
 });
 
 function addRow() {
@@ -82,6 +111,16 @@ function createNewRow() {
         <td><button type="button" onclick="removeRow(this)" class="btn-remove">Remove</button></td>
     `;
     return row;
+}
+
+function postView()
+{
+    console.log("PostView was called");
+
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;
+    submitButton.classList.add('disabled');
+
 }
 
 // Run once on page load to set initial button visibility

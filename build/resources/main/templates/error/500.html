@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <h1>Oops! Something went wrong.</h1>
+    <p>Status Code: <span th:text="${status}">404</span></p>
+    
+    <p>Error Detail: <span th:text="${message}">Error Message</span></p>
+    
+    <a href="/">Go back to Dashboard</a>
+</body>
+</html>

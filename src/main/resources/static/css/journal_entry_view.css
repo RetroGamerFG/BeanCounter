@@ -89,6 +89,10 @@ input[type="text"], input[type="date"] {
   font-weight: bold;
 }
 
+.disabled {
+  background-color: gray;
+}
+
 @media (max-width: 768px) {
   .inline-field {
     flex-direction: column; /* Stack the DatePicker and Description vertically on small screens */

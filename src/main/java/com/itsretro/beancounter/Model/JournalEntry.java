@@ -14,6 +14,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "JournalEntry")
@@ -27,19 +31,24 @@ public class JournalEntry
     @Column(name = "CreationDate", nullable = false)
     private LocalDate creationDate;
 
-    @Column(name = "PostDate")
+    @NotNull(message = "Post date is required")
+    @Column(name = "PostDate", nullable = false)
     private LocalDate postDate;
 
+    @NotBlank(message = "Description is required")
+    @Size(max = 64, message = "Description must be under 64 characters")
     @Column(name = "TransactionDescription", length = 64)
     private String transactionDescription;
 
     @Column(name = "IsEditable", nullable = false)
     private boolean isEditable;
 
+    @NotEmpty(message = "A journal entry must have at least two lines")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "journal_entry_id")
     private List<JournalEntryLine> lines = new ArrayList<>();
 
+    @NotNull(message = "Status is required")
     @Column(name = "Status", nullable = false)
     private String status;
 
@@ -147,11 +156,11 @@ public class JournalEntry
 
             if(line.getTransactionType().compareTo("D") == 0) //add if debit, subtract if credit
             {
-                totalAmount.add(line.getDebitAmount());
+                totalAmount = totalAmount.add(line.getDebitAmount());
             }
             else
             {
-                totalAmount.subtract(line.getcreditAmount());
+                totalAmount = totalAmount.subtract(line.getcreditAmount());
             }
         }
 

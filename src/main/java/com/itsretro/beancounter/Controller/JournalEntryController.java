@@ -18,6 +18,8 @@ import com.itsretro.beancounter.Model.JournalEntryLine;
 import com.itsretro.beancounter.Repositories.AccountRepository;
 import com.itsretro.beancounter.Repositories.JournalEntryRepository;
 
+import jakarta.validation.Valid;
+
 @Controller
 public class JournalEntryController
 {
@@ -73,10 +75,40 @@ public class JournalEntryController
     }
 
     @PostMapping("/save_journal_entry")
-    public String submitForm(@ModelAttribute("journalEntry") JournalEntry journalEntry, BindingResult bindingResult, Model model)
+    public String submitForm(@Valid @ModelAttribute("journalEntry") JournalEntry journalEntry, BindingResult bindingResult, Model model)
     {
-        journalEntry.setCreationDate(LocalDate.now()); //assign the time at time of save
+        if(journalEntry.getCreationDate() == null)
+        {
+            journalEntry.setCreationDate(LocalDate.now()); //assign the time at time of save
+        }
+
+        journalEntry.setStatus("Review"); //set status to review, then save to database
         journalEntry.setIsEditable(true);
+        boolean validation = journalEntry.validateLines();
+
+        if(validation == false || bindingResult.hasErrors())
+        {
+            if(validation == false)
+            {
+                bindingResult.reject("lineError", "The journal lines do not balance.");
+            }
+
+            model.addAttribute("journalEntry", journalEntry);
+            model.addAttribute("allAccounts", accountRepository.findAll());
+
+            return "journal_entry_view";
+        }
+
+        journalEntryRepository.save(journalEntry);
+
+        return "redirect:/general_ledger";
+    }
+
+    @PostMapping("/post_journal_entry")
+    public String postJournalEntry(@Valid @ModelAttribute("journalEntry") JournalEntry journalEntry, BindingResult bindingResult, Model model)
+    {
+        journalEntry.setIsEditable(false);
+        journalEntry.setStatus("Posted");
 
         if(bindingResult.hasErrors() || journalEntry.validateLines() == false)
         {
@@ -86,16 +118,8 @@ public class JournalEntryController
             return "redirect:journal_entry_view";
         }
 
-        journalEntry.setStatus("Review"); //set status to review, then save to database
         journalEntryRepository.save(journalEntry);
 
-        return "redirect:/general_ledger";
-    }
-
-    @PostMapping("/post_journal_entry")
-    public String postEntry(@ModelAttribute("journalEntry") JournalEntry journalEntry, BindingResult bindingResult, Model model)
-    {
-        //journalEntry.set
         return "redirect:/general_ledger";
     }
 }
