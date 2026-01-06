@@ -1,5 +1,6 @@
 package com.itsretro.beancounter.Model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,12 @@ public class JournalEntry
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "journal_entry_id")
     private List<JournalEntryLine> lines = new ArrayList<>();
+
+    @Column(name = "Status", nullable = false)
+    private String status;
+
+    @Column(name = "PostSignature", nullable = true)
+    private String postSignature;
 
     //
     // Getter & Setter Methods
@@ -101,5 +108,53 @@ public class JournalEntry
     public void setLines(List<JournalEntryLine> lines)
     {
         this.lines = lines;
+    }
+
+    public String getStatus()
+    {
+        return this.status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
+    public String getPostSignature()
+    {
+        return this.postSignature;
+    }
+
+    public void setPostSignature(String postSignature)
+    {
+        this.postSignature = postSignature;
+    }
+
+    //
+    // Additional Methods
+    //
+
+    public boolean validateLines()
+    {
+        BigDecimal totalAmount = new BigDecimal(0);
+        
+        for(JournalEntryLine line : lines)
+        {
+            if(!line.isValid()) //if the line is not a valid debit/credit, return false
+            {
+                return false;
+            }
+
+            if(line.getTransactionType().compareTo("D") == 0) //add if debit, subtract if credit
+            {
+                totalAmount.add(line.getDebitAmount());
+            }
+            else
+            {
+                totalAmount.subtract(line.getcreditAmount());
+            }
+        }
+
+        return totalAmount.compareTo(new BigDecimal(0)) == 0; //if balanced, is valid
     }
 }

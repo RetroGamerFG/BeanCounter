@@ -1,29 +1,31 @@
 <html>
     <head>
-
+        <link rel="stylesheet" th:href="@{/css/general_ledger_view.css}">
+        <script src="/js/general_ledger.js"></script>
     </head>
     <body>
         <button id="backButton" onclick="window.location.href='http://localhost:8080/'">Back</button>
-        <p>This is the general ledger page</p>
-        <button id="placeholder" onclick="window.location.href='http://localhost:8080/general_ledger/journal_entry_view'">Demo</button>
+        <button id="createButton" onclick="window.location.href='http://localhost:8080/general_ledger/journal_entry_view'">Create Entry</button>
 
         <table>
         <thead>
             <tr>
-                <th>JournalEntryID</th>
+                <th>ID</th>
                 <th>Creation Date</th>
                 <th>Post Date</th>
-                <th>Transaction Description</th>
-                <th>Is Editable</th>
+                <th>Description</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="entry : ${journalEntries}">
-                <td th:text="${entry.journalEntryID}"></td>
-                <td th:text="${entry.creationDate}"></td>
-                <td th:text="${entry.postDate}"></td>
-                <td th:text="${entry.transactionDescription}"></td>
-                <td th:text="${entry.isEditable ? 'Yes' : 'No'}"></td>
+            <tr th:each="entry : ${journalEntry}">
+                <td class="entry-text" th:text="${entry.journalEntryID}"></td>
+                <td class="entry-text" th:text="${entry.creationDate}"></td>
+                <td class="entry-text" th:text="${entry.postDate}"></td>
+                <td class="entry-text" th:text="${entry.transactionDescription}"></td>
+                <td class="entry-text" th:text="${entry.status}"></td>
+                <td><button class="edit" th:value="${entry.journalEntryID}" onClick="loadJournalEntry(this)">View</button></td>
+                <td><button class="remove" th:value="${entry.journalEntryID}" onClick="removeJournalEntry(this)">X</button></td>
             </tr>
         </tbody>
     </table>

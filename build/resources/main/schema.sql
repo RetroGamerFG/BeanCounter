@@ -1,3 +1,4 @@
+/*
 CREATE TABLE Account (
     AccountID INT AUTO_INCREMENT PRIMARY KEY,
     AccountCode DECIMAL (7, 3) NOT NULL,
@@ -25,3 +26,4 @@ CREATE TABLE JournalEntryLine (
     FOREIGN KEY (JournalEntryID) REFERENCES JournalEntry(JournalEntryID),
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
 );
+*/

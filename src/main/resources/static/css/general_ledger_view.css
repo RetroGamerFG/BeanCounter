@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.button-section {
+  display: flex;
+  justify-content: flex-start; /* Aligns buttons to the left */
+  gap: 10px;
+}
+
+.spacer {
+  flex-grow: 1; /* This ensures the gap between the first and second button group */
+}
+
+button {
+  padding: 10px 20px;
+  background-color: green;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: lightgreen;
+}
+
+.fields-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start; /* Ensure everything is left-aligned */
+}
+
+/* Inline layout for the DatePicker and Description fields */
+.inline-field {
+  display: flex;
+  gap: 20px; /* Space between the two fields */
+}
+
+.field {
+  display: flex;
+  flex-direction: row; /* Align label and input in a row */
+  align-items: center; /* Align label and input vertically */
+  gap: 10px; /* Space between label and input */
+}
+
+label {
+  font-weight: bold;
+  min-width: 100px; /* Ensure labels take a minimum width so they align */
+}
+
+input[type="text"], input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 300px; /* You can adjust the width of input fields here */
+  font-size: 14px;
+}
+
+button.edit {
+  background-color: yellow;
+  color: black;
+  font-weight: bold;
+  text-decoration-line: solid;
+}
+
+button.remove {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  text-decoration-line: solid;
+}
+
+th {
+  border-bottom: 1px solid gray;
+}
+
+tr:nth-child(even)
+{
+  background-color: #f2f2f2;
+}
+
+@media (max-width: 768px) {
+  .inline-field {
+    flex-direction: column; /* Stack the DatePicker and Description vertically on small screens */
+  }
+
+  .field {
+    flex-direction: column; /* Stack the label and input vertically on small screens */
+    align-items: flex-start;
+  }
+
+  .account-fields {
+    grid-template-columns: 1fr; /* Stack the account fields vertically on smaller screens */
+  }
+}

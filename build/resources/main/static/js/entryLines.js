@@ -1,9 +1,11 @@
-document.getElementById('backButton').addEventListener('click', function(event) {
+document.getElementById('backButton').addEventListener('click', function(event)
+{
     event.preventDefault();  // Prevent the form from being submitted
     window.location.href = 'http://localhost:8080/general_ledger'; // Perform the navigation
 });
 
-document.getElementById('editButton').addEventListener('click', function(event) {
+document.getElementById('editButton').addEventListener('click', function(event)
+{
     event.preventDefault();  // Prevent form submission
     // Your edit logic here
 });
@@ -12,18 +14,18 @@ function addRow() {
     const tbody = document.getElementById('lineItems');
     const rows = tbody.getElementsByClassName('line-row');
 
-    if (rows.length === 0) {
-        // If no rows exist, create a new one instead of cloning
-        const newRow = createNewRow();
-        tbody.appendChild(newRow);
-    } else {
-        // Clone the first row to use as a template
-        const newRow = rows[0].cloneNode(true);
-        // Clear the inputs in the cloned row
-        const inputs = newRow.querySelectorAll('input, select');
-        inputs.forEach(input => input.value = '');
-        tbody.appendChild(newRow);
-    }
+    // Clone the first row as it already has the populated <select> options
+    const newRow = rows[0].cloneNode(true);
+    
+    // Clear the values
+    const inputs = newRow.querySelectorAll('input');
+    inputs.forEach(input => input.value = '');
+    
+    // Reset selection to first option
+    const select = newRow.querySelector('select');
+    if(select) select.selectedIndex = 0;
+
+    tbody.appendChild(newRow);
     reIndexRows();
 }
 
@@ -43,20 +45,24 @@ function removeRow(button) {
 function reIndexRows() {
     const rows = document.querySelectorAll('.line-row');
     rows.forEach((row, index) => {
-        // Update the name attributes so Spring can bind to the List
         const select = row.querySelector('select');
-        const inputs = row.querySelectorAll('input');
+        // Find inputs specifically by their position or class
+        const inputs = row.querySelectorAll('input[type="number"]');
         
         if (select) {
             select.name = `lines[${index}].account`;
             select.id = `lines${index}.account`;
         }
-        inputs.forEach((input, i) => {
-            input.name = `lines[${index}].amount`;
-            input.id = `lines${index}.amount`;
-        });
 
-        // Toggle remove button visibility
+        // Assuming index 0 is Debit and index 1 is Credit based on your HTML
+        if (inputs.length >= 2) {
+            inputs[0].name = `lines[${index}].debitAmount`;
+            inputs[0].id = `lines${index}.debitAmount`;
+            
+            inputs[1].name = `lines[${index}].creditAmount`;
+            inputs[1].id = `lines${index}.creditAmount`;
+        }
+
         const removeBtn = row.querySelector('.btn-remove');
         removeBtn.style.display = (rows.length > 2) ? 'inline-block' : 'none';
     });

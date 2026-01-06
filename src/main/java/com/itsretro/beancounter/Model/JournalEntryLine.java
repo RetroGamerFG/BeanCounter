@@ -102,8 +102,17 @@ public class JournalEntryLine {
     // Additional Methods
     //
 
-    public boolean validJournalEntryLines()
+    public boolean isValid()
     {
+        if (debitAmount != null && transactionType.compareTo("D") == 0)
+        {
+            return true;
+        }
+        else if (creditAmount != null && transactionType.compareTo("C") == 0)
+        {
+            return true;
+        }
+
         return false;
     }
 }
