@@ -5,19 +5,15 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = 'http://localhost:8080/general_ledger'; // Perform the navigation
     });
 
-    if(document.getElementById('submitButton').value === 'p')
+    if(document.getElementById('submitButton').value === 'p') //if page's journalEntry is under review, submit button will have value of 'p'
     {
+        setPostView();
+
+        //add event listener for 'editButton' to revert to 'submit' version of page
         document.getElementById('editButton').addEventListener('click', function(event)
         {
             event.preventDefault();  // Prevent form submission
-
-            submitButton = document.getElementById('submitButton');
-            submitButton.value = "s";
-            submitButton.innerHTML = "Submit";
-
-            //editButton.disabled = true;
-            //editButton.classList.add('disabled');
-            //editButton.remove();
+            setEditView();
         });
     }
 
@@ -39,7 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function addRow() {
+function addRow()
+{
     const tbody = document.getElementById('lineItems');
     const rows = tbody.getElementsByClassName('line-row');
 
@@ -58,7 +55,8 @@ function addRow() {
     reIndexRows();
 }
 
-function removeRow(button) {
+function removeRow(button)
+{
     const tbody = document.getElementById('lineItems');
     const rows = tbody.getElementsByClassName('line-row');
 
@@ -71,7 +69,8 @@ function removeRow(button) {
     }
 }
 
-function reIndexRows() {
+function reIndexRows()
+{
     const rows = document.querySelectorAll('.line-row');
     rows.forEach((row, index) => {
         const select = row.querySelector('select');
@@ -97,7 +96,8 @@ function reIndexRows() {
     });
 }
 
-function createNewRow() {
+function createNewRow()
+{
     const row = document.createElement('tr');
     row.classList.add('line-row');
     row.innerHTML = `
@@ -113,14 +113,99 @@ function createNewRow() {
     return row;
 }
 
-function postView()
+function setPostView()
 {
-    console.log("PostView was called");
+    //disable 'postDate' and 'description'
+    const postDate = document.getElementById('postDate');
+    postDate.classList.add('lock-look');
 
+    const transactionDescription = document.getElementById('transactionDescription');
+    transactionDescription.classList.add('lock-look');
+
+    //fetch line items from 'line-row'
+    const rows = document.querySelectorAll('.line-row');
+
+    //disable each, using class 'lock-look' to maintain look
+    rows.forEach((row) => {
+        const select = row.querySelector('select');
+        const inputs = row.querySelectorAll('input[type="number"]');
+        const button = row.querySelector('button');
+
+        if (select) 
+        {
+            select.classList.add('lock-look');
+        }
+
+        if (inputs)
+        {
+            inputs[0].classList.add('lock-look');
+            inputs[1].classList.add('lock-look');
+        }
+
+        if (button)
+        {
+            button.disabled = true;
+        }
+    });
+
+    //hide the 'addRow' button
+    const addRowButton = document.getElementById('addRowButton');
+    addRowButton.disabled = true;
+    addRowButton.style.display = "none";
+}
+
+function setEditView()
+{
+    //enable 'postDate' and 'description'
+    const postDate = document.getElementById('postDate');
+    postDate.classList.remove('lock-look');
+
+    const transactionDescription = document.getElementById('transactionDescription');
+    transactionDescription.classList.remove('lock-look');
+
+    //revert 'post' button to 'submit' button
     const submitButton = document.getElementById('submitButton');
-    submitButton.disabled = true;
-    submitButton.classList.add('disabled');
+    submitButton.value = "s";
+    submitButton.innerHTML = "Submit";
 
+    //disable the 'edit' button
+    var editButton = document.getElementById('editButton');
+    editButton.disabled = true;
+
+    //fetch line items from 'line-row'
+    const rows = document.querySelectorAll('.line-row');
+
+    //enable each, removing class 'lock-look'
+    rows.forEach((row) => {
+        const select = row.querySelector('select');
+        const inputs = row.querySelectorAll('input[type="number"]');
+        const button = row.querySelector('button');
+
+        if (select) 
+        {
+            select.classList.remove('lock-look');
+        }
+
+        if (inputs)
+        {
+            inputs[0].classList.remove('lock-look');
+            inputs[1].classList.remove('lock-look');
+        }
+
+        if (button)
+        {
+            button.disabled = false;
+        }
+    });
+
+    //hide the 'addRow' button
+    const addRowButton = document.getElementById('addRowButton');
+    addRowButton.disabled = false;
+    addRowButton.style.display = "block";
+
+    //hide the 'postSignature' field
+    const postSection = document.querySelector('.post-signature-section');
+    postSection.style.display = "none";
 }
 
 // Run once on page load to set initial button visibility

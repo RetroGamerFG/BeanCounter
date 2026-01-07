@@ -32,7 +32,15 @@ public class JournalEntryController
     @GetMapping("/delete_journal_entry/{id}")
     public String deleteJournalEntry(@PathVariable("id") Integer id)
     {
+        JournalEntry journalEntry = journalEntryRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Journal Entry not found"));
+
+        if(journalEntry.getIsEditable() == false)
+        {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This entry cannot be removed");
+        }
+
         journalEntryRepository.deleteById(id);
+
         return "redirect:/general_ledger";
     }
 
@@ -82,8 +90,9 @@ public class JournalEntryController
             journalEntry.setCreationDate(LocalDate.now()); //assign the time at time of save
         }
 
-        journalEntry.setStatus("Review"); //set status to review, then save to database
+        journalEntry.setStatus("Open"); //set status to review, then save to database
         journalEntry.setIsEditable(true);
+        
         boolean validation = journalEntry.validateLines();
 
         if(validation == false || bindingResult.hasErrors())
@@ -99,6 +108,7 @@ public class JournalEntryController
             return "journal_entry_view";
         }
 
+        journalEntry.setStatus("Review");
         journalEntryRepository.save(journalEntry);
 
         return "redirect:/general_ledger";
@@ -107,16 +117,35 @@ public class JournalEntryController
     @PostMapping("/post_journal_entry")
     public String postJournalEntry(@Valid @ModelAttribute("journalEntry") JournalEntry journalEntry, BindingResult bindingResult, Model model)
     {
-        journalEntry.setIsEditable(false);
-        journalEntry.setStatus("Posted");
+        boolean amountValidation = journalEntry.validateLines();
+        boolean statusValidation = journalEntry.getStatus().compareTo("Review") == 0;
+        boolean signatureValidation = !journalEntry.getPostSignature().isBlank(); //inverted!
 
-        if(bindingResult.hasErrors() || journalEntry.validateLines() == false)
+        if(amountValidation == false || statusValidation == false || signatureValidation == false || bindingResult.hasErrors())
         {
+            if(amountValidation == false)
+            {
+                bindingResult.reject("lineError", "The journal lines do not balance.");
+            }
+
+            if(statusValidation == false)
+            {
+                bindingResult.reject("statusError", "The journal entry was not review-ready.");
+            }
+
+            if(signatureValidation == false)
+            {
+                bindingResult.reject("signatureError", "Posting requires a valid signature.");
+            }
+
             model.addAttribute("journalEntry", journalEntry);
             model.addAttribute("allAccounts", accountRepository.findAll());
 
-            return "redirect:journal_entry_view";
+            return "journal_entry_view";
         }
+
+        journalEntry.setStatus("Posted");
+        journalEntry.setIsEditable(false);
 
         journalEntryRepository.save(journalEntry);
 

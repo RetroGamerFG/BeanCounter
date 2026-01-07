@@ -18,8 +18,8 @@
         <div class="spacer"></div>
         <button id="editButton" th:if="${journalEntry.status == 'Review'}" type="button">Edit</button>
         <button id="submitButton" 
-          th:value="${journalEntry.isEditable} ? 'p' : 's'" 
-          th:text="${journalEntry.isEditable} ? 'Post' : 'Submit'"
+          th:value="${journalEntry.status == 'Review'} ? 'p' : 's'" 
+          th:text="${journalEntry.status == 'Review'} ? 'Post' : 'Submit'"
           type="button"
           >Placeholder
         </button>
@@ -29,7 +29,7 @@
         <div class="inline-field">
           <div class="field">
             <label>Post Date:</label>
-            <input type="date" name="postDate" th:value="${#temporals.format(journalEntry.postDate, 'yyyy-MM-dd')}" />
+            <input id="postDate" type="date" name="postDate" th:value="${#temporals.format(journalEntry.postDate, 'yyyy-MM-dd')}" />
             <span th:if="${#fields.hasErrors('postDate')}" th:errors="*{postDate}">Date Error</span>
           </div>
         </div>
@@ -37,7 +37,7 @@
         <div class="inline-field">
           <div class="field">
             <label>Description:</label>
-            <input type="text" th:field="*{transactionDescription}"/>
+            <input id="transactionDescription" type="text" th:field="*{transactionDescription}"/>
             <span th:if="${#fields.hasErrors('transactionDescription')}" th:errors="*{transactionDescription}">Description Error</span>
           </div>
         </div>
@@ -67,8 +67,12 @@
               </tr>
           </tbody>
         </table>
-
-        <button type="button" onclick="addRow()">Add Row</button>
+        <button id="addRowButton" type="button" onclick="addRow()">Add Row</button>
+      </div>
+      <div class="post-signature-section" th:if="${journalEntry.status} == 'Review'">
+        <label id="postSignatureLabel">Post Signature:</label>
+        <input type="text" th:field="*{postSignature}"/>
+        <span th:if="${#fields.hasErrors('postSignature')}" th:errors="*{postSignature}">Description Error</span>
       </div>
     </div>
   <div>
