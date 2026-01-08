@@ -1,0 +1,25 @@
+/* Table Elements */
+
+th {
+  border-bottom: 1px solid gray;
+}
+
+tr:nth-child(even)
+{
+  background-color: #f2f2f2;
+}
+
+@media (max-width: 768px) {
+  .inline-field {
+    flex-direction: column; /* Stack the DatePicker and Description vertically on small screens */
+  }
+
+  .field {
+    flex-direction: column; /* Stack the label and input vertically on small screens */
+    align-items: flex-start;
+  }
+
+  .account-fields {
+    grid-template-columns: 1fr; /* Stack the account fields vertically on smaller screens */
+  }
+}

@@ -6,5 +6,5 @@ import com.itsretro.beancounter.Model.JournalEntryLine;
 
 public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLine, Integer>
 {
-    //List<JournalEntryLine> findAllByJournalEntryId(String id);
+
 }

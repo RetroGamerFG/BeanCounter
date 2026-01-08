@@ -1,0 +1,391 @@
+2026-01-08 13:06:59.434240-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "GENERATED_DATE" not found; SQL statement:
+SELECT * FROM JOURNAL_ENTRY WHERE GENERATED_DATE <= '2025-01-31' [42122-240]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.expression.ExpressionColumn.getColumnException(ExpressionColumn.java:244)
+	at org.h2.expression.ExpressionColumn.optimizeOther(ExpressionColumn.java:226)
+	at org.h2.expression.ExpressionColumn.optimize(ExpressionColumn.java:213)
+	at org.h2.expression.condition.Comparison.optimize(Comparison.java:148)
+	at org.h2.expression.Expression.optimizeCondition(Expression.java:149)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1215)
+	at org.h2.command.query.Query.prepare(Query.java:235)
+	at org.h2.command.Parser.prepareCommand(Parser.java:492)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:647)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:563)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1160)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1344)
+	at org.h2.server.web.WebApp.query(WebApp.java:1142)
+	at org.h2.server.web.WebApp.query(WebApp.java:1118)
+	at org.h2.server.web.WebApp.process(WebApp.java:244)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:176)
+	at org.h2.server.web.JakartaWebServlet.doGet(JakartaWebServlet.java:129)
+	at org.h2.server.web.JakartaWebServlet.doPost(JakartaWebServlet.java:166)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:653)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:723)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+2026-01-08 13:23:22.270854-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Cannot parse "DATE" constant "2026.01-01"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY AS J, ACCOUNT AS A, JOURNAL_ENTRY_LINE AS JL
+WHERE J.POST_DATE <= '2026-01-31' AND J.POST_DATE >= '2026.01-01' [22007-240]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:518)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:212)
+	at org.h2.value.ValueDate.parse(ValueDate.java:53)
+	at org.h2.value.Value.convertToDate(Value.java:1885)
+	at org.h2.value.Value.convertTo(Value.java:1178)
+	at org.h2.value.Value.convertTo(Value.java:1057)
+	at org.h2.expression.condition.Comparison.optimize(Comparison.java:198)
+	at org.h2.expression.condition.ConditionAndOr.optimize(ConditionAndOr.java:137)
+	at org.h2.expression.Expression.optimizeCondition(Expression.java:149)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1215)
+	at org.h2.command.query.Query.prepare(Query.java:235)
+	at org.h2.command.Parser.prepareCommand(Parser.java:492)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:647)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:563)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1160)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1344)
+	at org.h2.server.web.WebApp.query(WebApp.java:1142)
+	at org.h2.server.web.WebApp.query(WebApp.java:1118)
+	at org.h2.server.web.WebApp.process(WebApp.java:244)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:176)
+	at org.h2.server.web.JakartaWebServlet.doGet(JakartaWebServlet.java:129)
+	at org.h2.server.web.JakartaWebServlet.doPost(JakartaWebServlet.java:166)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:653)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:723)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: 2026.01-01
+	at org.h2.util.DateTimeUtils.parseDateValue(DateTimeUtils.java:178)
+	at org.h2.value.ValueDate.parse(ValueDate.java:51)
+	... 51 more
+2026-01-08 13:23:42.936618-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Cannot parse "DATE" constant "2026.01-01"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY AS J, ACCOUNT AS A, JOURNAL_ENTRY_LINE AS JL
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026.01-01' [22007-240]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:518)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:212)
+	at org.h2.value.ValueDate.parse(ValueDate.java:53)
+	at org.h2.value.Value.convertToDate(Value.java:1885)
+	at org.h2.value.Value.convertTo(Value.java:1178)
+	at org.h2.value.Value.convertTo(Value.java:1057)
+	at org.h2.expression.condition.Comparison.optimize(Comparison.java:198)
+	at org.h2.expression.condition.ConditionAndOr.optimize(ConditionAndOr.java:137)
+	at org.h2.expression.Expression.optimizeCondition(Expression.java:149)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1215)
+	at org.h2.command.query.Query.prepare(Query.java:235)
+	at org.h2.command.Parser.prepareCommand(Parser.java:492)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:647)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:563)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1160)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1344)
+	at org.h2.server.web.WebApp.query(WebApp.java:1142)
+	at org.h2.server.web.WebApp.query(WebApp.java:1118)
+	at org.h2.server.web.WebApp.process(WebApp.java:244)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:176)
+	at org.h2.server.web.JakartaWebServlet.doGet(JakartaWebServlet.java:129)
+	at org.h2.server.web.JakartaWebServlet.doPost(JakartaWebServlet.java:166)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:653)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:723)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: 2026.01-01
+	at org.h2.util.DateTimeUtils.parseDateValue(DateTimeUtils.java:178)
+	at org.h2.value.ValueDate.parse(ValueDate.java:51)
+	... 51 more
+2026-01-08 13:23:48.420538-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Cannot parse "DATE" constant "2026.01-01"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY AS J, ACCOUNT AS A, JOURNAL_ENTRY_LINE AS JL
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026.01-01' [22007-240]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:518)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:212)
+	at org.h2.value.ValueDate.parse(ValueDate.java:53)
+	at org.h2.value.Value.convertToDate(Value.java:1885)
+	at org.h2.value.Value.convertTo(Value.java:1178)
+	at org.h2.value.Value.convertTo(Value.java:1057)
+	at org.h2.expression.condition.Comparison.optimize(Comparison.java:198)
+	at org.h2.expression.condition.ConditionAndOr.optimize(ConditionAndOr.java:137)
+	at org.h2.expression.Expression.optimizeCondition(Expression.java:149)
+	at org.h2.command.query.Select.prepareExpressions(Select.java:1215)
+	at org.h2.command.query.Query.prepare(Query.java:235)
+	at org.h2.command.Parser.prepareCommand(Parser.java:492)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:647)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:563)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1160)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1344)
+	at org.h2.server.web.WebApp.query(WebApp.java:1142)
+	at org.h2.server.web.WebApp.query(WebApp.java:1118)
+	at org.h2.server.web.WebApp.process(WebApp.java:244)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:176)
+	at org.h2.server.web.JakartaWebServlet.doGet(JakartaWebServlet.java:129)
+	at org.h2.server.web.JakartaWebServlet.doPost(JakartaWebServlet.java:166)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:653)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:723)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Caused by: java.lang.IllegalArgumentException: 2026.01-01
+	at org.h2.util.DateTimeUtils.parseDateValue(DateTimeUtils.java:178)
+	at org.h2.value.ValueDate.parse(ValueDate.java:51)
+	... 51 more
+2026-01-08 13:24:50.441606-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "DATE to BOOLEAN"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY AS J, ACCOUNT AS A, JOURNAL_ENTRY_LINE AS JL
+WHERE J.POST_DATE <= '2026-01-31' AND J.POST_DATE >= '2026-01-01'
+AND CREATION_DATE [22018-240]
+2026-01-08 13:24:55.572575-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "DATE to BOOLEAN"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY AS J, ACCOUNT AS A, JOURNAL_ENTRY_LINE AS JL
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE [22018-240]
+2026-01-08 13:25:55.125275-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY AS J, ACCOUNT AS A, JOURNAL_ENTRY_LINE AS JL\000d\000aWHERE J.POST_DATE <= '2026-01-31' AND J.POST_DATE >= '2026-01-01'\000d\000a[*]WHERE J.CREATION_DATE <= '2026-01-31'"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY AS J, ACCOUNT AS A, JOURNAL_ENTRY_LINE AS JL
+WHERE J.POST_DATE <= '2026-01-31' AND J.POST_DATE >= '2026-01-01'
+WHERE J.CREATION_DATE <= '2026-01-31' [42000-240]
+2026-01-08 13:30:31.805477-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY AS J\000d\000aWHERE J.POST_DATE <= '2026-01-31' AND J.POST_DATE >= '2026-01-01'\000d\000aAND J.CREATION_DATE <= '2026-01-31'\000d\000aAND J.STATUS = 'Posted'\000d\000aAND A.ACCOUNT_CODE >= 1000.001 AND A.ACCOUNT_CODE <= 3200.001\000d\000a[*]JOIN ACCOUNT AS A ON JL.ACCOUNTID = A.ACCOUNTID\000d\000aJOIN JOURNAL_ENTRY_LINE AS JL ON J.JOURNAL_ENTRY_ID = JL.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY AS J
+WHERE J.POST_DATE <= '2026-01-31' AND J.POST_DATE >= '2026-01-01'
+AND J.CREATION_DATE <= '2026-01-31'
+AND J.STATUS = 'Posted'
+AND A.ACCOUNT_CODE >= 1000.001 AND A.ACCOUNT_CODE <= 3200.001
+JOIN ACCOUNT AS A ON JL.ACCOUNTID = A.ACCOUNTID
+JOIN JOURNAL_ENTRY_LINE AS JL ON J.JOURNAL_ENTRY_ID = JL.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:31:17.277132-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000aAND A.ACCOUNT_CODE >= 1000.001 AND A.ACCOUNT_CODE <= 3200.001\000d\000a[*]JOIN ACCOUNT AS A ON JL.ACCOUNTID = A.ACCOUNTID\000d\000aJOIN JOURNAL_ENTRY_LINE AS JL ON J.JOURNAL_ENTRY_ID = JL.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+AND A.ACCOUNT_CODE >= 1000.001 AND A.ACCOUNT_CODE <= 3200.001
+JOIN ACCOUNT AS A ON JL.ACCOUNTID = A.ACCOUNTID
+JOIN JOURNAL_ENTRY_LINE AS JL ON J.JOURNAL_ENTRY_ID = JL.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:31:44.225201-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000aAND A.ACCOUNT_CODE >= 1000.001 AND A.ACCOUNT_CODE <= 3200.001\000d\000a[*]JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000aJOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+AND A.ACCOUNT_CODE >= 1000.001 AND A.ACCOUNT_CODE <= 3200.001
+JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:32:05.950129-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000aAND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a[*]JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000aJOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:32:10.092403-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000a--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a[*]JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000aJOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:32:53.757101-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000a--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000a[*]JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:33:11.766176-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000a--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000a[*]INNER JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+INNER JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:33:20.008325-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000a--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000a[*]INNER JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+INNER JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:33:27.025271-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000a--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000a[*]INNER_JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+INNER_JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRY_ID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:33:45.646068-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000a--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000a[*]INNER JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRYID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+INNER JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRYID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:33:51.837513-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000a--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000a[*]JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRYID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRYID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:34:05.394235-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY\000d\000aWHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'\000d\000aAND CREATION_DATE <= '2026-01-31'\000d\000aAND STATUS = 'Posted'\000d\000a--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001\000d\000a--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000a[*]JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRYID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY
+WHERE POST_DATE <= '2026-01-31' AND POST_DATE >= '2026-01-01'
+AND CREATION_DATE <= '2026-01-31'
+AND STATUS = 'Posted'
+--AND ACCOUNT.ACCOUNT_CODE >= 1000.001 AND ACCOUNT.ACCOUNT_CODE <= 3200.001
+--JOIN ACCOUNT ON JOURNAL_ENTRY.ACCOUNTID = ACCOUNT.ACCOUNTID
+JOIN JOURNAL_ENTRY_LINE ON JOURNAL_ENTRY.JOURNAL_ENTRYID = JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID [42000-240]
+2026-01-08 13:35:24.029347-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]DESC ACCOUNT"; expected "DELETE, DROP"; SQL statement:
+DESC ACCOUNT [42001-240]
+2026-01-08 13:35:31.197503-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SHOW COLUMNS [*]ACCOUNT"; expected "FROM"; SQL statement:
+SHOW COLUMNS ACCOUNT [42001-240]
+2026-01-08 13:35:35.771080-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SHOW [*]COL ACCOUNT"; SQL statement:
+SHOW COL ACCOUNT [42000-240]
+2026-01-08 14:20:58.647905-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY_LINE\000d\000aWHERE JOURNAL_ENTRY.POST_DATE >= '2026-01-01' AND JOURNAL_ENTRY.POST_DATE <= '2026-01-31'\000d\000a[*]JOIN JOURNAL_ENTRY ON JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID = JOURNAL_ENTRY.JOURNAL_ENTRYID"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY_LINE
+WHERE JOURNAL_ENTRY.POST_DATE >= '2026-01-01' AND JOURNAL_ENTRY.POST_DATE <= '2026-01-31'
+JOIN JOURNAL_ENTRY ON JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID = JOURNAL_ENTRY.JOURNAL_ENTRYID [42000-240]
+2026-01-08 14:23:46.604892-06:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM JOURNAL_ENTRY_LINE\000d\000aJOIN JOURNAL_ENTRY ON JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID = JOURNAL_ENTRY.JOURNAL_ENTRYID\000d\000aLEFT [*]ACCOUNT ON JOURNAL_ENTRY_LINE.ACCOUNTID = ACCOUNT.ACCOUNTID\000d\000aWHERE JOURNAL_ENTRY.POST_DATE >= '2026-01-01' AND JOURNAL_ENTRY.POST_DATE <= '2026-01-31'\000d\000aAND JOURNAL_ENTRY.STATUS = 'Posted'\000d\000aAND JOURNAL_ENTRY.CREATION_DATE <= '2026-01-08'"; expected "OUTER, JOIN"; SQL statement:
+SELECT * FROM JOURNAL_ENTRY_LINE
+JOIN JOURNAL_ENTRY ON JOURNAL_ENTRY_LINE.JOURNAL_ENTRY_ID = JOURNAL_ENTRY.JOURNAL_ENTRYID
+LEFT ACCOUNT ON JOURNAL_ENTRY_LINE.ACCOUNTID = ACCOUNT.ACCOUNTID
+WHERE JOURNAL_ENTRY.POST_DATE >= '2026-01-01' AND JOURNAL_ENTRY.POST_DATE <= '2026-01-31'
+AND JOURNAL_ENTRY.STATUS = 'Posted'
+AND JOURNAL_ENTRY.CREATION_DATE <= '2026-01-08' [42001-240]

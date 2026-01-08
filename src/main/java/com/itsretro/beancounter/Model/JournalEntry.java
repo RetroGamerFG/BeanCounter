@@ -166,4 +166,19 @@ public class JournalEntry
 
         return totalAmount.compareTo(new BigDecimal(0)) == 0; //if balanced, is valid
     }
+
+    public List<JournalEntryLine> getLinesByAccountID(Integer accountID)
+    {
+        List<JournalEntryLine> result = new ArrayList<>();
+
+        for(JournalEntryLine line : lines)
+        {
+            if(line.getAccount().getAccountID().equals(accountID))
+            {
+                result.add(line);
+            }
+        }
+
+        return result;
+    }
 }

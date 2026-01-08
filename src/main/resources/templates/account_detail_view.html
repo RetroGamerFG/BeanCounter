@@ -3,6 +3,20 @@
 
     </head>
     <body>
-        <p>Nothing here yet!</p>
+        <div th:each="detail : ${accountDetailLines}">
+            <table>
+                <thead>
+                    <tr>Transaction Number</tr>
+                    <tr>Description</tr>
+                    <tr>Debit</tr>
+                    <tr>Credit</tr>
+                </thead>
+                <tbody>
+                    <div th:each="entryLine : ${detail.associatedEntries}">
+                        <!--<tr th:text="${entryLine.}"></tr>-->
+                    </div>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>

@@ -30,6 +30,9 @@ public class AccountDetail
     @Column(name = "EndingDate", nullable = false)
     private LocalDate endingDate;
 
+    @Column(name = "GeneratedDate", nullable = false)
+    private LocalDate generatedDate;
+
     //
     // Getter & Setter Methods
     //
@@ -81,6 +84,16 @@ public class AccountDetail
 
     public void setEndingDate(LocalDate endingDate)
     {
-        endingDate = this.endingDate;
+        this.endingDate = endingDate;
+    }
+
+    public LocalDate getGeneratedDate()
+    {
+        return this.generatedDate;
+    }
+
+    public void setGeneratedDate(LocalDate generatedDate)
+    {
+        this.generatedDate = generatedDate;
     }
 }
