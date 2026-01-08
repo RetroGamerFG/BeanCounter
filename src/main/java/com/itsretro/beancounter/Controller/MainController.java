@@ -12,12 +12,6 @@ public class MainController
         return "main";
     }
 
-    @GetMapping("/account_detail")
-    public String accountDetail()
-    {
-        return "account_detail";
-    }
-
     @GetMapping("/statements")
     public String statements()
     {

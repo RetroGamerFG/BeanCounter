@@ -1,0 +1,16 @@
+package com.itsretro.beancounter.Controller;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.WebContentInterceptor;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        WebContentInterceptor interceptor = new WebContentInterceptor();
+        interceptor.setCacheSeconds(0); // Disables cache
+        registry.addInterceptor(interceptor);
+    }
+}

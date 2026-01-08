@@ -1,4 +1,8 @@
 /*
+    The following is an H2-schema utilized by the models in this project.
+*/
+
+/*
 CREATE TABLE Account (
     AccountID INT AUTO_INCREMENT PRIMARY KEY,
     AccountCode DECIMAL (7, 3) NOT NULL,

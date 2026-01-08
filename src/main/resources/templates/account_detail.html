@@ -1,8 +1,35 @@
 <html>
     <head>
-
+        <link rel="stylesheet" th:href="@{/css/account_detail.css}">
+        <script src="/js/account_detail.js"></script>
     </head>
     <body>
-        <p>This is the account detail page</p>
+        <button id="backButton">Back</button>
+        <button id="createButton">Create Detail</button>
+        <div id="entry-form" class="entry-form" hidden>
+            <form th:object="${accountDetail}" type="post">
+                <div class="entry-line">
+                    <label>Starting Account</label>
+                    <select th:field="*{startingAccountID}">
+                        <option th:each="acc : ${allAccounts}" th:value="${acc.AccountID}" th:text="${acc.AccountName}"></option>
+                    </select>
+                </div>
+                <div class="entry-line">
+                    <label>Ending Account</label>
+                    <select th:field="*{endingAccountID}">
+                        <option th:each="acc : ${allAccounts}" th:value="${acc.AccountID}" th:text="${acc.AccountName}"></option>
+                    </select>
+                </div>
+                <div class="entry-line">
+                    <label>Starting Date</label>
+                    <input type="date" th:value="${#temporals.format(accountDetail.startingDate, 'yyyy-MM-dd')}"/>
+                </div>
+                <div class="entry-line">
+                    <label>Ending Date</label>
+                    <input type="date" th:value="${#temporals.format(accountDetail.endingDate, 'yyyy-MM-dd')}"/>
+                </div>
+                <button type="submit">Generate</button>
+            </form>
+        </div>
     </body>
 </html>
