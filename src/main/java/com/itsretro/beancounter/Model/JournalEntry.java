@@ -147,7 +147,7 @@ public class JournalEntry
     {
         BigDecimal totalAmount = new BigDecimal(0);
         
-        for(JournalEntryLine line : lines)
+        for(JournalEntryLine line : this.lines)
         {
             if(!line.isValid()) //if the line is not a valid debit/credit, return false
             {
@@ -171,7 +171,7 @@ public class JournalEntry
     {
         List<JournalEntryLine> result = new ArrayList<>();
 
-        for(JournalEntryLine line : lines)
+        for(JournalEntryLine line : this.lines)
         {
             if(line.getAccount().getAccountID().equals(accountID))
             {

@@ -18,12 +18,11 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Inte
            "WHERE je.postDate BETWEEN :startDate AND :endDate " +
            "AND je.status = 'Posted' " +
            "AND je.creationDate <= :creationLimit " +
-           "AND a.accountCode BETWEEN :startCode AND :endCode")
-    List<JournalEntry> findForAccountDetail(
+           "AND a.accountCode = :accountCode")
+    List<Object[]> findForAccountDetail(
         @Param("startDate") LocalDate startDate,
         @Param("endDate") LocalDate endDate,
         @Param("creationLimit") LocalDate creationLimit,
-        @Param("startCode") BigDecimal startCode,
-        @Param("endCode") BigDecimal endCode
+        @Param("accountCode") BigDecimal accountCode
     );
 }

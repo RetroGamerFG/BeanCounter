@@ -2,7 +2,9 @@ package com.itsretro.beancounter.Controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,7 +74,7 @@ public class AccountDetailController
     @GetMapping("/account_detail/view/{id}")
     public String viewAccountDetail(@PathVariable("id") Long id, Model model)
     {
-        //fetch the accountDetail instance
+        //fetch the 'AccountDetail' instance
         AccountDetail accountDetail = accountDetailRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Detail not found"));
 
         //fetch the starting and ending accounts (used to get account code range)
@@ -85,32 +87,59 @@ public class AccountDetailController
             endingAccount.getAccountCode()
         );
 
-        //fetch all journal entries that were:
-            //1 - created before the detail's generated date
-            //2 - have a post date found within the range
-            //3 - have a journal entry that matches the account range
-        List<JournalEntry> matchedEntries = journalEntryRepository.findForAccountDetail(
-            accountDetail.getStartingDate(),
-            accountDetail.getEndingDate(),
-            accountDetail.getGeneratedDate(),
-            startingAccount.getAccountCode(),
-            endingAccount.getAccountCode()
-        );
-
-        //create instances of 'AccountDetailLine' for every account, matching for JournalEntry instances and valid lines
+        //create instances of 'AccountDetailLine' for every account in the range
         List<AccountDetailLine> fullAccountDetail = new ArrayList<>();
 
         for(Account account : matchedAccounts)
         {
+            //initialize the instance
             AccountDetailLine adl = new AccountDetailLine(account);
+            
+            //fetch all journal entry lines with the journal entry data joined that were:
+                //1 - created before the detail's generated date
+                //2 - have a post date found within the range
+                //3 - have a journal entry that matches the account range
+            List<Object[]> queryResults = journalEntryRepository.findForAccountDetail(
+                accountDetail.getStartingDate(),
+                accountDetail.getEndingDate(),
+                accountDetail.getGeneratedDate(),
+                account.getAccountCode()
+            );
 
-            for(JournalEntry entry : matchedEntries)
+            //proceed with storage operation only if results were found for the current account
+            if(!queryResults.isEmpty())
             {
-                List<JournalEntryLine> lines = entry.getLinesByAccountID(account.getAccountID()); //likely needs revision
-                adl.createEntryGroup(entry, lines);
+                //using a map, store the results, keeping information from 'JournalEntry' and 'JournalEntryLine'
+                Map<JournalEntry, List<JournalEntryLine>> mappedResults = new HashMap<>();
+
+                //for each queried object, convert to proper models, then store results
+                for(Object[] row : queryResults)
+                {
+                    JournalEntry je = (JournalEntry) row[0];
+                    JournalEntryLine jel = (JournalEntryLine) row[1];
+
+                    if(mappedResults.containsKey(je))
+                    {
+                        mappedResults.get(je).add(jel);
+                    }
+                    else
+                    {
+                        mappedResults.put(je, new ArrayList<>());
+                        mappedResults.get(je).add(jel);
+                    }
+                }
+
+                //create an 'EntryGroup' object for each valid 'JournalEntry' and its 'JournalEntryLine(s)'
+                for(JournalEntry je : mappedResults.keySet())
+                {
+                    adl.createEntryGroup(je, mappedResults.get(je));
+                }
             }
 
-            adl.calculateGrandTotal(); //force call to calculate grand total(s) following all entries added
+            //force call to calculate grand total(s) following all entries added
+            adl.calculateGrandTotal();
+
+            //add created instance to list
             fullAccountDetail.add(adl);
         }
 

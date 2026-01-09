@@ -19,7 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:unless="${detail.isEmpty} != false">
+                    <tr th:unless="${detail.isEmpty} == false">
                         <td>No entries for specified criteria!</td>
                     </tr>
                     <tr class="logs" th:each="entryLine : ${detail.associatedEntries}">

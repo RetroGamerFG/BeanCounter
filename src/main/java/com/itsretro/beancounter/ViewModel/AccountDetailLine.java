@@ -12,8 +12,8 @@ public class AccountDetailLine
 {
     public class EntryGroup
     {
-        private JournalEntry journalEntry;
-        private List<JournalEntryLine> journalEntryLines;
+        private JournalEntry journalEntry; //holds the matched entry for metadata
+        private List<JournalEntryLine> journalEntryLines; //holds extracted lines that match account
 
         //
         // Sub-Class Initializer
@@ -167,6 +167,7 @@ public class AccountDetailLine
 
     public BigDecimal getGrandTotal()
     {
+
         return this.grandTotal;
     }
 
@@ -189,12 +190,12 @@ public class AccountDetailLine
     // Additional Functions
     //
 
-    public void createEntryGroup(JournalEntry journalEntry, List<JournalEntryLine> journalEntryLines)
+    public void createEntryGroup(JournalEntry journalEntry, List<JournalEntryLine> matchedLines)
     {
         EntryGroup entryGroup = new EntryGroup();
 
         entryGroup.setJournalEntry(journalEntry);
-        entryGroup.setJournalEntryLines(journalEntryLines);
+        entryGroup.setJournalEntryLines(matchedLines);
 
         this.associatedEntries.add(entryGroup);
     }

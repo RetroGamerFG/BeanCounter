@@ -60,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="logs" th:each="line, stat : *{allAccountDetails}">
+                    <tr class="logs" th:each="line : *{allAccountDetails}">
                         <td th:text="${line.startingAccountID}"></td>
                         <td th:text="${line.endingAccountID}"></td>
                         <td th:text="${line.startingDate}"></td>
