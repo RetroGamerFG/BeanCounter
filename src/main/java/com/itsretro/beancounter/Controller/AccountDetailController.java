@@ -2,9 +2,9 @@ package com.itsretro.beancounter.Controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -110,7 +110,8 @@ public class AccountDetailController
             if(!queryResults.isEmpty())
             {
                 //using a map, store the results, keeping information from 'JournalEntry' and 'JournalEntryLine'
-                Map<JournalEntry, List<JournalEntryLine>> mappedResults = new HashMap<>();
+                //includes comparator to keep output sorted by the post date
+                Map<JournalEntry, List<JournalEntryLine>> mappedResults = new TreeMap<>((je1, je2) -> je1.getPostDate().compareTo(je2.getPostDate()));
 
                 //for each queried object, convert to proper models, then store results
                 for(Object[] row : queryResults)

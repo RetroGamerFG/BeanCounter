@@ -28,3 +28,18 @@ thead tr:first-child {
     caption-side: top;
     width: 100%;
 }
+
+.totals-line {
+    background-color: #dfdfdf;
+}
+
+/* Individual Elements */
+
+td#totalDebit, td#totalCredit {
+    text-decoration-line: underline;
+}
+
+td#grandTotal {
+    text-decoration-line: underline;
+    text-decoration-style: double;
+}

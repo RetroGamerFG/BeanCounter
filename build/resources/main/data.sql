@@ -32,6 +32,9 @@ MERGE INTO ACCOUNT (ACCOUNTID, ACCOUNT_CODE, ACCOUNT_NAME, ACCOUNT_DESCRIPTION, 
     (18, '5300.001', 'Utilities Expense', 'Electricity, water, and other utility costs', 'X', FALSE), -- Utilities Expense
     (19, '5400.001', 'Depreciation Expense', 'Allocation of the cost of tangible assets over time', 'X', FALSE); -- Depreciation Expense
 
+-- Restore the caching based on the last ID in the table
+ALTER TABLE ACCOUNT ALTER COLUMN ACCOUNTID RESTART WITH (SELECT MAX(ACCOUNTID) + 1 FROM ACCOUNT);
+
 
 -- The following is test data that can be used for the purpose of testing functionality beyond journal entries (account detail, statement, etc.)
 -- Entry 1: Owner's Initial Investment ($5,000.00)
@@ -133,3 +136,8 @@ VALUES (17, NULL, '15.75', 'D', 2, 8);
 
 MERGE INTO JOURNAL_ENTRY_LINE(JOURNAL_ENTRY_LINEID, CREDIT_AMOUNT, DEBIT_AMOUNT, TRANSACTION_TYPE, ACCOUNTID, JOURNAL_ENTRY_ID) 
 VALUES (18, '15.75', NULL, 'C', 13, 8);
+
+-- Restore the caching when using the test values
+ALTER TABLE JOURNAL_ENTRY ALTER COLUMN JOURNAL_ENTRYID RESTART WITH (SELECT MAX(JOURNAL_ENTRYID) + 1 FROM JOURNAL_ENTRY);
+
+ALTER TABLE JOURNAL_ENTRY_LINE ALTER COLUMN JOURNAL_ENTRY_LINEID RESTART WITH (SELECT MAX(JOURNAL_ENTRY_LINEID) + 1 FROM JOURNAL_ENTRY_LINE);
