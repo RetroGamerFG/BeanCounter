@@ -11,7 +11,42 @@ body {
 
 label {
   font-weight: bold;
-  min-width: 100px; /* Ensure labels take a minimum width so they align */
+  min-width: 150px; /* Ensure labels take a minimum width so they align */
+}
+
+/* Content Blocks / Dividers */
+
+.spacer {
+  padding: 10px;
+}
+
+.navigation-bar {
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: flex-start; /* Aligns buttons to the left */
+  gap: 10px;
+}
+
+.table-block {
+    width: 80%;             /* Adjust width as needed */
+    max-width: 900px;
+    background: white;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+/* Inline layout for the DatePicker and Description fields */
+.inline-field {
+  display: flex;
+  gap: 20px; /* Space between the two fields */
+}
+
+.field {
+  display: flex;
+  flex-direction: row; /* Align label and input in a row */
+  align-items: center; /* Align label and input vertically */
+  gap: 10px; /* Space between label and input */
 }
 
 /* Inputs */
@@ -30,13 +65,17 @@ button:hover {
   background-color: lightgreen;
 }
 
+button:disabled {
+  background-color: gray;
+}
+
 /* Tables */
 
 th {
   border-bottom: 1px solid gray;
 }
 
-tr:nth-child(even)
+tr.logs:nth-child(even)
 {
   background-color: #f2f2f2;
 }

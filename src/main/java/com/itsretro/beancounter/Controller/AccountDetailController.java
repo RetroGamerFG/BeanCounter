@@ -110,6 +110,7 @@ public class AccountDetailController
                 adl.createEntryGroup(entry, lines);
             }
 
+            adl.calculateGrandTotal(); //force call to calculate grand total(s) following all entries added
             fullAccountDetail.add(adl);
         }
 

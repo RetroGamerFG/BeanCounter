@@ -5,30 +5,33 @@
         <script src="/js/general_ledger.js"></script>
     </head>
     <body>
-        <button id="backButton" onclick="window.location.href='http://localhost:8080/'">Back</button>
-        <button id="createButton" onclick="window.location.href='http://localhost:8080/general_ledger/journal_entry_view'">Create Entry</button>
-
-        <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Creation Date</th>
-                <th>Post Date</th>
-                <th>Description</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="entry : ${journalEntry}">
-                <td class="entry-text" th:text="${entry.journalEntryID}"></td>
-                <td class="entry-text" th:text="${entry.creationDate}"></td>
-                <td class="entry-text" th:text="${entry.postDate}"></td>
-                <td class="entry-text" th:text="${entry.transactionDescription}"></td>
-                <td class="entry-text" th:text="${entry.status}"></td>
-                <td><button class="edit" th:value="${entry.journalEntryID}" onClick="loadJournalEntry(this)">View</button></td>
-                <td><button class="remove" th:value="${entry.journalEntryID}" onClick="removeJournalEntry(this)">X</button></td>
-            </tr>
-        </tbody>
-    </table>
+        <div class="navigation-bar">
+            <button id="backButton" onclick="window.location.href='http://localhost:8080/'">Back</button>
+            <button id="createButton" onclick="window.location.href='http://localhost:8080/general_ledger/journal_entry_view'">Create Entry</button>
+        </div>
+        <div class="table-block">
+            <table class="journal-entry">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Creation Date</th>
+                    <th>Post Date</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="logs" th:each="entry : ${journalEntry}">
+                    <td class="entry-text" th:text="${entry.journalEntryID}"></td>
+                    <td class="entry-text" th:text="${entry.creationDate}"></td>
+                    <td class="entry-text" th:text="${entry.postDate}"></td>
+                    <td class="entry-text" th:text="${entry.transactionDescription}"></td>
+                    <td class="entry-text" th:text="${entry.status}"></td>
+                    <td><button class="edit" th:value="${entry.journalEntryID}" onClick="loadJournalEntry(this)">View</button></td>
+                    <td><button class="remove" th:value="${entry.journalEntryID}" onClick="removeJournalEntry(this)">X</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     </body>
 </html>

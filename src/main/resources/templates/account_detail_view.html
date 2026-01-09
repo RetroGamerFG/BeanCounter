@@ -1,34 +1,53 @@
 <html>
     <head>
         <link rel="stylesheet" th:href="@{/css/all_pages.css}">
+        <link rel="stylesheet" th:href="@{/css/account_detail_view.css}">
     </head>
     <body>
-        <div th:each="detail : ${accountDetailLines}">
+        <div class="table-block" th:each="detail : ${accountDetailLines}">
             <table>
                 <thead>
                     <tr>
                         <label class="header-label" th:text="${detail.account.accountName}"></label>
                     </tr>
                     <tr>
-                        <td>Transaction Number</td>
-                        <td>Description</td>
-                        <td>Debit</td>
-                        <td>Credit</td>
+                        <th>Transaction Number</th>
+                        <th>Description</th>
+                        <th>Post Date</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:unless="${detail.isEmpty} == false">
+                    <tr th:unless="${detail.isEmpty} != false">
                         <td>No entries for specified criteria!</td>
                     </tr>
-                    <tr th:each="entryLine : ${detail.associatedEntries}">
+                    <tr class="logs" th:each="entryLine : ${detail.associatedEntries}">
                         <div th:each="item : ${entryLine.journalEntryLines}">
                             <td th:text="${entryLine.journalEntry.journalEntryID}"></td>
                             <td th:text="${entryLine.journalEntry.transactionDescription}"></td>
+                            <td th:text="${entryLine.journalEntry.postDate}"></td>
                             <td th:if="${item.debitAmount} != null" th:text="${item.debitAmount}"></td>
                             <td th:unless="${item.debitAmount} != null"></td>
                             <td th:if="${item.creditAmount} != null" th:text="${item.creditAmount}"></td>
                             <td th:unless="${item.creditAmount} != null"></td>
                         </div>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>Totals:</td>
+                        <td th:text="${detail.debitTotal}">Err</td>
+                        <td th:text="${detail.creditTotal}">Err</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td th:if="${detail.grandTotalType} == 'D'" th:text="${detail.grandTotal}"></td>
+                        <td th:unless="${detail.grandTotalType} == 'D'"></td>
+                        <td th:if="${detail.grandTotalType} == 'C'" th:text="${detail.grandTotal}"></td>
+                        <td th:unless="${detail.grandTotalType} == 'C'"></td>
                     </tr>
                 </tbody>
             </table>

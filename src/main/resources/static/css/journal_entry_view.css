@@ -21,19 +21,6 @@
   align-items: flex-start; /* Ensure everything is left-aligned */
 }
 
-/* Inline layout for the DatePicker and Description fields */
-.inline-field {
-  display: flex;
-  gap: 20px; /* Space between the two fields */
-}
-
-.field {
-  display: flex;
-  flex-direction: row; /* Align label and input in a row */
-  align-items: center; /* Align label and input vertically */
-  gap: 10px; /* Space between label and input */
-}
-
 input[type="text"], input[type="date"] {
   padding: 8px;
   border: 1px solid #ccc;
@@ -60,10 +47,6 @@ input[type="text"], input[type="date"] {
 }
 
 /* Disabled inputs */
-
-button:disabled {
-  background-color: gray;
-}
 
 .lock-look {
     pointer-events: none; /* Disables clicking/opening the dropdown */

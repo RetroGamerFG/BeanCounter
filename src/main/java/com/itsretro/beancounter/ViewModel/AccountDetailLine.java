@@ -1,5 +1,6 @@
 package com.itsretro.beancounter.ViewModel;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,16 +58,34 @@ public class AccountDetailLine
             this.journalEntryLines.add(journalEntryLine);
         }
 
-        public JournalEntryLine getSingleJournalEntryLine(int index)
+        public BigDecimal getDebitAmounts()
         {
-            try
+            BigDecimal result = new BigDecimal(0);
+
+            for(JournalEntryLine jel : journalEntryLines)
             {
-                return this.journalEntryLines.get(index);
+                if(jel.getTransactionType().compareTo("D") == 0)
+                {
+                    result = result.add(jel.getDebitAmount());
+                }
             }
-            catch (IndexOutOfBoundsException e)
+
+            return result;
+        }
+
+        public BigDecimal getCreditAmounts()
+        {
+            BigDecimal result = new BigDecimal(0);
+
+            for(JournalEntryLine jel : journalEntryLines)
             {
-                return null;
+                if(jel.getTransactionType().compareTo("C") == 0)
+                {
+                    result = result.add(jel.getCreditAmount());
+                }
             }
+
+            return result;
         }
     }
 
@@ -76,7 +95,12 @@ public class AccountDetailLine
 
     private Account account;
     private List<EntryGroup> associatedEntries;
-    private boolean isEmpty;
+
+    private BigDecimal debitTotal;
+    private BigDecimal creditTotal;
+
+    private BigDecimal grandTotal;
+    private String grandTotalType;
 
     //
     // Initializer
@@ -86,7 +110,10 @@ public class AccountDetailLine
     {
         this.account = account;
         this.associatedEntries = new ArrayList<>();
-        this.isEmpty = true;
+        this.debitTotal = null;
+        this.creditTotal = null;
+        this.grandTotal = null;
+        this.grandTotalType = null;
     }
 
     //
@@ -118,9 +145,44 @@ public class AccountDetailLine
         return this.associatedEntries.isEmpty();
     }
 
-    public void setIsEmpty(boolean isEmpty)
+    public BigDecimal getDebitTotal()
     {
-        this.isEmpty = isEmpty;
+        return this.debitTotal;
+    }
+
+    public void setDebitTotal(BigDecimal debitTotal)
+    {
+        this.debitTotal = debitTotal;
+    }
+
+    public BigDecimal getCreditTotal()
+    {
+        return this.creditTotal;
+    }
+
+    public void setCreditTotal(BigDecimal creditTotal)
+    {
+        this.creditTotal = creditTotal;
+    }
+
+    public BigDecimal getGrandTotal()
+    {
+        return this.grandTotal;
+    }
+
+    public void setGrandTotal(BigDecimal grandTotal)
+    {
+        this.grandTotal = grandTotal;
+    }
+
+    public String getGrandTotalType()
+    {
+        return this.grandTotalType;
+    }
+
+    public void setGrandTotalType(String grandTotalType)
+    {
+        this.grandTotalType = grandTotalType;
     }
 
     //
@@ -135,5 +197,31 @@ public class AccountDetailLine
         entryGroup.setJournalEntryLines(journalEntryLines);
 
         this.associatedEntries.add(entryGroup);
+    }
+
+    public void calculateGrandTotal()
+    {
+        BigDecimal calcDebitTotal = new BigDecimal(0);
+        BigDecimal calcCreditTotal = new BigDecimal(0);
+
+        for(EntryGroup eg : getAssociatedEntries())
+        {
+            calcDebitTotal = calcDebitTotal.add(eg.getDebitAmounts());
+            calcCreditTotal = calcCreditTotal.add(eg.getCreditAmounts());
+        }
+
+        setDebitTotal(calcDebitTotal);
+        setCreditTotal(calcCreditTotal);
+
+        if(calcDebitTotal.compareTo(calcCreditTotal) > 0)
+        {
+            setGrandTotal(calcDebitTotal.subtract(calcCreditTotal));
+            setGrandTotalType("D");
+        }
+        else
+        {
+            setGrandTotal(calcCreditTotal.subtract(calcDebitTotal));
+            setGrandTotalType("C");
+        }
     }
 }
