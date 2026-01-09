@@ -21,7 +21,7 @@ public class AccountDetailLine
         public EntryGroup()
         {
             this.journalEntry = null;
-            this.journalEntryLines = new ArrayList<>();
+            this.journalEntryLines = null;
         }
 
         //
@@ -76,6 +76,7 @@ public class AccountDetailLine
 
     private Account account;
     private List<EntryGroup> associatedEntries;
+    private boolean isEmpty;
 
     //
     // Initializer
@@ -85,6 +86,7 @@ public class AccountDetailLine
     {
         this.account = account;
         this.associatedEntries = new ArrayList<>();
+        this.isEmpty = true;
     }
 
     //
@@ -109,6 +111,16 @@ public class AccountDetailLine
     public void setAssociatedEntries(List<EntryGroup> associatedEntries)
     {
         this.associatedEntries = associatedEntries;
+    }
+
+    public boolean getIsEmpty()
+    {
+        return this.associatedEntries.isEmpty();
+    }
+
+    public void setIsEmpty(boolean isEmpty)
+    {
+        this.isEmpty = isEmpty;
     }
 
     //

@@ -106,7 +106,7 @@ public class AccountDetailController
 
             for(JournalEntry entry : matchedEntries)
             {
-                List<JournalEntryLine> lines = entry.getLinesByAccountID(account.getAccountID());
+                List<JournalEntryLine> lines = entry.getLinesByAccountID(account.getAccountID()); //likely needs revision
                 adl.createEntryGroup(entry, lines);
             }
 

@@ -83,7 +83,7 @@ public class JournalEntryLine {
         }
     }
 
-    public BigDecimal getcreditAmount()
+    public BigDecimal getCreditAmount()
     {
         return this.creditAmount;
     }

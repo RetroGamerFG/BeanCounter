@@ -1,20 +1,35 @@
 <html>
     <head>
-
+        <link rel="stylesheet" th:href="@{/css/all_pages.css}">
     </head>
     <body>
         <div th:each="detail : ${accountDetailLines}">
             <table>
                 <thead>
-                    <tr>Transaction Number</tr>
-                    <tr>Description</tr>
-                    <tr>Debit</tr>
-                    <tr>Credit</tr>
+                    <tr>
+                        <label class="header-label" th:text="${detail.account.accountName}"></label>
+                    </tr>
+                    <tr>
+                        <td>Transaction Number</td>
+                        <td>Description</td>
+                        <td>Debit</td>
+                        <td>Credit</td>
+                    </tr>
                 </thead>
                 <tbody>
-                    <div th:each="entryLine : ${detail.associatedEntries}">
-                        <!--<tr th:text="${entryLine.}"></tr>-->
-                    </div>
+                    <tr th:unless="${detail.isEmpty} == false">
+                        <td>No entries for specified criteria!</td>
+                    </tr>
+                    <tr th:each="entryLine : ${detail.associatedEntries}">
+                        <div th:each="item : ${entryLine.journalEntryLines}">
+                            <td th:text="${entryLine.journalEntry.journalEntryID}"></td>
+                            <td th:text="${entryLine.journalEntry.transactionDescription}"></td>
+                            <td th:if="${item.debitAmount} != null" th:text="${item.debitAmount}"></td>
+                            <td th:unless="${item.debitAmount} != null"></td>
+                            <td th:if="${item.creditAmount} != null" th:text="${item.creditAmount}"></td>
+                            <td th:unless="${item.creditAmount} != null"></td>
+                        </div>
+                    </tr>
                 </tbody>
             </table>
         </div>

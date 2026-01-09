@@ -160,7 +160,7 @@ public class JournalEntry
             }
             else
             {
-                totalAmount = totalAmount.subtract(line.getcreditAmount());
+                totalAmount = totalAmount.subtract(line.getCreditAmount());
             }
         }
 

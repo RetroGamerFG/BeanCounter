@@ -1,14 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -23,20 +12,6 @@ body {
 
 .spacer {
   flex-grow: 1; /* This ensures the gap between the first and second button group */
-}
-
-button {
-  padding: 10px 20px;
-  background-color: green;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-button:hover {
-  background-color: lightgreen;
 }
 
 .fields-section {
@@ -59,11 +34,6 @@ button:hover {
   gap: 10px; /* Space between label and input */
 }
 
-label {
-  font-weight: bold;
-  min-width: 100px; /* Ensure labels take a minimum width so they align */
-}
-
 input[type="text"], input[type="date"] {
   padding: 8px;
   border: 1px solid #ccc;
@@ -84,28 +54,4 @@ button.remove {
   color: white;
   font-weight: bold;
   text-decoration-line: solid;
-}
-
-th {
-  border-bottom: 1px solid gray;
-}
-
-tr:nth-child(even)
-{
-  background-color: #f2f2f2;
-}
-
-@media (max-width: 768px) {
-  .inline-field {
-    flex-direction: column; /* Stack the DatePicker and Description vertically on small screens */
-  }
-
-  .field {
-    flex-direction: column; /* Stack the label and input vertically on small screens */
-    align-items: flex-start;
-  }
-
-  .account-fields {
-    grid-template-columns: 1fr; /* Stack the account fields vertically on smaller screens */
-  }
 }
