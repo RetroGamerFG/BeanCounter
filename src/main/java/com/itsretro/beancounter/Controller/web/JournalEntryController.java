@@ -1,6 +1,4 @@
-package com.itsretro.beancounter.Controller;
-
-import java.time.LocalDate;
+package com.itsretro.beancounter.Controller.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -85,13 +83,7 @@ public class JournalEntryController
     @PostMapping("/save_journal_entry")
     public String submitForm(@Valid @ModelAttribute("journalEntry") JournalEntry journalEntry, BindingResult bindingResult, Model model)
     {
-        if(journalEntry.getCreationDate() == null)
-        {
-            journalEntry.setCreationDate(LocalDate.now()); //assign the time at time of save
-        }
-
-        journalEntry.setStatus("Open"); //set status to review, then save to database
-        journalEntry.setIsEditable(true);
+        journalEntry.firstSubmitDefaults(); //assigns creationDate, isEditable, and status
         
         boolean validation = journalEntry.validateLines();
 

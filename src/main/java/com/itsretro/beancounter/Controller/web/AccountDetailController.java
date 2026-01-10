@@ -1,4 +1,4 @@
-package com.itsretro.beancounter.Controller;
+package com.itsretro.beancounter.Controller.web;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

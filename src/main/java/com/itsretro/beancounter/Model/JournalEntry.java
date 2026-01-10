@@ -143,6 +143,13 @@ public class JournalEntry
     // Additional Methods
     //
 
+    public void firstSubmitDefaults()
+    {
+        this.creationDate = LocalDate.now(); //assign the time at time of save
+        this.status = "Open"; //set status to review, then save to database
+        this.isEditable = true;
+    }
+
     public boolean validateLines()
     {
         BigDecimal totalAmount = new BigDecimal(0);
