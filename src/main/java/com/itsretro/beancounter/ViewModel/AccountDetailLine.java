@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountDetaiLine: a ViewModel used to process and store retrieved data from an account detail's parameters.
+//     EntryGroup: a subclass which holds a journal entry and its filtered journal entry lines that match the account.
+//
+
 package com.itsretro.beancounter.ViewModel;
 
 import java.math.BigDecimal;
@@ -53,11 +61,17 @@ public class AccountDetailLine
         // Additional Sub-Class Functions
         //
 
+        //insertJournalEntryLine() - a shortcut function for adding a JournalEntryLine to the class member.
+        //inputs - journalEntryLine: a JournalEntryLine instance to add.
+        //output - none; adds the instance to the class member.
         public void insertJournalEntryLine(JournalEntryLine journalEntryLine)
         {
             this.journalEntryLines.add(journalEntryLine);
         }
 
+        //getDebitAmounts() - traverses the stored journal entry lines and returns the total of all debits found.
+        //inputs - none.
+        //output - a BigDecimal amounting to the total debits found.
         public BigDecimal getDebitAmounts()
         {
             BigDecimal result = new BigDecimal(0);
@@ -73,6 +87,9 @@ public class AccountDetailLine
             return result;
         }
 
+        //getCreditAmounts() - traverses the stored journal entry lines and returns the total of all credits found.
+        //inputs - none.
+        //output - a BigDecimal amounting to the total credits found.
         public BigDecimal getCreditAmounts()
         {
             BigDecimal result = new BigDecimal(0);
@@ -190,6 +207,11 @@ public class AccountDetailLine
     // Additional Functions
     //
 
+    //createEntryGroup() - creates a 'EntryGroup' instance to add to the associatedEntries member.
+    //inputs -
+        //journalEntry - a JournalEntry instance to add.
+        //matchedLines - all the JournalEntryLine instances found within journalEntry with the matching account to add.
+    //output - none; adds the newly created instance to the member.
     public void createEntryGroup(JournalEntry journalEntry, List<JournalEntryLine> matchedLines)
     {
         EntryGroup entryGroup = new EntryGroup();
@@ -200,6 +222,9 @@ public class AccountDetailLine
         this.associatedEntries.add(entryGroup);
     }
 
+    //calculateGrandTotal() - traverses all associatedEntries to gather total debits and total credits, then calculate the grand total.
+    //inputs - none.
+    //output - none; stores all results as members in the class instance.
     public void calculateGrandTotal()
     {
         BigDecimal calcDebitTotal = new BigDecimal(0);

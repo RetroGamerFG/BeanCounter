@@ -1,3 +1,6 @@
+//overrides for the front-end
+//currently used to remove values typed after database submissions using the back button
+
 package com.itsretro.beancounter.Controller.web;
 
 import org.springframework.context.annotation.Configuration;

@@ -1,3 +1,10 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountDetailController: a Spring Boot @Controller used to create and view account detail forms.
+//
+
 package com.itsretro.beancounter.Controller.web;
 
 import java.time.LocalDate;
@@ -40,6 +47,9 @@ public class AccountDetailController
     @Autowired
     private JournalEntryRepository journalEntryRepository;
 
+    //accountDetail() - the main view for the account detail.
+    //inputs - model: the page model to load values into.
+    //output - the account detail page loaded into view.
     @GetMapping("/account_detail")
     public String accountDetail(Model model)
     {
@@ -50,6 +60,12 @@ public class AccountDetailController
         return "account_detail";
     }
 
+    //createAccountDetailEntry() - takes the user's inputs from accountDetail() and attempts to store into the database.
+    //inputs -
+        //accountDetail: a @ModelAttribute instance of an account detail created from the front-end. Uses the @Valid attribute.
+        //bindingResult: a BindingResult used to validate the instance for saving into the database.
+        //model: the page model to load values into if saving is unsuccessful.
+    //output - reloads the page with error handling if unsuccessful, or reloads the account detail page otherwise.
     @PostMapping("/create_account_detail")
     public String createAccountDetailEntry(@Valid @ModelAttribute("accountDetail") AccountDetail accountDetail, BindingResult bindingResult, Model model)
     {
@@ -71,8 +87,13 @@ public class AccountDetailController
         return "redirect:/account_detail";
     }
 
+    //accountDetailView() - the view for an account detail.
+    //inputs -
+        //id: a @PathVariable instance of a Long representing the accountDetailID to load.
+        //model: the page model to load values into.
+    //output - the account detail view page loaded into view, modified for the existing entry.
     @GetMapping("/account_detail/view/{id}")
-    public String viewAccountDetail(@PathVariable("id") Long id, Model model)
+    public String accountDetailView(@PathVariable("id") Long id, Model model)
     {
         //fetch the 'AccountDetail' instance
         AccountDetail accountDetail = accountDetailRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account Detail not found"));
@@ -95,10 +116,11 @@ public class AccountDetailController
             //initialize the instance
             AccountDetailLine adl = new AccountDetailLine(account);
             
-            //fetch all journal entry lines with the journal entry data joined that were:
+            //fetch all journal entry lines with the journal entry data joined by SQL that were:
                 //1 - created before the detail's generated date
                 //2 - have a post date found within the range
                 //3 - have a journal entry that matches the account range
+                //4 - have a journal entry with a status of 'posted'
             List<Object[]> queryResults = journalEntryRepository.findForAccountDetail(
                 accountDetail.getStartingDate(),
                 accountDetail.getEndingDate(),

@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// JournalEntryLine: a JPA model used to store information for an individual line 
+// that relates to a journal entry.
+//
+
 package com.itsretro.beancounter.Model;
 
 import java.math.BigDecimal;
@@ -102,6 +110,9 @@ public class JournalEntryLine {
     // Additional Methods
     //
 
+    //isValid() - validates that a debit/credit has an amount assigned, and only one is assigned.
+    //inputs - none.
+    //output - a boolean based on the result of the operation.
     public boolean isValid()
     {
         if (debitAmount != null && transactionType.compareTo("D") == 0)

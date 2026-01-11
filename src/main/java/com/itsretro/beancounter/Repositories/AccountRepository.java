@@ -1,3 +1,10 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountRepository: a JPA repository to connect with the 'Account' model.
+//
+
 package com.itsretro.beancounter.Repositories;
 
 import java.math.BigDecimal;

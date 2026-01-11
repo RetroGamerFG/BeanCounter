@@ -1,3 +1,10 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountDetail: a JPA model used to store information for generated account detail forms.
+//
+
 package com.itsretro.beancounter.Model;
 
 import java.time.LocalDate;

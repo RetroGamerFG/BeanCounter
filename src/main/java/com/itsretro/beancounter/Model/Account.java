@@ -1,3 +1,10 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// Account: a JPA model used to store information for accounts utilized by journal entries.
+//
+
 package com.itsretro.beancounter.Model;
 
 import java.math.BigDecimal;

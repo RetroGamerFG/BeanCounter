@@ -1,3 +1,14 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// MCPIntegration: an optional Spring Boot @RestController that exposes the API to allow AI agents and/or MCP server
+// instances to fetch and store valid data into the program. See the 'BeanCounter-Agent' project for prepared tools to download.
+//
+// The developer(s) of this program make no guarantees regarding the accuracy, reliability, or regulatory compliance of 
+// AI-generated outputs and disclaim all liability arising from their use without appropriate human oversight.
+//
+
 package com.itsretro.beancounter.Controller.api;
 
 import java.time.LocalDate;
@@ -79,7 +90,7 @@ public class MCPIntegration
     }
 
     //getAccounts() - takes an API call and returns all the available accounts as JSON.
-    //inputs - none
+    //inputs - none.
     //output - a JSON representation of all accounts in Map format, the accountID being the key
     @GetMapping("/api/get_accounts")
     public Map<Integer, Account> getAccounts()

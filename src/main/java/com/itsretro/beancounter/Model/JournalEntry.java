@@ -1,3 +1,10 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// JournalEntry: a JPA model used to store information on accounting journal entries.
+//
+
 package com.itsretro.beancounter.Model;
 
 import java.math.BigDecimal;
@@ -143,6 +150,10 @@ public class JournalEntry
     // Additional Methods
     //
 
+    //firstSubmitDefaults() - to ensure a journal entry is submitted for the first time, this method overrides the
+    //creationDate, status, and isEditable fields.
+    //inputs - none.
+    //output - none; updates existing fields.
     public void firstSubmitDefaults()
     {
         this.creationDate = LocalDate.now(); //assign the time at time of save
@@ -150,6 +161,9 @@ public class JournalEntry
         this.isEditable = true;
     }
 
+    //validateLines() - performs validation checks to ensure each line balances, and is properly formatted.
+    //inputs - none.
+    //output - a boolean based on the result of the operation.
     public boolean validateLines()
     {
         BigDecimal totalAmount = new BigDecimal(0);
@@ -174,6 +188,9 @@ public class JournalEntry
         return totalAmount.compareTo(new BigDecimal(0)) == 0; //if balanced, is valid
     }
 
+    //getLinesByAccountID() - searches each line if a matching account id was found, and stores in a list.
+    //inputs - accountID - an int representing a valid account's accountID.
+    //output - a list containing JournalEntryLine instances where the accountID was a match, or empty otherwise.
     public List<JournalEntryLine> getLinesByAccountID(Integer accountID)
     {
         List<JournalEntryLine> result = new ArrayList<>();
