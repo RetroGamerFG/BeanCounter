@@ -58,7 +58,7 @@ public class JournalEntryController
     @GetMapping("/general_ledger")
     public String generalLedger(Model model)
     {
-        model.addAttribute("journalEntry", journalEntryRepository.findAll());
+        model.addAttribute("journalEntry", journalEntryRepository.findByStatusNot("Posted"));
         return "general_ledger";
     }
 

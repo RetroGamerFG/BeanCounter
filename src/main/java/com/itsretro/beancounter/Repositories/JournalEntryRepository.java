@@ -33,4 +33,6 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Inte
         @Param("creationLimit") LocalDate creationLimit,
         @Param("accountCode") BigDecimal accountCode
     );
+
+    List<JournalEntry> findByStatusNot(String status);
 }
