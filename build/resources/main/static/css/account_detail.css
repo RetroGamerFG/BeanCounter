@@ -1,0 +1,20 @@
+.entry-form {
+  padding: 10px;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+}
+
+.fields-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start; /* Ensure everything is left-aligned */
+}
+
+input[type="text"], input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 300px; /* You can adjust the width of input fields here */
+  font-size: 14px;
+}

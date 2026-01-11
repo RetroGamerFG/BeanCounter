@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <link rel="stylesheet" th:href="@{/css/all_pages.css}">
+        <link rel="stylesheet" th:href="@{/css/account_detail.css}">
+        <script src="/js/account_detail.js"></script>
+    </head>
+    <body>
+        <div class="navigation-bar">
+            <button id="backButton">Back</button>
+            <button id="createButton">Create Detail</button>
+        </div>
+
+        <div id="entry-form" class="entry-form" hidden>
+            <form id="accountDetailForm" th:object="${accountDetail}" method="post">
+                <div class="fields-section">
+                    <div class="inline-field">
+                        <div class="field">
+                            <label>Starting Account:</label>
+                            <select th:field="*{startingAccountID}">
+                                <option th:each="acc : ${allAccounts}" th:value="${acc.AccountID}" th:text="${acc.AccountName}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="inline-field">
+                        <div class="field">
+                            <label>Ending Account:</label>
+                            <select th:field="*{endingAccountID}">
+                                <option th:each="acc : ${allAccounts}" th:value="${acc.AccountID}" th:text="${acc.AccountName}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="inline-field">
+                        <div class="field">
+                            <label>Starting Date:</label>
+                            <input type="date" name="startingDate" th:value="${#temporals.format(accountDetail.startingDate, 'yyyy-MM-dd')}"/>
+                        </div>
+                    </div>
+                    <div class="inline-field">
+                        <div class="field">
+                            <label>Ending Date:</label>
+                            <input type="date" name="endingDate" th:value="${#temporals.format(accountDetail.endingDate, 'yyyy-MM-dd')}"/>
+                        </div>
+                    </div>
+                    <button id="generateButton" type="button">Generate</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div id="history-section" class="table-block">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Starting Account</t>
+                        <th>Ending Account</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Generated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="logs" th:each="line : *{allAccountDetails}">
+                        <td th:text="${line.startingAccountID}"></td>
+                        <td th:text="${line.endingAccountID}"></td>
+                        <td th:text="${line.startingDate}"></td>
+                        <td th:text="${line.endingDate}"></td>
+                        <td th:text="${line.generatedDate}"></td>
+                        <td><button th:value="${line.accountDetailID}" onclick="viewDetail(this)">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

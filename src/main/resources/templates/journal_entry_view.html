@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="stylesheet" th:href="@{/css/all_pages.css}">
+        <link rel="stylesheet" th:href="@{/css/journal_entry_view.css}">
+        <script src="/js/entryLines.js"></script>
+    </head>
+<body>
+  <form id="journalForm" th:object="${journalEntry}" method="post">
+    <input type="hidden" th:field="${journalEntry.journalEntryID}"/>
+    <input type="hidden" th:field="${journalEntry.creationDate}"/>
+    <input type="hidden" th:field="${journalEntry.status}"/>
+    
+    <div class="container">
+      <div class="button-section">
+        <button id="backButton" type="button">Back</button>
+        <div class="spacer"></div>
+        <button id="editButton" th:if="${journalEntry.status == 'Review'}" type="button">Edit</button>
+        <button id="submitButton" 
+          th:value="${journalEntry.status == 'Review'} ? 'p' : 's'" 
+          th:text="${journalEntry.status == 'Review'} ? 'Post' : 'Submit'"
+          type="button"
+          >Placeholder
+        </button>
+      </div>
+
+      <div class="fields-section">
+        <div class="inline-field">
+          <div class="field">
+            <label>Post Date:</label>
+            <input id="postDate" type="date" name="postDate" th:value="${#temporals.format(journalEntry.postDate, 'yyyy-MM-dd')}" />
+            <span th:if="${#fields.hasErrors('postDate')}" th:errors="*{postDate}">Date Error</span>
+          </div>
+        </div>
+        
+        <div class="inline-field">
+          <div class="field">
+            <label>Description:</label>
+            <input id="transactionDescription" type="text" th:field="*{transactionDescription}"/>
+            <span th:if="${#fields.hasErrors('transactionDescription')}" th:errors="*{transactionDescription}">Description Error</span>
+          </div>
+        </div>
+
+        <table id="lineTable">
+          <thead>
+              <tr>
+                  <th>Account</th>
+                  <th>Debit</th>
+                  <th>Credit</th>
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody id="lineItems">
+              <tr th:each="line, stat : *{lines}" class="line-row">
+                <input type="hidden" th:field="*{lines[__${stat.index}__].journalEntryLineID}"/>
+                  <td>
+                      <select th:field="*{lines[__${stat.index}__].account}">
+                          <option th:each="acc : ${allAccounts}" 
+                                  th:value="${acc.AccountID}" 
+                                  th:text="${acc.AccountName}"></option>
+                      </select>
+                  </td>
+                  <td><input type="number" step="0.01" th:field="*{lines[__${stat.index}__].debitAmount}" /></td>
+                  <td><input type="number" step="0.01" th:field="*{lines[__${stat.index}__].creditAmount}" /></td>
+                  <td><button type="button" onclick="removeRow(this)" class="btn-remove">Remove</button></td>
+              </tr>
+          </tbody>
+        </table>
+        <button id="addRowButton" type="button" onclick="addRow()">Add Row</button>
+      </div>
+      <div class="post-signature-section" th:if="${journalEntry.status} == 'Review'">
+        <label id="postSignatureLabel">Post Signature:</label>
+        <input type="text" th:field="*{postSignature}"/>
+        <span th:if="${#fields.hasErrors('postSignature')}" th:errors="*{postSignature}">Description Error</span>
+      </div>
+    </div>
+  <div>
+    <span th:if="${#fields.hasErrors('global')}" th:errors="*{global}" class="alert alert-danger">Global Errors (like unbalanced lines)</span>
+  </div>
+  </form>
+ </body>
+</html>

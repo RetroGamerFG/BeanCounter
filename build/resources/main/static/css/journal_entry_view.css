@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.button-section {
+  display: flex;
+  justify-content: flex-start; /* Aligns buttons to the left */
+  gap: 10px;
+}
+
+.spacer {
+  flex-grow: 1; /* This ensures the gap between the first and second button group */
+}
+
+.fields-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start; /* Ensure everything is left-aligned */
+}
+
+input[type="text"], input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 300px; /* You can adjust the width of input fields here */
+  font-size: 14px;
+}
+
+/* Grid layout for the Account Fields (AccountCode, AccountName, Debit, Credit) */
+.account-fields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 equal-width columns */
+  gap: 5px; /* Space between grid items */
+}
+
+.account-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.account-field label {
+  font-weight: bold;
+}
+
+/* Disabled inputs */
+
+.lock-look {
+    pointer-events: none; /* Disables clicking/opening the dropdown */
+    touch-action: none;   /* Disables touch interaction on mobile */
+}
+
+/* Table Elements */
+
+@media (max-width: 768px) {
+  .inline-field {
+    flex-direction: column; /* Stack the DatePicker and Description vertically on small screens */
+  }
+
+  .field {
+    flex-direction: column; /* Stack the label and input vertically on small screens */
+    align-items: flex-start;
+  }
+
+  .account-fields {
+    grid-template-columns: 1fr; /* Stack the account fields vertically on smaller screens */
+  }
+}
