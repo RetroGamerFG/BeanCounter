@@ -1,0 +1,19 @@
+//overrides for the front-end
+//currently used to remove values typed after database submissions using the back button
+
+package com.itsretro.beancounter.controller.web;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.mvc.WebContentInterceptor;
+
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        WebContentInterceptor interceptor = new WebContentInterceptor();
+        interceptor.setCacheSeconds(0); // Disables cache
+        registry.addInterceptor(interceptor);
+    }
+}

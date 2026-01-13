@@ -4,11 +4,11 @@
         <link rel="stylesheet" th:href="@{/css/account_detail_view.css}">
     </head>
     <body>
-        <div class="table-block" th:each="detail : ${accountDetailLines}">
+        <div class="table-block" th:each="accountEntry : ${accountDetailView.accountDetailBlocks}">
             <table>
                 <thead>
                     <tr>
-                        <label class="header-label" th:text="${detail.account.accountName}"></label>
+                        <label class="header-label" th:text="${accountEntry.key.accountName}"></label>
                     </tr>
                     <tr>
                         <th>Trans #</th>
@@ -20,40 +20,47 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:unless="${detail.isEmpty} == false">
-                        <td>No entries for specified criteria!</td>
-                    </tr>
-                    <tr class="logs" th:each="entryLine : ${detail.associatedEntries}">
-                        <div th:each="item : ${entryLine.journalEntryLines}">
-                            <td><a th:text="${entryLine.journalEntry.journalEntryID}" href="http://localhost:8080/general_ledger"></a></td>
-                            <td th:text="${entryLine.journalEntry.transactionDescription}"></td>
-                            <td th:if="${entryLine.journalEntry.postSignature} != null" th:text="${entryLine.journalEntry.postSignature}"></td>
-                            <td th:unless="${entryLine.journalEntry.postSignature} != null">Error</td>
-                            <td th:text="${entryLine.journalEntry.postDate}"></td>
-                            <td th:if="${item.debitAmount} != null" th:text="${item.debitAmount}"></td>
-                            <td th:unless="${item.debitAmount} != null"></td>
-                            <td th:if="${item.creditAmount} != null" th:text="${item.creditAmount}"></td>
-                            <td th:unless="${item.creditAmount} != null"></td>
+                    <div class="year-block" th:each="yearEntry : ${accountEntry.value}">
+                        <tr>
+                            <td th:text="${yearEntry.key}"></td>
+                        </tr>
+                        <div class="month-block" th:each="monthEntry : ${yearEntry.value.monthBlocks}">
+                            <tr>
+                                <td th:text="${monthEntry.key}"></td>
+                            </tr>
+                            <tr class="entry-line" th:each="entryLine : ${monthEntry.value.accountDetailLines}"> <!-- ENTRIES START HERE -->
+                                <td><a th:text="${entryLine.journalEntryID}" href="http://localhost:8080/general_ledger"></a></td>
+                                <td th:text="${entryLine.description}"></td>
+                                <td th:if="${entryLine.postSignature} != null" th:text="${entryLine.postSignature}"></td>
+                                <td th:unless="${entryLine.postSignature} != null">Error</td>
+                                <td th:text="${entryLine.postDate}"></td>
+                                <td th:if="${entryLine.type} == 'D'" th:text="${entryLine.amount}"></td>
+                                <td th:unless="${entryLine.type} != 'D'"></td>
+                                <td th:if="${entryLine.type} == 'C'" th:text="${entryLine.amount}"></td>
+                                <td th:unless="${entryLine.type} != 'C'"></td>
+                            </tr>
+                            <!--
+                                <tr class="totals-line">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Totals:</td>
+                                    <td id="totalDebit" th:text="${detail.debitTotal}">Err</td>
+                                    <td id="totalCredit" th:text="${detail.creditTotal}">Err</td>
+                                </tr>
+                                <tr class="grand-total-line">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td id="grandTotal" th:if="${detail.grandTotalType} == 'D'" th:text="${detail.grandTotal}"></td>
+                                    <td id="grandTotal" th:unless="${detail.grandTotalType} == 'D'"></td>
+                                    <td id="grandTotal" th:if="${detail.grandTotalType} == 'C'" th:text="${detail.grandTotal}"></td>
+                                    <td id="grandTotal" th:unless="${detail.grandTotalType} == 'C'"></td>
+                                </tr>
+                            -->
                         </div>
-                    </tr>
-                    <tr class="totals-line">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Totals:</td>
-                        <td id="totalDebit" th:text="${detail.debitTotal}">Err</td>
-                        <td id="totalCredit" th:text="${detail.creditTotal}">Err</td>
-                    </tr>
-                    <tr class="grand-total-line">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td id="grandTotal" th:if="${detail.grandTotalType} == 'D'" th:text="${detail.grandTotal}"></td>
-                        <td id="grandTotal" th:unless="${detail.grandTotalType} == 'D'"></td>
-                        <td id="grandTotal" th:if="${detail.grandTotalType} == 'C'" th:text="${detail.grandTotal}"></td>
-                        <td id="grandTotal" th:unless="${detail.grandTotalType} == 'C'"></td>
-                    </tr>
+                    </div>
                 </tbody>
             </table>
         </div>
