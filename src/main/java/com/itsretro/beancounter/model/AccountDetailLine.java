@@ -1,4 +1,4 @@
-package com.itsretro.beancounter.viewmodel;
+package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;
 

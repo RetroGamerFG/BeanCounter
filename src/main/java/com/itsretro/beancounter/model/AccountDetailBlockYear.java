@@ -1,17 +1,19 @@
-package com.itsretro.beancounter.viewmodel;
+package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AccountDetailBlockYear //n for the amount of passed AccountDetailLine
+public class AccountDetailBlockYear implements FinancialBlock //n for the amount of passed AccountDetailLine
 {
     private Map<Month, AccountDetailBlockMonth> monthBlocks;
 
     private BigDecimal totalDebits;
     private BigDecimal totalCredits;
     private BigDecimal grandTotal;
+
+    private String grandTotalType;
 
     public AccountDetailBlockYear()
     {
@@ -20,6 +22,8 @@ public class AccountDetailBlockYear //n for the amount of passed AccountDetailLi
         this.totalDebits = new BigDecimal(0);
         this.totalCredits = new BigDecimal(0);
         this.grandTotal = new BigDecimal(0);
+
+        this.grandTotalType = null;
     }
 
     //
@@ -36,6 +40,7 @@ public class AccountDetailBlockYear //n for the amount of passed AccountDetailLi
         this.monthBlocks = monthBlocks;
     }
 
+    @Override
     public BigDecimal getTotalDebits()
     {
         return this.totalDebits;
@@ -46,6 +51,7 @@ public class AccountDetailBlockYear //n for the amount of passed AccountDetailLi
         this.totalDebits = totalDebits;
     }
 
+    @Override
     public BigDecimal getTotalCredits()
     {
         return this.totalCredits;
@@ -56,33 +62,26 @@ public class AccountDetailBlockYear //n for the amount of passed AccountDetailLi
         this.totalCredits = totalCredits;
     }
 
+    @Override
     public BigDecimal getGrandTotal()
     {
         return this.grandTotal;
     }
 
+    @Override
     public void setGrandTotal(BigDecimal grandTotal)
     {
         this.grandTotal = grandTotal;
     }
 
-    //
-    // Additional Methods
-    //
-
-    //calculateTotals() - calls each AccountDetailBlockMonth's calculate method, then adds the fetched totals to this instance's totals.
-    //inputs - none.
-    //output - none; updates the instance's values.
-    public void calculateTotals()
+    public String getGrandTotalType()
     {
-        //iterate through each AccountDetailLine to increment total amounts
-        for(AccountDetailBlockMonth adbm : this.monthBlocks.values())
-        {
-            adbm.calculateTotals(); //call calculateTotals() to update values
+        return this.grandTotalType;
+    }
 
-            this.totalDebits = this.totalDebits.add(adbm.getTotalDebits());
-            this.totalCredits = this.totalCredits.add(adbm.getTotalCredits());
-            this.grandTotal = this.grandTotal.add(adbm.getGrandTotal());
-        }
+    @Override
+    public void setGrandTotalType(String grandTotalType)
+    {
+        this.grandTotalType = grandTotalType;
     }
 }

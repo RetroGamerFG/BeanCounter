@@ -77,6 +77,9 @@ public class AccountDetailService
             }
         }
 
+        //calculate the totals for all stored entries in the account detail view
+        accountDetailLogic.calculateTotalsForAccountDetailView(adv);
+
         return adv;
     }
 }

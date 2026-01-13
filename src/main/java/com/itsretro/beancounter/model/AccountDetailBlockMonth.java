@@ -1,16 +1,18 @@
-package com.itsretro.beancounter.viewmodel;
+package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AccountDetailBlockMonth //1 < n < 12 for a given year
+public class AccountDetailBlockMonth implements FinancialBlock//1 < n < 12 for a given year
 {
     private Set<AccountDetailLine> accountDetailLines;
 
     private BigDecimal totalDebits;
     private BigDecimal totalCredits;
+
     private BigDecimal grandTotal;
+    private String grandTotalType;
 
     public AccountDetailBlockMonth()
     {
@@ -19,6 +21,8 @@ public class AccountDetailBlockMonth //1 < n < 12 for a given year
         this.totalDebits = new BigDecimal(0);
         this.totalCredits = new BigDecimal(0);
         this.grandTotal = new BigDecimal(0);
+
+        this.grandTotalType = null;
     }
 
     //
@@ -35,6 +39,7 @@ public class AccountDetailBlockMonth //1 < n < 12 for a given year
         this.accountDetailLines = accountDetailLines;
     }
 
+    @Override
     public BigDecimal getTotalDebits()
     {
         return this.totalDebits;
@@ -45,6 +50,7 @@ public class AccountDetailBlockMonth //1 < n < 12 for a given year
         this.totalDebits = totalDebits;
     }
 
+    @Override
     public BigDecimal getTotalCredits()
     {
         return this.totalCredits;
@@ -55,14 +61,27 @@ public class AccountDetailBlockMonth //1 < n < 12 for a given year
         this.totalCredits = totalCredits;
     }
 
+    @Override
     public BigDecimal getGrandTotal()
     {
         return this.grandTotal;
     }
 
+    @Override
     public void setGrandTotal(BigDecimal grandTotal)
     {
         this.grandTotal = grandTotal;
+    }
+
+    public String getGrandTotalType()
+    {
+        return this.grandTotalType;
+    }
+
+    @Override
+    public void setGrandTotalType(String grandTotalType)
+    {
+        this.grandTotalType = grandTotalType;
     }
 
     //
@@ -72,21 +91,5 @@ public class AccountDetailBlockMonth //1 < n < 12 for a given year
     public void insert(AccountDetailLine adl)
     {
         this.accountDetailLines.add(adl);
-    }
-
-    //calculateTotals() - calls each AccountDetailLine's calculate method, then adds the fetched totals to this instance's totals.
-    //inputs - none.
-    //output - none; updates the instance's values.
-    public void calculateTotals()
-    {
-        //iterate through each AccountDetailLine to increment total amounts
-        for(AccountDetailLine adl : this.accountDetailLines)
-        {
-            //add the values to debits and/or credits
-            this.totalDebits = this.totalDebits.add(adl.getDebitAmount());
-            this.totalCredits = this.totalCredits.add(adl.getCreditAmount());
-        }
-
-        //perform calculation for grand total
     }
 }

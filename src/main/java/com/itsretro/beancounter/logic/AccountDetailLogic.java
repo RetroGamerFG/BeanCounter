@@ -1,5 +1,6 @@
 package com.itsretro.beancounter.logic;
 
+import java.math.BigDecimal;
 import java.time.Month;
 import java.time.Year;
 import java.util.HashMap;
@@ -10,11 +11,12 @@ import org.springframework.stereotype.Component;
 
 import com.itsretro.beancounter.model.Account;
 import com.itsretro.beancounter.model.AccountDetail;
+import com.itsretro.beancounter.model.AccountDetailBlockMonth;
+import com.itsretro.beancounter.model.AccountDetailBlockYear;
+import com.itsretro.beancounter.model.AccountDetailLine;
+import com.itsretro.beancounter.model.FinancialBlock;
 import com.itsretro.beancounter.model.JournalEntry;
 import com.itsretro.beancounter.model.JournalEntryLine;
-import com.itsretro.beancounter.viewmodel.AccountDetailBlockMonth;
-import com.itsretro.beancounter.viewmodel.AccountDetailBlockYear;
-import com.itsretro.beancounter.viewmodel.AccountDetailLine;
 import com.itsretro.beancounter.viewmodel.AccountDetailView;
 
 @Component
@@ -99,7 +101,7 @@ public class AccountDetailLogic
 
             AccountDetailLine adl = mapToLine(je, jel);
 
-            // 2. Safely navigate the nested structure
+            //navigate the structure to insert the account detail line to the appropriate account->year->month
             Map<Year, AccountDetailBlockYear> yearMap = adv.getAccountDetailBlocks().get(account);
             if (yearMap == null)
             {
@@ -119,10 +121,6 @@ public class AccountDetailLogic
             }
         }
     }
-
-    //
-    //
-    //
 
     //
     //
@@ -147,5 +145,107 @@ public class AccountDetailLogic
         }
 
         return adl;
+    }
+
+    //
+    //
+    //
+    public void calculateTotalsForAccountDetailView(AccountDetailView adv)
+    {
+        //reset values to zero
+        adv.setTotalDebits(BigDecimal.ZERO);
+        adv.setTotalCredits(BigDecimal.ZERO);
+        adv.setGrandTotal(BigDecimal.ZERO);
+
+        //iterate the account detail view to perform total calculations for each year and each month
+        for(Map<Year, AccountDetailBlockYear> yearMap : adv.getAccountDetailBlocks().values())
+        {
+            //iterate through each account
+            for(AccountDetailBlockYear yearBlock : yearMap.values())
+            {
+                //process the current yearBlock and it's child values
+                calculateYearTotals(yearBlock);
+
+                //increment the view totals from calculated values
+                adv.setTotalDebits(adv.getTotalDebits().add(yearBlock.getTotalDebits()));
+                adv.setTotalCredits(adv.getTotalCredits().add(yearBlock.getTotalCredits()));
+            }
+
+            //perform the grand total calculation
+            finalizeGrandTotal(adv);
+        }
+
+        System.out.println();
+    }
+
+    //
+    //
+    //
+    private void calculateYearTotals(AccountDetailBlockYear yearBlock)
+    {
+        //reset values to zero
+        yearBlock.setTotalDebits(BigDecimal.ZERO);
+        yearBlock.setTotalCredits(BigDecimal.ZERO);
+        yearBlock.setGrandTotal(BigDecimal.ZERO);
+
+        //iterate through each yearBlock to calculate each containing monthBlock
+        for(AccountDetailBlockMonth monthBlock : yearBlock.getMonthBlocks().values())
+        {
+            //process the current monthBlock and it's child values
+            calculateMonthTotals(monthBlock);
+
+            //increment the yearBlock totals from calculated values
+            yearBlock.setTotalDebits(yearBlock.getTotalDebits().add(monthBlock.getTotalDebits()));
+            yearBlock.setTotalCredits(yearBlock.getTotalCredits().add(monthBlock.getTotalCredits()));
+        }
+
+        //perform the grand total calculation
+        finalizeGrandTotal(yearBlock);
+    }
+
+    //
+    //
+    //
+    private void calculateMonthTotals(AccountDetailBlockMonth monthBlock)
+    {
+        //reset values to zero
+        monthBlock.setTotalDebits(BigDecimal.ZERO);
+        monthBlock.setTotalCredits(BigDecimal.ZERO);
+        monthBlock.setGrandTotal(BigDecimal.ZERO);
+
+        //iterate through each monthBlock, incrementing totals based on each AccountDetailLine
+        for(AccountDetailLine line : monthBlock.getAccountDetailLines())
+        {
+            monthBlock.setTotalDebits(monthBlock.getTotalDebits().add(line.getDebitAmount()));
+            monthBlock.setTotalCredits(monthBlock.getTotalCredits().add(line.getCreditAmount()));
+        }
+
+        //perform the grand total calculation
+        finalizeGrandTotal(monthBlock);
+    }
+
+    //
+    //
+    //
+    private void finalizeGrandTotal(FinancialBlock block)
+    {
+        BigDecimal debits = block.getTotalDebits();
+        BigDecimal credits = block.getTotalCredits();
+        
+        // Reset grand total before starting
+        BigDecimal runningTotal = BigDecimal.ZERO;
+
+        if(debits.compareTo(credits) > 0)
+        {
+            runningTotal = runningTotal.add(debits).subtract(credits);
+            block.setGrandTotal(runningTotal);
+            block.setGrandTotalType("D");
+        } 
+        else 
+        {
+            runningTotal = runningTotal.add(credits).subtract(debits);
+            block.setGrandTotal(runningTotal);
+            block.setGrandTotalType("C");
+        }
     }
 }

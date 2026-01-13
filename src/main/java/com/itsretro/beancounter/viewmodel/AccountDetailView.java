@@ -15,8 +15,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.itsretro.beancounter.model.Account;
+import com.itsretro.beancounter.model.AccountDetailBlockYear;
+import com.itsretro.beancounter.model.FinancialBlock;
 
-public class AccountDetailView 
+public class AccountDetailView implements FinancialBlock
 {
     //block structure: account details should be structured by year, then by month.
     //private Set<AccountDetailBlockYear> accountDetailBlocks;
@@ -25,6 +27,8 @@ public class AccountDetailView
     private BigDecimal totalDebits;
     private BigDecimal totalCredits;
     private BigDecimal grandTotal;
+
+    private String grandTotalType;
     
     //
     // Initializer(s)
@@ -37,6 +41,8 @@ public class AccountDetailView
         this.totalDebits = BigDecimal.ZERO;
         this.totalCredits = BigDecimal.ZERO;
         this.grandTotal = BigDecimal.ZERO;
+
+        this.grandTotalType = null;
     }
 
     //
@@ -53,6 +59,7 @@ public class AccountDetailView
         this.accountDetailBlocks = accountDetailBlocks;
     }
 
+    @Override
     public BigDecimal getTotalDebits()
     {
         return this.totalDebits;
@@ -63,6 +70,7 @@ public class AccountDetailView
         this.totalDebits = totalDebits;
     }
 
+    @Override
     public BigDecimal getTotalCredits()
     {
         return this.totalCredits;
@@ -73,13 +81,26 @@ public class AccountDetailView
         this.totalCredits = totalCredits;
     }
 
+    @Override
     public BigDecimal getGrandTotal()
     {
         return this.grandTotal;
     }
 
+    @Override
     public void setGrandTotal(BigDecimal grandTotal)
     {
         this.grandTotal = grandTotal;
+    }
+
+    public String getGrandTotalType()
+    {
+        return this.grandTotalType;
+    }
+
+    @Override
+    public void setGrandTotalType(String grandTotalType)
+    {
+        this.grandTotalType = grandTotalType;
     }
 }

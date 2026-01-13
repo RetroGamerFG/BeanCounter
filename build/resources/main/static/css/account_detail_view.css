@@ -29,17 +29,25 @@ thead tr:first-child {
     width: 100%;
 }
 
-.totals-line {
-    background-color: #dfdfdf;
+.mtd-totals-line {
+    background-color: lightblue;
+}
+
+.ytd-totals-line {
+    background-color: lightyellow;;
+}
+
+.grand-total-line {
+    background-color: #d3d3d3;
 }
 
 /* Individual Elements */
 
-td#totalDebit, td#totalCredit {
+.total {
     text-decoration-line: underline;
 }
 
-td#grandTotal {
+.grand-total {
     text-decoration-line: underline;
     text-decoration-style: double;
 }
