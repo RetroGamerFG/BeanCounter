@@ -8,7 +8,7 @@
             <table>
                 <thead>
                     <tr>
-                        <label class="header-label" th:text="${accountEntry.key.accountName}"></label>
+                        <th colspan="6" class="header-label" th:text="${accountEntry.key.accountName}"></th>
                     </tr>
                     <tr>
                         <th>Trans #</th>
@@ -20,80 +20,65 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <div class="year-block" th:each="yearEntry : ${accountEntry.value}">
-                        <tr>
-                            <td th:text="${yearEntry.key}"></td>
+                    <th:block th:each="yearEntry : ${accountEntry.value}">
+                        <tr class="year-block">
+                            <td colspan="6" class="year-header" th:text="${yearEntry.key}" th:attr="data-year=${yearEntry.key}"></td>
                         </tr>
-                        <div class="month-block" th:each="monthEntry : ${yearEntry.value.monthBlocks}">
-                            <tr>
-                                <td th:text="${monthEntry.key}"></td>
+                        <th:block th:each="monthEntry : ${yearEntry.value.monthBlocks}">
+                            <tr class="month-block">
+                                <td colspan="6" class="month-header" th:text="${monthEntry.key}" th:attr="data-month=${monthEntry.key}"></td>
                             </tr>
-                            <tr class="entry-line" th:each="entryLine : ${monthEntry.value.accountDetailLines}"> <!-- ENTRIES START HERE -->
+                            <tr class="entry-line" th:each="entryLine : ${monthEntry.value.accountDetailLines}" th:attr="data-entry-id=${entryLine.journalEntryID}">
                                 <td><a th:text="${entryLine.journalEntryID}" href="http://localhost:8080/general_ledger"></a></td>
                                 <td th:text="${entryLine.description}"></td>
                                 <td th:if="${entryLine.postSignature} != null" th:text="${entryLine.postSignature}"></td>
                                 <td th:unless="${entryLine.postSignature} != null">Error</td>
                                 <td th:text="${entryLine.postDate}"></td>
-                                <td th:if="${entryLine.type} == 'D'" th:text="${entryLine.amount}"></td>
+                                <td th:if="${entryLine.type} == 'D'" th:text="${entryLine.amount}" class="debit-amount"></td>
                                 <td th:unless="${entryLine.type} != 'D'"></td>
-                                <td th:if="${entryLine.type} == 'C'" th:text="${entryLine.amount}"></td>
+                                <td th:if="${entryLine.type} == 'C'" th:text="${entryLine.amount}" class="credit-amount"></td>
                                 <td th:unless="${entryLine.type} != 'C'"></td>
                             </tr>
-                            <tr class="mtd-totals-line">
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                            <tr class="mtd-totals-line" th:attr="data-month=${monthEntry.key}">
+                                <td colspan="3"></td>
                                 <td>Totals:</td>
-                                <td class="total" id="totalDebit" th:text="${monthEntry.value.totalDebits}">Err</td>
-                                <td class="total" id="totalCredit" th:text="${monthEntry.value.totalCredits}">Err</td>
+                                <td class="total month-total-debit" th:text="${monthEntry.value.totalDebits}">Err</td>
+                                <td class="total month-total-credit" th:text="${monthEntry.value.totalCredits}">Err</td>
                             </tr>
-                            <tr class="mtd-totals-line">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td class="grand-total" id="monthGrandTotal" th:if="${monthEntry.value.grandTotalType} == 'D'" th:text="${monthEntry.value.grandTotal}"></td>
-                                <td class="grand-total" id="monthGrandTotal" th:unless="${monthEntry.value.grandTotalType} == 'D'"></td>
-                                <td class="grand-total" id="monthGrandTotal" th:if="${monthEntry.value.grandTotalType} == 'C'" th:text="${monthEntry.value.grandTotal}"></td>
-                                <td class="grand-total" id="monthGrandTotal" th:unless="${monthEntry.value.grandTotalType} == 'C'"></td>
+                            <tr class="mtd-totals-line" th:attr="data-month=${monthEntry.key}">
+                                <td colspan="4"></td>
+                                <td class="grand-total month-grand-total" th:if="${monthEntry.value.grandTotalType} == 'D'" th:text="${monthEntry.value.grandTotal}" th:attr="data-type='debit'"></td>
+                                <td class="grand-total month-grand-total" th:unless="${monthEntry.value.grandTotalType} == 'D'"></td>
+                                <td class="grand-total month-grand-total" th:if="${monthEntry.value.grandTotalType} == 'C'" th:text="${monthEntry.value.grandTotal}" th:attr="data-type='credit'"></td>
+                                <td class="grand-total month-grand-total" th:unless="${monthEntry.value.grandTotalType} == 'C'"></td>
                             </tr>
-                        </div>
-                        <tr class="ytd-totals-line">
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                        </th:block>
+                        <tr class="ytd-totals-line" th:attr="data-year=${yearEntry.key}">
+                            <td colspan="3"></td>
                             <td>YTD:</td>
-                            <td class="total" id="yearTotalDebit" th:text="${yearEntry.value.totalDebits}">Err</td>
-                            <td class="total" id="yearTotalCredit" th:text="${yearEntry.value.totalCredits}">Err</td>
-                            </tr>
-                        <tr class="ytd-totals-line">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="grand-total" id="yearGrandTotal" th:if="${yearEntry.value.grandTotalType} == 'D'" th:text="${yearEntry.value.grandTotal}"></td>
-                            <td class="grand-total" id="yearGrandTotal" th:unless="${yearEntry.value.grandTotalType} == 'D'"></td>
-                            <td class="grand-total" id="yearGrandTotal" th:if="${yearEntry.value.grandTotalType} == 'C'" th:text="${yearEntry.value.grandTotal}"></td>
-                            <td class="grand-total" id="yearGrandTotal" th:unless="${yearEntry.value.grandTotalType} == 'C'"></td>
+                            <td class="total year-total-debit" th:text="${yearEntry.value.totalDebits}">Err</td>
+                            <td class="total year-total-credit" th:text="${yearEntry.value.totalCredits}">Err</td>
                         </tr>
-                    </div>
-                    <tr class="grand-total-line">
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <tr class="ytd-totals-line" th:attr="data-year=${yearEntry.key}">
+                            <td colspan="4"></td>
+                            <td class="grand-total year-grand-total" th:if="${yearEntry.value.grandTotalType} == 'D'" th:text="${yearEntry.value.grandTotal}" th:attr="data-type='debit'"></td>
+                            <td class="grand-total year-grand-total" th:unless="${yearEntry.value.grandTotalType} == 'D'"></td>
+                            <td class="grand-total year-grand-total" th:if="${yearEntry.value.grandTotalType} == 'C'" th:text="${yearEntry.value.grandTotal}" th:attr="data-type='credit'"></td>
+                            <td class="grand-total year-grand-total" th:unless="${yearEntry.value.grandTotalType} == 'C'"></td>
+                        </tr>
+                    </th:block>
+                    <tr class="grand-total-line" data-level="account">
+                        <td colspan="3"></td>
                         <td>Report Total:</td>
-                        <td class="total" id="accountTotalDebit" th:text="${accountDetailView.totalDebits}">Err</td>
-                        <td class="total" id="accountTotalCredit" th:text="${accountDetailView.totalCredits}">Err</td>
+                        <td class="total account-total-debit" th:text="${accountDetailView.totalDebits}">Err</td>
+                        <td class="total account-total-credit" th:text="${accountDetailView.totalCredits}">Err</td>
                     </tr>
-                    <tr class="grand-total-line">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="grand-total" id="accountGrandTotal" th:if="${accountDetailView.grandTotalType} == 'D'" th:text="${accountDetailView.grandTotal}"></td>
-                        <td class="grand-total" id="accountGrandTotal" th:unless="${accountDetailView.grandTotalType} == 'D'"></td>
-                        <td class="grand-total" id="accountGrandTotal" th:if="${accountDetailView.grandTotalType} == 'C'" th:text="${accountDetailView.grandTotal}"></td>
-                        <td class="grand-total" id="accountGrandTotal" th:unless="${accountDetailView.grandTotalType} == 'C'"></td>
+                    <tr class="grand-total-line" data-level="account">
+                        <td colspan="4"></td>
+                        <td class="grand-total account-grand-total" th:if="${accountDetailView.grandTotalType} == 'D'" th:text="${accountDetailView.grandTotal}" data-type="debit"></td>
+                        <td class="grand-total account-grand-total" th:unless="${accountDetailView.grandTotalType} == 'D'"></td>
+                        <td class="grand-total account-grand-total" th:if="${accountDetailView.grandTotalType} == 'C'" th:text="${accountDetailView.grandTotal}" data-type="credit"></td>
+                        <td class="grand-total account-grand-total" th:unless="${accountDetailView.grandTotalType} == 'C'"></td>
                     </tr>
                 </tbody>
             </table>
