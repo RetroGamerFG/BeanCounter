@@ -2,6 +2,7 @@
     <head>
         <link rel="stylesheet" th:href="@{/css/all_pages.css}">
         <link rel="stylesheet" th:href="@{/css/account_detail_view.css}">
+        <script th:src="@{/js/account_detail_view.js}"></script>
     </head>
     <body>
         <div class="table-block" th:each="accountEntry : ${accountDetailView.accountDetailBlocks}">
@@ -9,6 +10,9 @@
                 <thead>
                     <tr>
                         <th colspan="6" class="header-label" th:text="${accountEntry.key.accountName}"></th>
+                    </tr>
+                    <tr>
+                        <th colspan="6" class="header-date" th:text="${accountDetailView.dateString}"></th>
                     </tr>
                     <tr>
                         <th>Trans #</th>
@@ -21,14 +25,14 @@
                 </thead>
                 <tbody>
                     <th:block th:each="yearEntry : ${accountEntry.value}">
-                        <tr class="year-block">
-                            <td colspan="6" class="year-header" th:text="${yearEntry.key}" th:attr="data-year=${yearEntry.key}"></td>
+                        <tr class="year-block" th:attr="data-year=${yearEntry.key}">
+                            <td colspan="6" class="year-header" th:text="${yearEntry.key}"></td>
                         </tr>
                         <th:block th:each="monthEntry : ${yearEntry.value.monthBlocks}">
-                            <tr class="month-block">
-                                <td colspan="6" class="month-header" th:text="${monthEntry.key}" th:attr="data-month=${monthEntry.key}"></td>
+                            <tr class="month-block" th:attr="data-year=${yearEntry.key},data-month=${monthEntry.key}">
+                                <td colspan="6" class="month-header" th:text="${monthEntry.key}"></td>
                             </tr>
-                            <tr class="entry-line" th:each="entryLine : ${monthEntry.value.accountDetailLines}" th:attr="data-entry-id=${entryLine.journalEntryID}">
+                            <tr class="entry-line" th:each="entryLine : ${monthEntry.value.accountDetailLines}" th:attr="data-entry-id=${entryLine.journalEntryID},data-year=${yearEntry.key},data-month=${monthEntry.key}">
                                 <td><a th:text="${entryLine.journalEntryID}" href="http://localhost:8080/general_ledger"></a></td>
                                 <td th:text="${entryLine.description}"></td>
                                 <td th:if="${entryLine.postSignature} != null" th:text="${entryLine.postSignature}"></td>
@@ -39,13 +43,13 @@
                                 <td th:if="${entryLine.type} == 'C'" th:text="${entryLine.amount}" class="credit-amount"></td>
                                 <td th:unless="${entryLine.type} != 'C'"></td>
                             </tr>
-                            <tr class="mtd-totals-line" th:attr="data-month=${monthEntry.key}">
+                            <tr class="mtd-totals-line" th:attr="data-year=${yearEntry.key},data-month=${monthEntry.key}">
                                 <td colspan="3"></td>
                                 <td>Totals:</td>
                                 <td class="total month-total-debit" th:text="${monthEntry.value.totalDebits}">Err</td>
                                 <td class="total month-total-credit" th:text="${monthEntry.value.totalCredits}">Err</td>
                             </tr>
-                            <tr class="mtd-totals-line" th:attr="data-month=${monthEntry.key}">
+                            <tr class="mtd-totals-line" th:attr="data-year=${yearEntry.key},data-month=${monthEntry.key}">
                                 <td colspan="4"></td>
                                 <td class="grand-total month-grand-total" th:if="${monthEntry.value.grandTotalType} == 'D'" th:text="${monthEntry.value.grandTotal}" th:attr="data-type='debit'"></td>
                                 <td class="grand-total month-grand-total" th:unless="${monthEntry.value.grandTotalType} == 'D'"></td>

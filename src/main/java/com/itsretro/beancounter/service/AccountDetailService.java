@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountDetailService: a service class used to link the AccountDetail repository and the AccountDetail logic.
+// Includes methods for retrieving and storing AccountDetail, and building AccountDetailView. 
+//
+
 package com.itsretro.beancounter.service;
 
 import java.util.List;
@@ -79,6 +87,9 @@ public class AccountDetailService
 
         //calculate the totals for all stored entries in the account detail view
         accountDetailLogic.calculateTotalsForAccountDetailView(adv);
+
+        //call the logic class to create the date line
+        adv.setDateString(accountDetailLogic.createDateString(accountDetail));
 
         return adv;
     }

@@ -1,8 +1,16 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountDetailBlockYear: a model used to store AccountDetailLine instances for a given year.
+//   Used to create AccountDetailView.
+//
+
 package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;
 import java.time.Month;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class AccountDetailBlockYear implements FinancialBlock //n for the amount of passed AccountDetailLine
@@ -17,7 +25,7 @@ public class AccountDetailBlockYear implements FinancialBlock //n for the amount
 
     public AccountDetailBlockYear()
     {
-        this.monthBlocks = new HashMap<>();
+        this.monthBlocks = new EnumMap<>(Month.class);
 
         this.totalDebits = new BigDecimal(0);
         this.totalCredits = new BigDecimal(0);

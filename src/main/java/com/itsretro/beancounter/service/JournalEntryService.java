@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// JournalEntryService: a service class used to link the JournalEntry repository and the Journal logic.
+// Includes methods for retrieving and storing JournalEntry. 
+//
+
 package com.itsretro.beancounter.service;
 
 import java.math.BigDecimal;

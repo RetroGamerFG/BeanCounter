@@ -1,11 +1,20 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountDetailLogic: a logic class for AccountDetail and related classes.
+// Includes methods related to class member assignment and computation of amounts.
+//
+
 package com.itsretro.beancounter.logic;
 
 import java.math.BigDecimal;
 import java.time.Month;
 import java.time.Year;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.springframework.stereotype.Component;
 
@@ -38,7 +47,7 @@ public class AccountDetailLogic
 
         for(Account account : accounts)
         {
-            Map<Year, AccountDetailBlockYear> adbyMap = new HashMap<>();
+            SortedMap<Year, AccountDetailBlockYear> adbyMap = new TreeMap<>();
             
             //determine the number of years and months from the start and end date
             for(int y = accountDetail.getStartingDate().getYear(); y <= accountDetail.getEndingDate().getYear(); y++)
@@ -158,7 +167,7 @@ public class AccountDetailLogic
         adv.setGrandTotal(BigDecimal.ZERO);
 
         //iterate the account detail view to perform total calculations for each year and each month
-        for(Map<Year, AccountDetailBlockYear> yearMap : adv.getAccountDetailBlocks().values())
+        for(SortedMap<Year, AccountDetailBlockYear> yearMap : adv.getAccountDetailBlocks().values())
         {
             //iterate through each account
             for(AccountDetailBlockYear yearBlock : yearMap.values())
@@ -176,6 +185,15 @@ public class AccountDetailLogic
         }
 
         System.out.println();
+    }
+
+    //
+    //
+    //
+    public String createDateString(AccountDetail ad)
+    {
+        String output = ad.getStartingDate().toString() + " - " + ad.getEndingDate();
+        return output;
     }
 
     //

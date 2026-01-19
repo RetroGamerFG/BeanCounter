@@ -1,12 +1,21 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountDetailBlockMonth: a model used to store AccountDetailLine instances for a given month.
+//   Used by AccountDetailBlockYear to create AccountDetailView.
+//
+
 package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Comparator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-public class AccountDetailBlockMonth implements FinancialBlock//1 < n < 12 for a given year
+public class AccountDetailBlockMonth implements FinancialBlock
 {
-    private Set<AccountDetailLine> accountDetailLines;
+    private SortedSet<AccountDetailLine> accountDetailLines;
 
     private BigDecimal totalDebits;
     private BigDecimal totalCredits;
@@ -16,7 +25,9 @@ public class AccountDetailBlockMonth implements FinancialBlock//1 < n < 12 for a
 
     public AccountDetailBlockMonth()
     {
-        this.accountDetailLines = new HashSet<>();
+        this.accountDetailLines = new TreeSet<>(
+            Comparator.comparing(AccountDetailLine::getPostDate)
+        );
 
         this.totalDebits = new BigDecimal(0);
         this.totalCredits = new BigDecimal(0);
@@ -29,12 +40,12 @@ public class AccountDetailBlockMonth implements FinancialBlock//1 < n < 12 for a
     // Getters & Setters
     //
 
-    public Set<AccountDetailLine> getAccountDetailLines()
+    public SortedSet<AccountDetailLine> getAccountDetailLines()
     {
         return this.accountDetailLines;
     }
 
-    public void setAccountDetailLines(Set<AccountDetailLine> accountDetailLines)
+    public void setAccountDetailLines(SortedSet<AccountDetailLine> accountDetailLines)
     {
         this.accountDetailLines = accountDetailLines;
     }

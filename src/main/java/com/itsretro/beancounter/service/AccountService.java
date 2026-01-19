@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// AccountService: a service class used to link the Account repository.
+// Includes methods for retrieving and storing Account. 
+//
+
 package com.itsretro.beancounter.service;
 
 import java.util.HashMap;
