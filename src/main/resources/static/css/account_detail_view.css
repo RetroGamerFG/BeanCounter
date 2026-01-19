@@ -7,39 +7,137 @@ body {
 }
 
 .header-label {
-    display: block;         /* Allows it to take full width */
-    width: 100%;
-    text-align: center;     /* Centers text within the label */
-    font-size: 1.5rem;
+    text-align: center;     /* Centers text within the header */
+    font-size: 2rem;
     font-weight: bold;
     padding: 10px 0;
     background-color: lightgreen;
     color: white;
+    border: none;
+}
+
+.header-date {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 0;
+    background-color: lightgreen;
+    color: white;
+    border-bottom: 2px solid #333;
+    border-top: none;
+    border-left: none;
+    border-right: none;
 }
 
 table {
-  width: 100%;            /* Forces table to fill the account-block */
-  border-collapse: collapse;
+    width: 100%;            /* Forces table to fill the account-block */
+    border-collapse: collapse;
 }
 
-/* Ensure the row containing the label spans properly */
-thead tr:first-child {
-    display: table-caption; /* Forces the first row to act like a title top-bar */
-    caption-side: top;
+/* Nested table for month/year data */
+.nested-table {
     width: 100%;
+    border-collapse: collapse;
+    margin: 0;
 }
 
-.totals-line {
-    background-color: #dfdfdf;
+.nested-table tbody {
+    border: none;
 }
 
-/* Individual Elements */
+/* Year and Month Headers */
+.year-block td {
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 8px;
+    background-color: #a5d6a7;
+    border-top: 2px solid #333;
+    cursor: pointer;
+    user-select: none;
+}
 
-td#totalDebit, td#totalCredit {
+.year-block td:hover {
+    background-color: #8bc34a;
+}
+
+.year-content {
+    border: none;
+}
+
+.year-data {
+    padding: 0 !important;
+    border: none;
+}
+
+.month-block td {
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 6px;
+    padding-left: 20px;
+    background-color: #c8e6c9;
+    border-top: 1px solid #666;
+    cursor: pointer;
+    user-select: none;
+}
+
+.month-block td:hover {
+    background-color: #a5d6a7;
+}
+
+/* Entry Lines */
+.entry-line td {
+    padding: 4px 8px;
+}
+
+.debit-amount,
+.credit-amount {
+    text-align: right;
+    font-family: monospace;
+}
+
+/* Total Lines */
+.mtd-totals-line {
+    background-color: #e8f5e9;
+    font-weight: bold;
+}
+
+.ytd-totals-line {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.grand-total-line {
+    background-color: #bdbdbd;
+    font-weight: bold;
+}
+
+/* Total Values */
+.total {
     text-decoration-line: underline;
+    text-align: right;
+    font-family: monospace;
 }
 
-td#grandTotal {
+.grand-total {
     text-decoration-line: underline;
     text-decoration-style: double;
+    text-align: right;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+/* Specific total classes for targeting */
+.month-total-debit,
+.month-total-credit,
+.year-total-debit,
+.year-total-credit,
+.account-total-debit,
+.account-total-credit {
+    text-align: right;
+}
+
+.month-grand-total,
+.year-grand-total,
+.account-grand-total {
+    font-weight: bold;
 }

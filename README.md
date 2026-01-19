@@ -7,7 +7,7 @@ Log transactions, generate statements, and perform additional functions for your
 
 • [X] Create, edit, review, & post journal entries
 
-• [ ] Lookup posted entries
+• [-] Lookup posted entries
 
 • [ ] Add custom new account codes
 
@@ -25,7 +25,9 @@ Log transactions, generate statements, and perform additional functions for your
 I'm looking for users that can test out the program. This includes general usage, bug finding, possible calculation errors, and anything else that throws a wrench into the machine. Any feedback during development is valuable, and is greatly appreciated.
 
 <h2>Next Update</h2>
-BeanCounter is now being written in Spring Boot! This is a complete overhaul from it's legacy version, but can now offer more thanks to the use of the JPA/MVC model, and it's front-end through Thymeleaf. The core functionality of creating journal entries and creating account detail forms has been properly implemented. More time will be spent on the account detail before proceeding with the statements module.
+BeanCounter is now being written in Spring Boot! This is a complete overhaul from it's legacy version, but can now offer more thanks to the use of the JPA/MVC model, and it's front-end through Thymeleaf. The core functionality of creating journal entries and creating account detail forms has been properly implemented. 
+
+Currently a posted entry can only been seen on the account detail, but I will be creating a view separate from the regular entry view that is also accessible from the account detail.
 
 <h2>MCP & Agent Functionality</h2>
 I am looking into optional packages that can utilize AI agents and MCP servers. However, I am still debating whether to include the prepared tools in this version. This functionality goes beyond the initial scope of the project, so I am still considering whether this will be part of a premium version of BeanCounter for the future. To be clear, the RESTful API will be included and is completely optional, but the tools/resources/prompts will not.
