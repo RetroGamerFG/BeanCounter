@@ -31,9 +31,12 @@ import com.itsretro.beancounter.viewmodel.AccountDetailView;
 @Component
 public class AccountDetailLogic 
 {
-    //
-    //
-    //
+    //buildEmptyAccountDetailView() - called first, initializes an AccountDetailView instance with a list of accounts and valid
+        //attributes passed. Assumes passed attributes are valid.
+    //inputs -
+        //accountDetail: an AccountDetail instance to create a view from.
+        //accounts: a list of Account instances to include in the view.
+    //output - an AccountDetailView with AccountDetailBlock(s) for each passed account.
     public AccountDetailView buildEmptyAccountDetailView(AccountDetail accountDetail, List<Account> accounts)
     {
         AccountDetailView adv = new AccountDetailView();
@@ -93,15 +96,15 @@ public class AccountDetailLogic
         return adv;
     }
 
-    //
-    //
-    //
+    //addJournalEntriesToAccountDetailView() - given an initialized AccountDetailView, AccountDetailLine instances are created and 
+        //populated for the given account and the contents of a query to JournalEntryRepository (called from service).
+    //inputs -
+        //adv: an AccountDetailView instance to add to.
+        //account: the current Account instance to append AccountDetailLine instances to.
+        //queryResults: a list of objects containing queried results from the JournalEntryRepository.
+    //output - none; appends the AccountDetailView with journal entries.
     public void addJournalEntriesToAccountDetailView(AccountDetailView adv, Account account, List<Object[]> queryResults)
     {
-        //using a map, store the results, keeping information from 'JournalEntry' and 'JournalEntryLine'
-        //includes comparator to keep output sorted by the post date
-        //Map<JournalEntry, List<JournalEntryLine>> mappedResults = new TreeMap<>((je1, je2) -> je1.getPostDate().compareTo(je2.getPostDate()));
-
         //for each queried object, convert to proper models, then store results
         for(Object[] row : queryResults)
         {
@@ -131,34 +134,9 @@ public class AccountDetailLogic
         }
     }
 
-    //
-    //
-    //
-    private AccountDetailLine mapToLine(JournalEntry je, JournalEntryLine jel)
-    {
-        AccountDetailLine adl = new AccountDetailLine();
-        adl.setJournalEntryID(je.getJournalEntryID().toString());
-        adl.setDescription(je.getTransactionDescription());
-        adl.setPostSignature(je.getPostSignature());
-        adl.setPostDate(je.getPostDate().toString()); 
-
-        if ("D".equalsIgnoreCase(jel.getTransactionType()))
-        {
-            adl.setAmount(jel.getDebitAmount());
-            adl.setType("D");
-        }
-        else 
-        {
-            adl.setAmount(jel.getCreditAmount());
-            adl.setType("C");
-        }
-
-        return adl;
-    }
-
-    //
-    //
-    //
+    //createTotalsForAccountDetailView() - performs calculations to get debit, credit, and grand total amounts for AccountDetailView.
+    //inputs - adv: an instance of AccountDetailView.
+    //output - none; updates instance values.
     public void calculateTotalsForAccountDetailView(AccountDetailView adv)
     {
         //reset values to zero
@@ -187,18 +165,45 @@ public class AccountDetailLogic
         System.out.println();
     }
 
-    //
-    //
-    //
+    //createDateString() - given a valid accountDetail, initializes the dateString member with passed values.
+    //inputs - ad: an AccountDetail instance.
+    //output - a formatted String with passed values.
     public String createDateString(AccountDetail ad)
     {
         String output = ad.getStartingDate().toString() + " - " + ad.getEndingDate();
         return output;
     }
 
-    //
-    //
-    //
+    //mapToLine() - helper function to create the AccountDetailLine instance.
+    //inputs -
+        //je: a JournalEntry instance.
+        //jel: a JounalEntryLine instance.
+    //output - an initialized AccountDetailLine with passed values.
+    private AccountDetailLine mapToLine(JournalEntry je, JournalEntryLine jel)
+    {
+        AccountDetailLine adl = new AccountDetailLine();
+        adl.setJournalEntryID(je.getJournalEntryID().toString());
+        adl.setDescription(je.getTransactionDescription());
+        adl.setPostSignature(je.getPostSignature());
+        adl.setPostDate(je.getPostDate().toString()); 
+
+        if ("D".equalsIgnoreCase(jel.getTransactionType()))
+        {
+            adl.setAmount(jel.getDebitAmount());
+            adl.setType("D");
+        }
+        else 
+        {
+            adl.setAmount(jel.getCreditAmount());
+            adl.setType("C");
+        }
+
+        return adl;
+    }
+
+    //calculateYearTotals() - helper function to calculate totals for the AccountDetailBlockYear instance.
+    //inputs - yearBlock: an instance of an AccountDetailBlockYear to calculate totals for.
+    //output - none; updates instance values.
     private void calculateYearTotals(AccountDetailBlockYear yearBlock)
     {
         //reset values to zero
@@ -221,9 +226,9 @@ public class AccountDetailLogic
         finalizeGrandTotal(yearBlock);
     }
 
-    //
-    //
-    //
+    //calculateMonthTotals() - helper function to calculate totals for the AccountDetailBlockMonth instance.
+    //inputs - monthBlock: an instance of an AccountDetailBlockMonth to calculate totals for.
+    //output - none; updates instance values.
     private void calculateMonthTotals(AccountDetailBlockMonth monthBlock)
     {
         //reset values to zero
@@ -242,9 +247,9 @@ public class AccountDetailLogic
         finalizeGrandTotal(monthBlock);
     }
 
-    //
-    //
-    //
+    //finalizeGrandTotal() - helper function to calculate grand totals for a given FinancialBlock instance.
+    //inputs - block: a class that utilizes the FinancialBlock interface.
+    //output - none; updates instance values.
     private void finalizeGrandTotal(FinancialBlock block)
     {
         BigDecimal debits = block.getTotalDebits();

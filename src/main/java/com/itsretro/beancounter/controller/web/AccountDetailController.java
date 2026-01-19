@@ -71,6 +71,11 @@ public class AccountDetailController
         return "redirect:/account_detail";
     }
 
+    //accountDetailView() - takes the user's selection and presents an account detail form.
+    //inputs -
+        //id: a @PathVariable instance of a long representing the AccountDetail to view.
+        //model: the page model to load values into.
+    //output - the account detail page loaded into view
     @GetMapping("/account_detail/view/{id}")
     public String accountDetailView(@PathVariable("id") Long id, Model model)
     {
@@ -83,6 +88,11 @@ public class AccountDetailController
         return "account_detail_view";
     }
 
+    //reloadView() - a helper function used if a AccountDetail fails to generate.
+    //inputs -
+        //model: the page model to load values into.
+        //accountDetail: the AccountDetail instance to reload into model.
+    //output - reloads the page with previous selections from accountDetail.
     private String reloadView(Model model, AccountDetail accountDetail) 
     {
         model.addAttribute("accountDetail", accountDetail);

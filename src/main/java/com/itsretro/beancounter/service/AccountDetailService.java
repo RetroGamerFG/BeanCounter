@@ -36,34 +36,34 @@ public class AccountDetailService
     @Autowired
     private JournalEntryService journalEntryService;
 
-    //
-    //
-    //
+    //getAccountDetailByID() - fetches an AccountDetail from the repository given an identifier.
+    //inputs - id: a long representing the id of the account detail to search for.
+    //output - an AccountDetail matching the id, or an exception is thrown on error.
     public AccountDetail getAccountDetailByID(Long id)
     {
         return accountDetailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Account not found"));
     }
 
-    //
-    //
-    //
+    //getAllAccountDetail() - fetches all AccountDetail from the repository.
+    //inputs - none.
+    //output - a list containing all instances of AccountDetail.
     public List<AccountDetail> getAllAccountDetail()
     {
         return accountDetailRepository.findAll();
     }
 
-    //
-    //
-    //
+    //saveNewAccountDetail() - calls the AccountDetail repository to save an instance.
+    //inputs - accountDetail: an AccountDetail instance to save into the repository.
+    //output - the AccountDetail instance, regardless of result.
     public AccountDetail saveNewAccountDetail(AccountDetail accountDetail)
     {
         accountDetailRepository.save(accountDetail);
         return accountDetail;
     }
 
-    //
-    //
-    //
+    //getAccountDetailView() - creates an AccountDetailView instance through several operations.
+    //inputs - accountDetail: an AccountDetail instance to convert into a view.
+    //output - an AccountDetailView with the passed values.
     public AccountDetailView getAccountDetailView(AccountDetail accountDetail)
     {
         List<Account> matchedAccounts = accountService.getAccountsForAccountDetail(accountDetail.getStartingAccountID(), accountDetail.getEndingAccountID());

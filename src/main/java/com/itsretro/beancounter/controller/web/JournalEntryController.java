@@ -151,6 +151,11 @@ public class JournalEntryController
         return "redirect:/general_ledger";
     }
 
+    //reloadView() - a helper function used if a JournalEntry fails to submit/post.
+    //inputs -
+        //model: the page model to load values into.
+        //journalEntry: the JournalEntry instance to reload into model.
+    //output - reloads the page with the journal entry.
     private String reloadView(Model model, JournalEntry journalEntry) 
     {
         model.addAttribute("journalEntry", journalEntry);
