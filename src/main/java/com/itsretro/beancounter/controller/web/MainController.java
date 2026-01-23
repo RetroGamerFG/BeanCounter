@@ -7,8 +7,16 @@
 
 package com.itsretro.beancounter.controller.web;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.itsretro.beancounter.model.BusinessInfo;
 
 @Controller
 public class MainController
@@ -22,10 +30,41 @@ public class MainController
         return "main";
     }
 
-    //to be migrated later.
-    @GetMapping("/statements")
-    public String statements()
+    @GetMapping("/setup")
+    public String setup()
     {
-        return "statements";
+        //confirm file does not exist. DO NOT OVERWRITE THE EXISTING FILE HERE.
+        File file = new File("data/business.dat");
+        
+        if(file.exists())
+        {
+            return "error";
+        }
+        
+        return "setup";
+    }
+
+    @PostMapping("/setup")
+    public String finalizeSetup(BusinessInfo businessInfo)
+    {
+        //confirm file does not exist. DO NOT OVERWRITE THE EXISTING FILE HERE.
+        File file = new File("data/business.dat");
+        
+        if(file.exists())
+        {
+            return "error";
+        }
+
+        //attempt to save the inputs.
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data/business.dat")))
+        {
+            oos.writeObject(businessInfo);
+        } 
+        catch (IOException e) 
+        {
+            return "error";
+        }
+        
+        return "redirect:/dashboard";
     }
 }

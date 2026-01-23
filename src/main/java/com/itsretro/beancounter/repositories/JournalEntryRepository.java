@@ -39,5 +39,11 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Inte
         @Param("accountCode") BigDecimal accountCode
     );
 
+    //fetches all journal entry lines with the journal entry data joined by SQL that were:
+        //1 - have a post date found within the range
+        //2 - have a journal entry with a status of 'posted'
+        //3 - were created before the financial statement's generated date
+        //4 - include an account of a specified accountType
+
     List<JournalEntry> findByStatusNot(String status);
 }
