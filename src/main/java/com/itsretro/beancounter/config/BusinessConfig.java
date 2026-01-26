@@ -5,9 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.annotation.RequestScope;
 
 import com.itsretro.beancounter.model.BusinessInfo;
 
@@ -15,7 +15,7 @@ import com.itsretro.beancounter.model.BusinessInfo;
 public class BusinessConfig 
 {
     @Bean
-    @ConfigurationProperties(prefix = "business.dat")
+    @RequestScope
     public BusinessInfo businessInfo()
     {
         BusinessInfo businessInfo = new BusinessInfo();

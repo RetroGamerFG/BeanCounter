@@ -21,6 +21,9 @@ public class FinancialStatement
     @Column(name = "StatementType", length = 2) //(IS), (BS), (RE), (FA)
     private String statementType;
 
+    @Column(name = "CreationDate")
+    private LocalDate creationDate;
+
     @Column(name = "StartingDate")
     private LocalDate startingDate;
 
@@ -58,6 +61,16 @@ public class FinancialStatement
     public void setStatementType(String statementType)
     {
         this.statementType = statementType;
+    }
+
+    public LocalDate getCreationDate()
+    {
+        return this.creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate)
+    {
+        this.creationDate = creationDate;
     }
 
     public LocalDate getStartingDate()
