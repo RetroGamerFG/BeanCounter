@@ -1,32 +1,40 @@
 package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FinancialStatementBlock 
 {
-    public enum accountType 
-    {
-        REVENUE,
-        EXPENSE;
-    }
-
-    private Map<accountType, FinancialStatementLine> statementLines;
+    private Map<String, FinancialStatementLine> statementLines; //string = Account.accountName
     
     private BigDecimal totalAmountMTD;
     private BigDecimal totalAmountQTD;
     private BigDecimal totalAmountYTD;
 
     //
+    // Initializer(s)
+    //
+
+    public FinancialStatementBlock()
+    {
+        this.statementLines = new HashMap<>();
+        
+        this.totalAmountMTD = BigDecimal.ZERO;
+        this.totalAmountQTD = BigDecimal.ZERO;
+        this.totalAmountYTD = BigDecimal.ZERO;
+    }
+
+    //
     // Getters & Setters
     //
 
-    public Map<accountType, FinancialStatementLine> getStatementLines()
+    public Map<String, FinancialStatementLine> getStatementLines()
     {
         return statementLines;
     }
 
-    public void setStatementLines(Map<accountType, FinancialStatementLine> statementLines)
+    public void setStatementLines(Map<String, FinancialStatementLine> statementLines)
     {
         this.statementLines = statementLines;
     }

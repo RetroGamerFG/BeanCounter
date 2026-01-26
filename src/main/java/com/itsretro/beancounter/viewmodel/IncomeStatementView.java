@@ -1,15 +1,13 @@
 package com.itsretro.beancounter.viewmodel;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.itsretro.beancounter.model.FinancialStatementBlock;
 
 public class IncomeStatementView 
 {
-    private List<FinancialStatementBlock> revenueItems; //blocks hold MTD, QTD, and YTD totals for accountType
-    private List<FinancialStatementBlock> expenseItems;
+    private FinancialStatementBlock revenueItems; //blocks hold MTD, QTD, and YTD totals for accountType
+    private FinancialStatementBlock expenseItems;
 
     private BigDecimal grandTotalMTD;
     private BigDecimal grandTotalQTD;
@@ -25,8 +23,8 @@ public class IncomeStatementView
 
     public IncomeStatementView()
     {
-        this.revenueItems = new ArrayList<>();
-        this.expenseItems = new ArrayList<>();
+        this.revenueItems = null;
+        this.expenseItems = null;
 
         this.grandTotalMTD = BigDecimal.ZERO;
         this.grandTotalQTD = BigDecimal.ZERO;
@@ -41,22 +39,22 @@ public class IncomeStatementView
     // Getters & Setters
     //
 
-    public List<FinancialStatementBlock> getRevenueItems()
+    public FinancialStatementBlock getRevenueItems()
     {
         return revenueItems;
     }
 
-    public void setRevenueItems(List<FinancialStatementBlock> revenueItems)
+    public void setRevenueItems(FinancialStatementBlock revenueItems)
     {
         this.revenueItems = revenueItems;
     }
 
-    public List<FinancialStatementBlock> getExpenseItems()
+    public FinancialStatementBlock getExpenseItems()
     {
         return expenseItems;
     }
 
-    public void setExpenseItems(List<FinancialStatementBlock> expenseItems)
+    public void setExpenseItems(FinancialStatementBlock expenseItems)
     {
         this.expenseItems = expenseItems;
     }

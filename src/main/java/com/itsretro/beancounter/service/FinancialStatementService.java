@@ -86,18 +86,23 @@ public class FinancialStatementService
         );
 
         //populate the fetched journal entries into the income statement view
-        incomeStatementLogic.addJournalEntriesToIncomeStatementView(isv, queriedRev);
+        incomeStatementLogic.addJournalEntriesToIncomeStatementView(isv, queriedRev, "R");
 
         //call the journalEntry repository to get list of "Expense" account journal entries
         List<Object[]> queriedExp = journalEntryRepository.findForFinancialStatement(
             financialStatement.getStartingDate(), 
             endDate,
             financialStatement.getGeneratedDate(), 
-            "E"
+            "X"
         );
 
         //populate the fetched journal entries into the income statement view
-        incomeStatementLogic.addJournalEntriesToIncomeStatementView(isv, queriedExp);
+        incomeStatementLogic.addJournalEntriesToIncomeStatementView(isv, queriedExp, "X");
+
+        //calculate totals
+        incomeStatementLogic.calculateTotals(isv);
+
+        System.out.println(); //for breakpoint debugging
 
         return isv;
     }

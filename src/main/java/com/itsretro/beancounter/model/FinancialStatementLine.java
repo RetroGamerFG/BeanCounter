@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 public class FinancialStatementLine 
 {
-    private String accountName;
     private boolean isCredit;
 
     private BigDecimal totalAmountMTD;
@@ -12,18 +11,19 @@ public class FinancialStatementLine
     private BigDecimal totalAmountYTD;
 
     //
-    // Getters & Setters
+    // Initializer(s)
     //
 
-    public String getAccountName()
+    public FinancialStatementLine()
     {
-        return accountName;
+        this.totalAmountMTD = BigDecimal.ZERO;
+        this.totalAmountQTD = BigDecimal.ZERO;
+        this.totalAmountYTD = BigDecimal.ZERO;
     }
 
-    public void setAccountName(String accountName)
-    {
-        this.accountName = accountName;
-    }
+    //
+    // Getters & Setters
+    //
 
     public boolean getIsCredit()
     {
