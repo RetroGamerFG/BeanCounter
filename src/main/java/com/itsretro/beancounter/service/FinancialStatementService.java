@@ -47,13 +47,28 @@ public class FinancialStatementService
     }
 
     //
-    // Service Methods
+    // Repository Calls
     //
 
     public FinancialStatement getFinancialStatementByID(Long id)
     {
         return financialStatementRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Financial statement not found"));
     }
+
+    public List<FinancialStatement> getAllFinancialStatements()
+    {
+        return financialStatementRepository.findAll();
+    }
+
+    public FinancialStatement saveNewFinancialStatement(FinancialStatement financialStatement)
+    {
+        financialStatementRepository.save(financialStatement);
+        return financialStatement;
+    }
+
+    //
+    // Service Methods
+    //
 
     public IncomeStatementView getIncomeStatementView(FinancialStatement financialStatement)
     {
@@ -63,16 +78,27 @@ public class FinancialStatementService
         LocalDate endDate = businessInfoLogic.determineEndDate(businessInfo,financialStatement);
 
         //call the journalEntry repository to get list of 'Revenue' account journal entries
-        List<Object[]> queried = journalEntryRepository.findForFinancialStatement(
+        List<Object[]> queriedRev = journalEntryRepository.findForFinancialStatement(
             financialStatement.getStartingDate(), 
             endDate,
-            financialStatement.getCreationDate(), 
+            financialStatement.getGeneratedDate(), 
             "R"
         );
 
         //populate the fetched journal entries into the income statement view
+        incomeStatementLogic.addJournalEntriesToIncomeStatementView(isv, queriedRev);
+
+        //call the journalEntry repository to get list of "Expense" account journal entries
+        List<Object[]> queriedExp = journalEntryRepository.findForFinancialStatement(
+            financialStatement.getStartingDate(), 
+            endDate,
+            financialStatement.getGeneratedDate(), 
+            "E"
+        );
+
+        //populate the fetched journal entries into the income statement view
+        incomeStatementLogic.addJournalEntriesToIncomeStatementView(isv, queriedExp);
 
         return isv;
     }
-
 }

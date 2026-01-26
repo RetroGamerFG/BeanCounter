@@ -1,8 +1,84 @@
 <html>
     <head>
         <link rel="stylesheet" th:href="@{/css/all_pages.css}">
+        <link rel="stylesheet" th:href="@{/css/statements.css}">
+        <script src="/js/statements.js"></script>
     </head>
     <body>
-        <p>This is the statements page</p>
+        <div class="navigation-bar">
+            <button id="backButton">Back</button>
+            <button id="createButton">Create Detail</button>
+        </div>
+
+        <div id="entry-form" class="entry-form" hidden>
+            <form id="financialStatementForm" th:object="${financialStatement}" method="post">
+                <div class="fields-section">
+                    <div class="inline-field">
+                        <div class="field">
+                            <label>Statement Type:</label>
+                            <select id="statementType" th:field="*{statementType}">
+                                <option value="IS">Income Statement</option>
+                                <option value="BS">Balance Sheet</option>
+                                <option value="RE">Retained Earnings</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="inline-field">
+                        <div class="field">
+                            <label>Starting Date:</label>
+                            <input type="date" th:field="*{startingDate}"/>
+                        </div>
+                    </div>
+                    <div class="inline-field">
+                        <div class="field">
+                            <label>Range Type:</label>
+                            <select id="rangeType" th:field="*{rangeType}">
+                                <option value="MTD">Month to Date</option>
+                                <option value="QTD">Quarter to Date</option>
+                                <option value="YTD">Year to Date</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="inline-field">
+                        <div class="field">
+                            <label>Display Columns:</label>
+                            <div>
+                                <input type="checkbox" id="includeMTD" th:field="*{includeMTD}"/>
+                                <label for="includeMTD">Include Months</label>
+                                <input type="checkbox" id="includeQTD" th:field="*{includeQTD}"/>
+                                <label for="includeQTD">Include Quarters</label>
+                                <input type="checkbox" id="includeYTD" th:field="*{includeYTD}"/>
+                                <label for="includeYTD">Include Years</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="generateButton" type="button">Generate</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div id="history-section" class="table-block">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Statement Type</t>
+                        <th>Generated</th>
+                        <th>Starting Date</th>
+                        <th>Range Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="logs" th:each="line : *{allFinancialStatements}">
+                        <td th:text="${line.statementType}"></td>
+                        <td th:text="${line.generatedDate}"></td>
+                        <td th:text="${#temporals.format(line.startingDate, 'MMMM yyyy')}"></td>
+                        <td th:text="${line.rangeType}"></td>
+                        <td><button th:value="${line.financialStatementID}" onclick="viewStatement(this)">View</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>

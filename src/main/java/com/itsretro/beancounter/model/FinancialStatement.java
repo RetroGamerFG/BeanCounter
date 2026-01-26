@@ -21,8 +21,8 @@ public class FinancialStatement
     @Column(name = "StatementType", length = 2) //(IS), (BS), (RE), (FA)
     private String statementType;
 
-    @Column(name = "CreationDate")
-    private LocalDate creationDate;
+    @Column(name = "GeneratedDate")
+    private LocalDate generatedDate;
 
     @Column(name = "StartingDate")
     private LocalDate startingDate;
@@ -63,14 +63,14 @@ public class FinancialStatement
         this.statementType = statementType;
     }
 
-    public LocalDate getCreationDate()
+    public LocalDate getGeneratedDate()
     {
-        return this.creationDate;
+        return this.generatedDate;
     }
 
-    public void setCreationDate(LocalDate creationDate)
+    public void setGeneratedDate(LocalDate generatedDate)
     {
-        this.creationDate = creationDate;
+        this.generatedDate = generatedDate;
     }
 
     public LocalDate getStartingDate()
