@@ -74,7 +74,7 @@ public class JournalEntryController
         journalEntry.getLines().add(new JournalEntryLine());
 
         model.addAttribute("journalEntry", journalEntry);
-        model.addAttribute("allAccounts", accountService.getAllAccountsForDropdown());
+        model.addAttribute("allAccounts", accountService.getAllAccounts());
         
         return "journal_entry_view";
     }
@@ -90,7 +90,7 @@ public class JournalEntryController
         JournalEntry journalEntry = journalService.getEntryByID(id);
 
         model.addAttribute("journalEntry", journalEntry);
-        model.addAttribute("allAccounts", accountService.getAllAccountsForDropdown());
+        model.addAttribute("allAccounts", accountService.getAllAccounts());
         
         return "journal_entry_view";
     }
@@ -159,7 +159,7 @@ public class JournalEntryController
     private String reloadView(Model model, JournalEntry journalEntry) 
     {
         model.addAttribute("journalEntry", journalEntry);
-        model.addAttribute("allAccounts", accountService.getAllAccountsForDropdown());
+        model.addAttribute("allAccounts", accountService.getAllAccounts());
 
         return "journal_entry_view";
     }

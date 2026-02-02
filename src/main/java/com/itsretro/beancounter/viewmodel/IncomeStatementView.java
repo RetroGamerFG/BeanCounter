@@ -1,21 +1,25 @@
 package com.itsretro.beancounter.viewmodel;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import com.itsretro.beancounter.model.FinancialStatementBlock;
+import com.itsretro.beancounter.model.FinancialStatementColumn;
 
 public class IncomeStatementView 
 {
-    private FinancialStatementBlock revenueItems; //blocks hold MTD, QTD, and YTD totals for accountType
-    private FinancialStatementBlock expenseItems;
+    private Set<String> revenueAccounts;
+    private Set<String> expenseAccounts;
 
-    private BigDecimal grandTotalMTD;
-    private BigDecimal grandTotalQTD;
-    private BigDecimal grandTotalYTD;
+    private List<FinancialStatementColumn> revenueItems;
+    private List<FinancialStatementColumn> expenseItems;
 
-    private boolean includeMTD;
-    private boolean includeQTD;
-    private boolean includeYTD;
+    private int columnCount;
+    private List<BigDecimal> netIncomeByColumn;
+
+    private String dateRangeString;
 
     //
     // Initializer(s)
@@ -23,99 +27,97 @@ public class IncomeStatementView
 
     public IncomeStatementView()
     {
-        this.revenueItems = null;
-        this.expenseItems = null;
+        this.revenueAccounts = new HashSet<>();
+        this.expenseAccounts = new HashSet<>();
 
-        this.grandTotalMTD = BigDecimal.ZERO;
-        this.grandTotalQTD = BigDecimal.ZERO;
-        this.grandTotalYTD = BigDecimal.ZERO;
+        this.revenueItems = new ArrayList<>();
+        this.expenseItems = new ArrayList<>();
 
-        this.includeMTD = false;
-        this.includeQTD = false;
-        this.includeYTD = false;
+        this.netIncomeByColumn = new ArrayList<>();
+
+        this.dateRangeString = null;
     }
 
     //
     // Getters & Setters
     //
 
-    public FinancialStatementBlock getRevenueItems()
+    public Set<String> getRevenueAccounts()
     {
-        return revenueItems;
+        return this.revenueAccounts;
     }
 
-    public void setRevenueItems(FinancialStatementBlock revenueItems)
+    public void setRevenueAccounts(Set<String> revenueAccounts)
+    {
+        this.revenueAccounts = revenueAccounts;
+    }
+
+    public Set<String> getExpenseAccounts()
+    {
+        return this.expenseAccounts;
+    }
+
+    public void setExpenseAccounts(Set<String> expenseAccounts)
+    {
+        this.expenseAccounts = expenseAccounts;
+    }
+
+    public List<FinancialStatementColumn> getRevenueItems()
+    {
+        return this.revenueItems;
+    }
+
+    public void setRevenueItems(List<FinancialStatementColumn> revenueItems)
     {
         this.revenueItems = revenueItems;
     }
 
-    public FinancialStatementBlock getExpenseItems()
+    public List<FinancialStatementColumn> getExpenseItems()
     {
-        return expenseItems;
+        return this.expenseItems;
     }
 
-    public void setExpenseItems(FinancialStatementBlock expenseItems)
+    public void setExpenseItems(List<FinancialStatementColumn> expenseItems)
     {
         this.expenseItems = expenseItems;
     }
 
-    public BigDecimal getGrandTotalMTD()
+    public int getColumnCount()
     {
-        return grandTotalMTD;
+        return this.columnCount;
     }
 
-    public void setGrandTotalMTD(BigDecimal grandTotalMTD)
+    public void setColumnCount(int columnCount)
     {
-        this.grandTotalMTD = grandTotalMTD;
+        this.columnCount = columnCount;
     }
 
-    public BigDecimal getGrandTotalQTD()
+    public List<BigDecimal> getNetIncomeByColumn()
     {
-        return grandTotalQTD;
+        return this.netIncomeByColumn;
     }
 
-    public void setGrandTotalQTD(BigDecimal grandTotalQTD)
+    public void setNetIncomeByBlock(List<BigDecimal> netIncomeByColumn)
     {
-        this.grandTotalQTD = grandTotalQTD;
+        this.netIncomeByColumn = netIncomeByColumn;
     }
 
-    public BigDecimal getGrandTotalYTD()
+    public String getDateRangeString()
     {
-        return grandTotalYTD;
+        return this.dateRangeString;
     }
 
-    public void setGrandTotalYTD(BigDecimal grandTotalYTD)
+    public void setDateRangeString(String dateRangeString)
     {
-        this.grandTotalYTD = grandTotalYTD;
+        this.dateRangeString = dateRangeString;
     }
 
-    public boolean getIncludeMTD()
-    {
-        return includeMTD;
-    }
+    //
+    // Additional Methods
+    //
 
-    public void setIncludeMTD(boolean includeMTD)
+    public void incrementColumnCount()
     {
-        this.includeMTD = includeMTD;
-    }
-
-    public boolean getIncludeQTD()
-    {
-        return includeQTD;
-    }
-
-    public void setIncludeQTD(boolean includeQTD)
-    {
-        this.includeQTD = includeQTD;
-    }
-
-    public boolean getIncludeYTD()
-    {
-        return includeYTD;
-    }
-
-    public void setIncludeYTD(boolean includeYTD)
-    {
-        this.includeYTD = includeYTD;
+        this.columnCount++;
     }
 }

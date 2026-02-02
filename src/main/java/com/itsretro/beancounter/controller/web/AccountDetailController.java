@@ -42,7 +42,7 @@ public class AccountDetailController
     {
         model.addAttribute("accountDetail", new AccountDetail());
         model.addAttribute("allAccountDetails", accountDetailService.getAllAccountDetail());
-        model.addAttribute("allAccounts", accountService.getAllAccountsForDropdown());
+        model.addAttribute("allAccounts", accountService.getAllAccounts());
 
         return "account_detail";
     }
@@ -96,7 +96,7 @@ public class AccountDetailController
     private String reloadView(Model model, AccountDetail accountDetail) 
     {
         model.addAttribute("accountDetail", accountDetail);
-        model.addAttribute("allAccounts", accountService.getAllAccountsForDropdown());
+        model.addAttribute("allAccounts", accountService.getAllAccounts());
 
         return "account_detail";
     }

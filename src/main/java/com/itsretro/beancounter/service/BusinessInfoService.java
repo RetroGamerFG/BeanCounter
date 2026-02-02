@@ -21,4 +21,9 @@ public class BusinessInfoService
     //
     // Service Methods
     //
+
+    public BusinessInfo getBusinessInfo()
+    {
+        return this.businessInfo;
+    }
 }

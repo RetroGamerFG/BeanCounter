@@ -4,11 +4,9 @@ import java.math.BigDecimal;
 
 public class FinancialStatementLine 
 {
+    private String accountName;
     private boolean isCredit;
-
-    private BigDecimal totalAmountMTD;
-    private BigDecimal totalAmountQTD;
-    private BigDecimal totalAmountYTD;
+    private BigDecimal totalAmount;
 
     //
     // Initializer(s)
@@ -16,14 +14,48 @@ public class FinancialStatementLine
 
     public FinancialStatementLine()
     {
-        this.totalAmountMTD = BigDecimal.ZERO;
-        this.totalAmountQTD = BigDecimal.ZERO;
-        this.totalAmountYTD = BigDecimal.ZERO;
+        this.accountName = null;
+        this.isCredit = false;
+        this.totalAmount = BigDecimal.ZERO;
+    }
+
+    //for use with the journalEntryLine repository
+    public FinancialStatementLine(String accountName, BigDecimal debitAmount, BigDecimal creditAmount)
+    {
+        this.accountName = accountName;
+
+        if(debitAmount.compareTo(creditAmount) > 0)
+        {
+            this.totalAmount = debitAmount;
+            this.isCredit = false;
+        }
+        else if (debitAmount.compareTo(creditAmount) < 0)
+        {
+            this.totalAmount = creditAmount;
+            this.isCredit = true;
+        }
+        else
+        {
+            this.totalAmount = BigDecimal.ZERO;
+            this.isCredit = false;
+        }
+
+        System.out.println();
     }
 
     //
     // Getters & Setters
     //
+
+    public String getAccountName()
+    {
+        return this.accountName;
+    }
+
+    public void setAccountName(String accountName)
+    {
+        this.accountName = accountName;
+    }
 
     public boolean getIsCredit()
     {
@@ -35,33 +67,13 @@ public class FinancialStatementLine
         this.isCredit = isCredit;
     }
 
-    public BigDecimal getTotalAmountMTD()
+    public BigDecimal getTotalAmount()
     {
-        return totalAmountMTD;
+        return totalAmount;
     }
 
-    public void setTotalAmountMTD(BigDecimal totalAmountMTD)
+    public void setTotalAmount(BigDecimal totalAmount)
     {
-        this.totalAmountMTD = totalAmountMTD;
-    }
-
-    public BigDecimal getTotalAmountQTD()
-    {
-        return totalAmountQTD;
-    }
-
-    public void setTotalAmountQTD(BigDecimal totalAmountQTD)
-    {
-        this.totalAmountQTD = totalAmountQTD;
-    }
-
-    public BigDecimal getTotalAmountYTD()
-    {
-        return totalAmountYTD;
-    }
-
-    public void setTotalAmountYTD(BigDecimal totalAmountYTD)
-    {
-        this.totalAmountYTD = totalAmountYTD;
+        this.totalAmount = totalAmount;
     }
 }

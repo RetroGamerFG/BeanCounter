@@ -58,6 +58,7 @@ public class FinancialStatementController
         IncomeStatementView incomeStatementView = financialStatementService.getIncomeStatementView(financialStatement);
 
         model.addAttribute("incomeStatementView", incomeStatementView);
+        model.addAttribute("businessInfo", financialStatementService.getBusinessInfo());
         
         return "income_statement_view";
     }

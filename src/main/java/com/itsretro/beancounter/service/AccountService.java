@@ -45,7 +45,7 @@ public class AccountService
     //getAllAccountsForDropdown() - fetches all Account data saved in the Account repository. This is primarily used for HTML inputs.
     //inputs - none.
     //output - a list containing all accounts (should be at least one for program to function...).
-    public List<Account> getAllAccountsForDropdown()
+    public List<Account> getAllAccounts()
     {
         return accountRepository.findAll();
     }

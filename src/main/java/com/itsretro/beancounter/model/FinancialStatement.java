@@ -30,14 +30,20 @@ public class FinancialStatement
     @Column(name = "RangeType", length = 3)
     private String rangeType;
 
-    @Column(name = "IncludeMTD", nullable = true)
-    private boolean includeMTD;
+    @Column(name = "IncludeAllMonths", nullable = true) //for a multi-month statement
+    private boolean includeAllMonths;
 
-    @Column(name = "IncludeQTD", nullable = true)
-    private boolean includeQTD;
+    @Column(name = "IncludeAllQuarters", nullable = true) //for a multi-quarter statement
+    private boolean includeAllQuarters;
 
-    @Column(name = "IncludeYTD", nullable = true)
-    private boolean includeYTD;
+    @Column(name = "IncludePreviousMonth", nullable = true) //to include the month before the startingDate
+    private boolean includePreviousMonth;
+
+    @Column(name = "IncludePreviousQuarter", nullable = true) //to include the quarter before the startingDate
+    private boolean includePreviousQuarter;
+
+    @Column(name = "IncludePreviousYear", nullable = true) //to include the year before the startingDate
+    private boolean includePreviousYear;
 
     //
     // Getters & Setters
@@ -93,32 +99,53 @@ public class FinancialStatement
         this.rangeType = rangeType;
     }
 
-    public boolean isIncludeMTD()
+    public boolean getIncludeAllMonths()
     {
-        return includeMTD;
+        return this.includeAllMonths;
     }
 
-    public void setIncludeMTD(boolean includeMTD)
+    public void setIncludeAllMonths(boolean includeAllMonths)
     {
-        this.includeMTD = includeMTD;
+        this.includeAllMonths = includeAllMonths;
     }
 
-    public boolean isIncludeQTD() {
-        return includeQTD;
+    public boolean getIncludeAllQuarters()
+    {
+        return this.includeAllQuarters;
     }
 
-    public void setIncludeQTD(boolean includeQTD)
+    public void setIncludeAllQuarters(boolean includeAllQuarters)
     {
-        this.includeQTD = includeQTD;
+        this.includeAllQuarters = includeAllQuarters;
     }
 
-    public boolean isIncludeYTD()
+    public boolean getIncludePreviousMonth()
     {
-        return includeYTD;
+        return this.includePreviousMonth;
     }
 
-    public void setIncludeYTD(boolean includeYTD)
+    public void setIncludePreviousMonth(boolean includePreviousMonth)
     {
-        this.includeYTD = includeYTD;
+        this.includePreviousMonth = includePreviousMonth;
+    }
+
+    public boolean getIncludePreviousQuarter()
+    {
+        return this.includePreviousQuarter;
+    }
+
+    public void setIncludePreviousQuarter(boolean includePreviousQuarter)
+    {
+        this.includePreviousQuarter = includePreviousQuarter;
+    }
+
+    public boolean getIncludePreviousYear()
+    {
+        return this.includePreviousYear;
+    }
+
+    public void setIncludePreviousYear(boolean includePreviousYear)
+    {
+        this.includePreviousYear = includePreviousYear;
     }
 }
