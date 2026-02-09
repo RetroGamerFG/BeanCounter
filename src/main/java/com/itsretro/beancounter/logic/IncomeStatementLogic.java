@@ -42,7 +42,6 @@ public class IncomeStatementLogic
         for(int c = 0; c < isv.getColumnCount(); c++)
         {
             calculateIncomeStatementColumn(isv.getColumns().get(c));
-            calculateIncomeStatementColumn(isv.getColumns().get(c));
         }
     }
 
@@ -64,15 +63,16 @@ public class IncomeStatementLogic
 
     private void calculateIncomeStatementColumn(IncomeStatementColumn isc)
     {
+        //revenue is reported as credits, so reverse amount when calculating total
         for(FinancialStatementLine fsl : isc.getRevenueLines().values())
         {
             if(fsl.getIsCredit() == false)
             {
-                isc.setTotalRevenue(isc.getTotalRevenue().add(fsl.getTotalAmount()));
+                isc.setTotalRevenue(isc.getTotalRevenue().subtract(fsl.getTotalAmount()));
             }
             else
             {
-                isc.setTotalRevenue(isc.getTotalRevenue().subtract(fsl.getTotalAmount()));
+                isc.setTotalRevenue(isc.getTotalRevenue().add(fsl.getTotalAmount()));
             }
         }
 

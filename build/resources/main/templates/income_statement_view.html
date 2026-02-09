@@ -28,57 +28,62 @@
                 </tr>
 
                 <!-- Revenue -->
-                <th:block th:each="column : ${incomeStatementView.columns}">
-                    <tbody class="revenue-block">
+                <tbody class="revenue-block">
+                    <tr>
+                        <th>Revenue</th>
+                    </tr>
+                    <th:block th:each="accountName : ${incomeStatementView.revenueAccounts}">
                         <tr>
-                            <th>Revenue</th>
+                            <td th:text="${accountName}"></td>
+                            <th:block th:each="column : ${incomeStatementView.columns}">
+                                <th:block th:if="${column.revenueLines != null and column.revenueLines.containsKey(accountName)}" th:with="amount=${column.revenueLines.get(accountName).totalAmount}">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${amount})}">-</td>
+                                </th:block>
+                                <td th:unless="${column.revenueLines != null and column.revenueLines.containsKey(accountName)}">-</td>
+                            </th:block>
                         </tr>
-                        <th:block th:each="accountName : ${incomeStatementView.revenueAccounts}">
-                            <tr>
-                                <td th:text="${accountName}"></td>
-                                <td th:if="${column.revenueLines.containsKey(accountName)}">
-                                    <span th:replace="~{fragments/formatters :: amount(${column.revenueLines.get(accountName).totalAmount})}">-</span>
-                                </td>
-                            </tr>
+                    </th:block>
+                    <tr>
+                        <th>Total Revenue</th>
+                        <th:block th:each="column : ${incomeStatementView.columns}">
+                            <th th:replace="~{fragments/formatters :: amount-th(${column.totalRevenue})}">-</th>
                         </th:block>
-                        <tr>
-                            <th>Total Revenue</th>
-                            <th>
-                                <span th:replace="~{fragments/formatters :: amount(${column.totalRevenue})}">-</span>
-                            </th>
-                        </tr>
-                    </tbody>
-                    <!-- Expenses -->
-                    <tbody class="expense-block">
-                        <tr>
-                            <th>Expenses</th>
-                        </tr>
-                        <th:block th:each="accountName : ${incomeStatementView.expenseAccounts}">
-                            <tr>
-                                <td th:text="${accountName}"></td>
-                                <td th:if="${column.expenseLines.containsKey(accountName)}">
-                                    <span th:replace="~{fragments/formatters :: amount(${column.expenseLines.get(accountName).totalAmount})}">-</span>
-                                </td>
-                            </tr>
-                        </th:block>
-                        <tr>
-                            <th>Total Expenses</th>
-                            <th>
-                                <span th:replace="~{fragments/formatters :: amount(${column.totalExpense})}">-</span>
-                            </th>
-                        </tr>
-                    </tbody>
+                    </tr>
+                </tbody>
 
-                    <tbody>
-                        <!-- Net Income (Loss) -->
+                <!-- Expenses -->
+                <tbody class="expense-block">
+                    <tr>
+                        <th>Expenses</th>
+                    </tr>
+                    <th:block th:each="accountName : ${incomeStatementView.expenseAccounts}">
                         <tr>
-                            <th>Net Income (Loss)</th>
-                            <th>
-                                <span th:replace="~{fragments/formatters :: amount(${column.netIncome})}">-</span>
-                            </th>
+                            <td th:text="${accountName}"></td>
+                            <th:block th:each="column : ${incomeStatementView.columns}">
+                                <th:block th:if="${column.expenseLines != null and column.expenseLines.containsKey(accountName)}" th:with="amount=${column.expenseLines.get(accountName).totalAmount}">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${amount})}">-</td>
+                                </th:block>
+                                <td th:unless="${column.expenseLines != null and column.expenseLines.containsKey(accountName)}">-</td>
+                            </th:block>
                         </tr>
-                    </tbody>
-                </th:block>
+                    </th:block>
+                    <tr>
+                        <th>Total Expenses</th>
+                        <th:block th:each="column : ${incomeStatementView.columns}">
+                            <th th:replace="~{fragments/formatters :: amount-th(${column.totalExpense})}">-</th>
+                        </th:block>
+                    </tr>
+                </tbody>
+
+                <!-- Net Income (Loss) -->
+                <tbody class="net-income-line">
+                    <tr>
+                        <th>Net Income (Loss)</th>
+                        <th:block th:each="column : ${incomeStatementView.columns}">
+                            <th th:replace="~{fragments/formatters :: amount-th(${column.netIncome})}">-</th>
+                        </th:block>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </body>
