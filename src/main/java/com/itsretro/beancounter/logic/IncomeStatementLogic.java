@@ -4,30 +4,21 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.itsretro.beancounter.model.FinancialStatementColumn;
 import com.itsretro.beancounter.model.FinancialStatementLine;
-import com.itsretro.beancounter.model.JournalEntryLine;
+import com.itsretro.beancounter.model.IncomeStatementColumn;
 import com.itsretro.beancounter.viewmodel.IncomeStatementView;
 
 @Component
 public class IncomeStatementLogic 
 {
-    public void createColumn(IncomeStatementView isv, String columnLabel, String columnRange)
+    public void createColumn(IncomeStatementView isv, String columnLabel, int columnIndex)
     {
-        //create new column for revenue
-        FinancialStatementColumn fsc = new FinancialStatementColumn();
-        fsc.setColumnLabel(columnLabel);
-        fsc.setColumnRange(columnRange);
+        IncomeStatementColumn isc = new IncomeStatementColumn();
 
-        isv.getRevenueItems().add(fsc);
-        
-        //force new column for expenses
-        fsc = new FinancialStatementColumn();
-        fsc.setColumnLabel(columnLabel);
-        fsc.setColumnRange(columnRange);
+        isc.setColumnLabel(columnLabel);
+        isc.setColumnIndex(columnIndex);
 
-        isv.getExpenseItems().add(fsc);
-
+        isv.getColumns().add(isc);
         isv.incrementColumnCount();
     }
 
@@ -37,84 +28,67 @@ public class IncomeStatementLogic
         {
             if("R".compareToIgnoreCase(type) == 0)
             {
-                isv.getRevenueItems().get(colIndex).getLines().add(fsl);
+                isv.getColumns().get(colIndex).getRevenueLines().put(fsl.getAccountName(), fsl);
             }
             else
             {
-                isv.getExpenseItems().get(colIndex).getLines().add(fsl);
+                isv.getColumns().get(colIndex).getExpenseLines().put(fsl.getAccountName(), fsl);
             }
         }
     }
 
     public void calculateTotals(IncomeStatementView isv)
     {
-        //calculateBlockTotals(isv.getRevenueItems());
-        //calculateBlockTotals(isv.getExpenseItems());
-
-        //profit/loss = revenue - expenses
-
-        //calculate net income for each block's revenue and expense totals, add to view's list member
-        for(int c = 0; c < isv.getRevenueItems().size(); c++)
+        for(int c = 0; c < isv.getColumnCount(); c++)
         {
-            //BigDecimal result = isv.getRevenueItems().get(c).getTotalAmount();
-            //result = result.subtract(isv.getExpenseItems().get(c).getTotalAmount());
-            //isv.getNetIncomeByBlock().add(result);
+            calculateIncomeStatementColumn(isv.getColumns().get(c));
+            calculateIncomeStatementColumn(isv.getColumns().get(c));
         }
     }
 
     public void extractMatchedAccountNames(IncomeStatementView isv)
     {
-        for(FinancialStatementColumn fsc : isv.getRevenueItems())
+        for(int c = 0; c < isv.getColumnCount(); c++)
         {
-            for(FinancialStatementLine fsl : fsc.getLines())
+            for(String accountName : isv.getColumns().get(c).getRevenueLines().keySet())
             {
-                isv.getRevenueAccounts().add(fsl.getAccountName());
+                isv.getRevenueAccounts().add(accountName);
             }
-        }
 
-        for(FinancialStatementColumn fsc : isv.getExpenseItems())
-        {
-            for(FinancialStatementLine fsl : fsc.getLines())
+            for(String accountName : isv.getColumns().get(c).getExpenseLines().keySet())
             {
-                isv.getExpenseAccounts().add(fsl.getAccountName());
+                isv.getExpenseAccounts().add(accountName);
             }
         }
     }
 
-    private void incrementFinancialStatementLine(FinancialStatementLine fsl, JournalEntryLine jel)
+    private void calculateIncomeStatementColumn(IncomeStatementColumn isc)
     {
-        if("D".compareToIgnoreCase(jel.getTransactionType()) == 0)
+        for(FinancialStatementLine fsl : isc.getRevenueLines().values())
         {
             if(fsl.getIsCredit() == false)
             {
-                fsl.setTotalAmount(fsl.getTotalAmount().add(jel.getDebitAmount()));
+                isc.setTotalRevenue(isc.getTotalRevenue().add(fsl.getTotalAmount()));
             }
             else
             {
-                fsl.setTotalAmount(fsl.getTotalAmount().subtract(jel.getDebitAmount()));
+                isc.setTotalRevenue(isc.getTotalRevenue().subtract(fsl.getTotalAmount()));
             }
         }
-        else
-        {
-            if(fsl.getIsCredit() == false)
-            {
-                fsl.setTotalAmount(fsl.getTotalAmount().add(jel.getCreditAmount()));
-            }
-            else
-            {
-                fsl.setTotalAmount(fsl.getTotalAmount().subtract(jel.getCreditAmount()));
-            }
-        }
-    }
 
-    private void calculateBlockTotals(List<FinancialStatementColumn> fscAll)
-    {
-        for(FinancialStatementColumn fsc : fscAll)
+        for(FinancialStatementLine fsl : isc.getExpenseLines().values())
         {
-            //for(FinancialStatementLine fsl : fsc.getStatementLines().values())
-            //{
-                //fsc.setTotalAmount(fsc.getTotalAmount().add(fsl.getTotalAmount()));
-            //}
+            if(fsl.getIsCredit() == false)
+            {
+                isc.setTotalExpense(isc.getTotalExpense().add(fsl.getTotalAmount()));
+            }
+            else
+            {
+                isc.setTotalExpense(isc.getTotalExpense().subtract(fsl.getTotalAmount()));
+            }
         }
+
+        //net income = revenue - expenses
+        isc.setNetIncome(isc.getTotalRevenue().subtract(isc.getTotalExpense()));
     }
 }

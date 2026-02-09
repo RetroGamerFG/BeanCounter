@@ -123,7 +123,7 @@ public class FinancialStatementService
         else
         {
             //ASSUMES THIS IS A MTD
-            incomeStatementLogic.createColumn(isv, financialStatement.getStartingDate().getMonth().toString(), financialStatement.getRangeType());
+            incomeStatementLogic.createColumn(isv, financialStatement.getStartingDate().getMonth().toString(), 0);
 
             //call the journalEntry repository to get list of 'Revenue' account journal entries
             List<FinancialStatementLine> queriedRev = fetchJournalEntries(
@@ -189,7 +189,7 @@ public class FinancialStatementService
             LocalDate currentStart = LocalDate.of(year, currentMonth, 1);
             LocalDate currentEnd = LocalDate.of(year, currentMonth, 1).with(TemporalAdjusters.lastDayOfMonth());
 
-            incomeStatementLogic.createColumn(isv, currentStart.getMonth().toString(), "MTD");
+            incomeStatementLogic.createColumn(isv, currentStart.getMonth().toString(), m);
 
             List<FinancialStatementLine> revenueQuery = fetchJournalEntries(currentStart, currentEnd, fs.getGeneratedDate(), "R");
             incomeStatementLogic.addJournalEntriesToColumn(isv, revenueQuery, "R", m);

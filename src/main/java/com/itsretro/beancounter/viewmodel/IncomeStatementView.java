@@ -1,23 +1,19 @@
 package com.itsretro.beancounter.viewmodel;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.itsretro.beancounter.model.FinancialStatementColumn;
+import com.itsretro.beancounter.model.IncomeStatementColumn;
 
 public class IncomeStatementView 
 {
     private Set<String> revenueAccounts;
     private Set<String> expenseAccounts;
 
-    private List<FinancialStatementColumn> revenueItems;
-    private List<FinancialStatementColumn> expenseItems;
-
+    private List<IncomeStatementColumn> columns;
     private int columnCount;
-    private List<BigDecimal> netIncomeByColumn;
 
     private String dateRangeString;
 
@@ -30,10 +26,8 @@ public class IncomeStatementView
         this.revenueAccounts = new HashSet<>();
         this.expenseAccounts = new HashSet<>();
 
-        this.revenueItems = new ArrayList<>();
-        this.expenseItems = new ArrayList<>();
-
-        this.netIncomeByColumn = new ArrayList<>();
+        this.columns = new ArrayList<>();
+        this.columnCount = 0;
 
         this.dateRangeString = null;
     }
@@ -62,24 +56,14 @@ public class IncomeStatementView
         this.expenseAccounts = expenseAccounts;
     }
 
-    public List<FinancialStatementColumn> getRevenueItems()
+    public List<IncomeStatementColumn> getColumns()
     {
-        return this.revenueItems;
+        return this.columns;
     }
 
-    public void setRevenueItems(List<FinancialStatementColumn> revenueItems)
+    public void setColumns(List<IncomeStatementColumn> columns)
     {
-        this.revenueItems = revenueItems;
-    }
-
-    public List<FinancialStatementColumn> getExpenseItems()
-    {
-        return this.expenseItems;
-    }
-
-    public void setExpenseItems(List<FinancialStatementColumn> expenseItems)
-    {
-        this.expenseItems = expenseItems;
+        this.columns = columns;
     }
 
     public int getColumnCount()
@@ -90,16 +74,6 @@ public class IncomeStatementView
     public void setColumnCount(int columnCount)
     {
         this.columnCount = columnCount;
-    }
-
-    public List<BigDecimal> getNetIncomeByColumn()
-    {
-        return this.netIncomeByColumn;
-    }
-
-    public void setNetIncomeByBlock(List<BigDecimal> netIncomeByColumn)
-    {
-        this.netIncomeByColumn = netIncomeByColumn;
     }
 
     public String getDateRangeString()

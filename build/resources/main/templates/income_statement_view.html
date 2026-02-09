@@ -7,7 +7,7 @@
     <body>
         <div class="table-block">
             <table>
-                <thead>
+                <thead class="statement-header">
                     <tr>
                         <th colspan="4" th:text="${businessInfo.name}">Error Getting Business Name</th>
                     </tr>
@@ -18,89 +18,67 @@
                         <th colspan="4" th:text="${incomeStatementView.dateRangeString}">Error Getting Formatted Date</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Revenue & Column Labels -->
-                    <th:block th:each="revItems : ${incomeStatementView.revenueItems}">
-                        <td th:text="${revItems.columnLabel}"></td>
+
+                <!-- Column Labels -->
+                <tr>
+                    <th></th>
+                    <th:block th:each="column : ${incomeStatementView.columns}">
+                        <th th:text="${column.columnLabel}"></th>
                     </th:block>
-                    <tr>
-                        <th>Revenue</th>
-                    </tr>
+                </tr>
 
-                    <th:block th:each="revItems : ${incomeStatementView.revenueItems}">
-                        <tr th:each="line : ${revItems.lines}">
-                            <td th:text="${line.accountName}"></td>
-                            <td th:text="${line.totalAmount}"></td>
-                        </tr>
-                    </th:block>
-
-                    <tr>
-                        <th>Expenses</th>
-                    </tr>
-
-                    <tr>
-                        <th>Net Income (Loss)</th>
-                    </tr>
-                    <!--
-                    Revenue
-
-                    <tr>
-                        <th colspan="4">Revenue</th>
-                            <td></td> Placeholder
-                            <td th:if="${incomeStatementView.includeMTD}">MMM</td>
-                            <td th:if="${incomeStatementView.includeQTD}">Q#</td>
-                            <td th:if="${incomeStatementView.includeYTD}">YYYY</td>
-                    </tr>
-                    <th:block th:each="lineEntry : ${incomeStatementView.revenueItems.statementLines}">
+                <!-- Revenue -->
+                <th:block th:each="column : ${incomeStatementView.columns}">
+                    <tbody class="revenue-block">
                         <tr>
-                            <td th:text="${lineEntry.key}"></td>
-                            <td th:text="${lineEntry.value.totalAmountMTD}"></td>
+                            <th>Revenue</th>
                         </tr>
-                    </th:block>
-
-                    Revenue Total
-
-                    <tr class="subtotal">
-                        <td>Total Revenue</td>
-                        <td th:if="${incomeStatementView.includeMTD}" th:text="${incomeStatementView.revenueItems.totalAmountMTD}"></td>
-                        <td th:if="${incomeStatementView.includeQTD}" th:text="${incomeStatementView.revenueItems.totalAmountQTD}"></td>
-                        <td th:if="${incomeStatementView.includeYTD}" th:text="${incomeStatementView.revenueItems.totalAmountYTD}"></td>
-                    </tr>
-                    
-                    Expenses
-
-                    <tr>
-                        <th colspan="4">Expenses</th>
-                    </tr>
-                    <th:block th:each="lineEntry : ${incomeStatementView.expenseItems.statementLines}">
+                        <th:block th:each="accountName : ${incomeStatementView.revenueAccounts}">
+                            <tr>
+                                <td th:text="${accountName}"></td>
+                                <td th:if="${column.revenueLines.containsKey(accountName)}">
+                                    <span th:replace="~{fragments/formatters :: amount(${column.revenueLines.get(accountName).totalAmount})}">-</span>
+                                </td>
+                            </tr>
+                        </th:block>
                         <tr>
-                            <td th:text="${lineEntry.key}"></td>
-                            <td th:if="${incomeStatementView.includeMTD}" th:text="${lineEntry.value.totalAmountMTD}"></td>
-                            <td th:if="${incomeStatementView.includeQTD}" th:text="${lineEntry.value.totalAmountQTD}"></td>
-                            <td th:if="${incomeStatementView.includeYTD}" th:text="${lineEntry.value.totalAmountYTD}"></td>
+                            <th>Total Revenue</th>
+                            <th>
+                                <span th:replace="~{fragments/formatters :: amount(${column.totalRevenue})}">-</span>
+                            </th>
                         </tr>
-                    </th:block>
+                    </tbody>
+                    <!-- Expenses -->
+                    <tbody class="expense-block">
+                        <tr>
+                            <th>Expenses</th>
+                        </tr>
+                        <th:block th:each="accountName : ${incomeStatementView.expenseAccounts}">
+                            <tr>
+                                <td th:text="${accountName}"></td>
+                                <td th:if="${column.expenseLines.containsKey(accountName)}">
+                                    <span th:replace="~{fragments/formatters :: amount(${column.expenseLines.get(accountName).totalAmount})}">-</span>
+                                </td>
+                            </tr>
+                        </th:block>
+                        <tr>
+                            <th>Total Expenses</th>
+                            <th>
+                                <span th:replace="~{fragments/formatters :: amount(${column.totalExpense})}">-</span>
+                            </th>
+                        </tr>
+                    </tbody>
 
-                    Expense Total
-
-                    <tr class="subtotal">
-                        <td>Total Expenses</td>
-                        <td th:if="${incomeStatementView.includeMTD}" th:text="${incomeStatementView.expenseItems.totalAmountMTD}"></td>
-                        <td th:if="${incomeStatementView.includeQTD}" th:text="${incomeStatementView.expenseItems.totalAmountQTD}"></td>
-                        <td th:if="${incomeStatementView.includeYTD}" th:text="${incomeStatementView.expenseItems.totalAmountYTD}"></td>
-                    </tr>
-                    
-                    Grand Total / Net Income
-
-                    <tr class="grand-total">
-                        <td>Net Income</td>
-                        <td th:if="${incomeStatementView.includeMTD}" th:text="${incomeStatementView.grandTotalMTD}"></td>
-                        <td th:if="${incomeStatementView.includeQTD}" th:text="${incomeStatementView.grandTotalQTD}"></td>
-                        <td th:if="${incomeStatementView.includeYTD}" th:text="${incomeStatementView.grandTotalYTD}"></td>
-                    </tr>
-
-                    -->
-                </tbody>
+                    <tbody>
+                        <!-- Net Income (Loss) -->
+                        <tr>
+                            <th>Net Income (Loss)</th>
+                            <th>
+                                <span th:replace="~{fragments/formatters :: amount(${column.netIncome})}">-</span>
+                            </th>
+                        </tr>
+                    </tbody>
+                </th:block>
             </table>
         </div>
     </body>
