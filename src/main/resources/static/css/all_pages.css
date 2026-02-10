@@ -28,13 +28,15 @@ label {
 }
 
 .table-block {
-    width: 80%;             /* Adjust width as needed */
-    max-width: 900px;
-    min-height: 400px;
-    background: white;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-radius: 8px;
+  background: white;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  width: fit-content;
+  min-width: 800px;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
 }
 
 /* Inline layout for the DatePicker and Description fields */
@@ -106,7 +108,8 @@ a:focus {
 /* Tables */
 
 table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
 }
 

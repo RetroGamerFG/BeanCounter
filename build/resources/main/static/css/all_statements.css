@@ -1,0 +1,57 @@
+.header-label {
+    text-align: center;     /* Centers text within the header */
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 10px 0;
+    background-color: lightgreen;
+    color: white;
+    border: none;
+}
+
+.header-date {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 0;
+    background-color: lightgreen;
+    color: white;
+    border-bottom: 2px solid #333;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.block {
+    padding: 10px;
+}
+
+.column-label {
+
+}
+
+.row-label {
+    font-size: 1.05rem;
+	font-weight: 600;
+    max-width: 420px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.row-value {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    min-width: 90px;
+}
+
+.table-block th,
+.table-block td {
+    white-space: nowrap;
+}
+
+.table-block td.row-label {
+    white-space: normal;
+}
+
+.total-line {
+
+}

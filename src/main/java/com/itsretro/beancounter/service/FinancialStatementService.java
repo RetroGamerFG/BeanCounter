@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.itsretro.beancounter.logic.BusinessInfoLogic;
 import com.itsretro.beancounter.logic.FinancialStatementLogic;
 import com.itsretro.beancounter.logic.IncomeStatementLogic;
-import com.itsretro.beancounter.model.BusinessInfo;
 import com.itsretro.beancounter.model.FinancialStatement;
 import com.itsretro.beancounter.model.FinancialStatementLine;
 import com.itsretro.beancounter.repositories.FinancialStatementRepository;
@@ -36,17 +35,6 @@ public class FinancialStatementService
 
     @Autowired
     private BusinessInfoLogic businessInfoLogic;
-
-    private final BusinessInfo businessInfo;
-
-    //
-    // Initializer
-    //
-
-    public FinancialStatementService(BusinessInfo businessInfo)
-    {
-        this.businessInfo = businessInfo;
-    }
 
     //
     // Repository Calls
@@ -76,7 +64,7 @@ public class FinancialStatementService
     {
         IncomeStatementView isv = new IncomeStatementView();
 
-        LocalDate endDate = null;
+        LocalDate endDate;
         
         //determine the end date to query journal entries to. Should match the statement's range type (MTD, QTD, YTD).
         if("QTD".compareToIgnoreCase(fs.getRangeType()) == 0)
@@ -151,7 +139,7 @@ public class FinancialStatementService
         }
         else //MTD, one month only
         {
-            createColumn(isv, fs, fs.getStartingDate().getMonth().toString(), fs.getStartingDate(), endDate);
+            createIncomeStatementColumn(isv, fs, fs.getStartingDate().getMonth().toString(), fs.getStartingDate(), endDate);
         }
 
         //calculate totals
@@ -177,7 +165,7 @@ public class FinancialStatementService
         );
     }
 
-    private void createColumn(IncomeStatementView isv, FinancialStatement fs, String columnLabel, LocalDate startDate, LocalDate endDate)
+    private void createIncomeStatementColumn(IncomeStatementView isv, FinancialStatement fs, String columnLabel, LocalDate startDate, LocalDate endDate)
     {
         int colIndex = isv.getColumnCount();
 
@@ -217,7 +205,7 @@ public class FinancialStatementService
             LocalDate currentStart = quarterStart.plusMonths(m);
             LocalDate currentEnd = currentStart.with(TemporalAdjusters.lastDayOfMonth());
 
-            createColumn(isv, fs, currentStart.getMonth().toString(), currentStart, currentEnd);
+            createIncomeStatementColumn(isv, fs, currentStart.getMonth().toString(), currentStart, currentEnd);
         }
     }
 
@@ -226,7 +214,7 @@ public class FinancialStatementService
         LocalDate quarterStartDate = businessInfoLogic.getQuarterStartDate(fs.getStartingDate(), quarter);
         LocalDate quarterEndDate = businessInfoLogic.getQuarterEndDate(fs.getStartingDate(), quarter);
 
-        createColumn(isv, fs, "Q" + quarter, quarterStartDate, quarterEndDate);
+        createIncomeStatementColumn(isv, fs, "Q" + quarter, quarterStartDate, quarterEndDate);
     }
 
     private void createColumnForYear(IncomeStatementView isv, FinancialStatement fs)
@@ -234,6 +222,6 @@ public class FinancialStatementService
         LocalDate fiscalYearStartDate = businessInfoLogic.getQuarterStartDate(fs.getStartingDate(), 1);
         LocalDate fiscalYearEndDate = businessInfoLogic.getQuarterEndDate(fs.getStartingDate(), 4);
 
-        createColumn(isv, fs, String.valueOf(fiscalYearStartDate.getYear()), fiscalYearStartDate, fiscalYearEndDate);
+        createIncomeStatementColumn(isv, fs, String.valueOf(fiscalYearStartDate.getYear()), fiscalYearStartDate, fiscalYearEndDate);
     }
 }

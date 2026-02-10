@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <td th:fragment="amount-td(value)" th:text="${value < 0 ? '(' + #numbers.formatDecimal(-value, 1, 'COMMA', 2, 'POINT') + ')' : #numbers.formatDecimal(value, 1, 'COMMA', 2, 'POINT')}">0.00</td>
-        <th th:fragment="amount-th(value)" th:text="${value < 0 ? '(' + #numbers.formatDecimal(-value, 1, 'COMMA', 2, 'POINT') + ')' : #numbers.formatDecimal(value, 1, 'COMMA', 2, 'POINT')}">0.00</th>
+        <td th:fragment="amount-td(value, cssClass, span)"
+            th:class="${cssClass}"
+            th:attr="colspan=${span}"
+            th:text="${value < 0 ? '(' + #numbers.formatDecimal(-value, 1, 'COMMA', 2, 'POINT') + ')' : #numbers.formatDecimal(value, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+        <th th:fragment="amount-th(value, cssClass, span)"
+            th:class="${cssClass}"
+            th:attr="colspan=${span}"
+            th:text="${value < 0 ? '(' + #numbers.formatDecimal(-value, 1, 'COMMA', 2, 'POINT') + ')' : #numbers.formatDecimal(value, 1, 'COMMA', 2, 'POINT')}">0.00</th>
     </body>
 </html>

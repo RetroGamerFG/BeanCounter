@@ -1,6 +1,7 @@
 <html>
     <head>
         <link rel="stylesheet" th:href="@{/css/all_pages.css}">
+        <link rel="stylesheet" th:href="@{/css/all_statements.css}">
         <link rel="stylesheet" th:href="@{/css/income_statement_view.css}">
         <script th:src="@{/js/income_statement_view.js}"></script>
     </head>
@@ -9,68 +10,68 @@
             <table>
                 <thead class="statement-header">
                     <tr>
-                        <th colspan="4" th:text="${businessInfo.name}">Error Getting Business Name</th>
+                        <th class="header-label" th:colspan="${4 + (incomeStatementView.columns.size() * 2)}" th:text="${businessInfo.name}">Error Getting Business Name</th>
                     </tr>
                     <tr>
-                        <th colspan="4">Income Statement</th>
+                        <th class="header-label" th:colspan="${4 + (incomeStatementView.columns.size() * 2)}">Income Statement</th>
                     </tr>
                     <tr>
-                        <th colspan="4" th:text="${incomeStatementView.dateRangeString}">Error Getting Formatted Date</th>
+                        <th class="header-date" th:colspan="${4 + (incomeStatementView.columns.size() * 2)}" th:text="${incomeStatementView.dateRangeString}">Error Getting Formatted Date</th>
                     </tr>
                 </thead>
 
                 <!-- Column Labels -->
                 <tr>
-                    <th></th>
+                    <th colspan="4"></th>
                     <th:block th:each="column : ${incomeStatementView.columns}">
-                        <th th:text="${column.columnLabel}"></th>
+                        <th colspan="2" th:text="${column.columnLabel}"></th>
                     </th:block>
                 </tr>
 
                 <!-- Revenue -->
-                <tbody class="revenue-block">
+                <tbody class="block" id="revenue-block">
                     <tr>
-                        <th>Revenue</th>
+                        <th colspan="4">Revenue</th>
                     </tr>
                     <th:block th:each="accountName : ${incomeStatementView.revenueAccounts}">
                         <tr>
-                            <td th:text="${accountName}"></td>
+                            <td class="row-label" colspan="4" th:text="${accountName}"></td>
                             <th:block th:each="column : ${incomeStatementView.columns}">
                                 <th:block th:if="${column.revenueLines != null and column.revenueLines.containsKey(accountName)}" th:with="amount=${column.revenueLines.get(accountName).totalAmount}">
-                                    <td th:replace="~{fragments/formatters :: amount-td(${amount})}">-</td>
+                                    <td th:replace="~{fragments/formatters :: amount-td(${amount}, 'row-value', 2)}">-</td>
                                 </th:block>
-                                <td th:unless="${column.revenueLines != null and column.revenueLines.containsKey(accountName)}">-</td>
+                                <td class="row-value" colspan="2" th:unless="${column.revenueLines != null and column.revenueLines.containsKey(accountName)}">-</td>
                             </th:block>
                         </tr>
                     </th:block>
                     <tr>
-                        <th>Total Revenue</th>
+                        <th colspan="4">Total Revenue</th>
                         <th:block th:each="column : ${incomeStatementView.columns}">
-                            <th th:replace="~{fragments/formatters :: amount-th(${column.totalRevenue})}">-</th>
+                            <th th:replace="~{fragments/formatters :: amount-th(${column.totalRevenue}, 'row-value', 2)}">-</th>
                         </th:block>
                     </tr>
                 </tbody>
 
                 <!-- Expenses -->
-                <tbody class="expense-block">
+                <tbody class="block" id="expense-block">
                     <tr>
-                        <th>Expenses</th>
+                        <th colspan="4">Expenses</th>
                     </tr>
                     <th:block th:each="accountName : ${incomeStatementView.expenseAccounts}">
                         <tr>
-                            <td th:text="${accountName}"></td>
+                            <td class="row-label" colspan="4" th:text="${accountName}"></td>
                             <th:block th:each="column : ${incomeStatementView.columns}">
                                 <th:block th:if="${column.expenseLines != null and column.expenseLines.containsKey(accountName)}" th:with="amount=${column.expenseLines.get(accountName).totalAmount}">
-                                    <td th:replace="~{fragments/formatters :: amount-td(${amount})}">-</td>
+                                    <td th:replace="~{fragments/formatters :: amount-td(${amount}, 'row-value', 2)}">-</td>
                                 </th:block>
-                                <td th:unless="${column.expenseLines != null and column.expenseLines.containsKey(accountName)}">-</td>
+                                <td class="row-value" colspan="2" th:unless="${column.expenseLines != null and column.expenseLines.containsKey(accountName)}">-</td>
                             </th:block>
                         </tr>
                     </th:block>
                     <tr>
-                        <th>Total Expenses</th>
+                        <th colspan="4">Total Expenses</th>
                         <th:block th:each="column : ${incomeStatementView.columns}">
-                            <th th:replace="~{fragments/formatters :: amount-th(${column.totalExpense})}">-</th>
+                            <th th:replace="~{fragments/formatters :: amount-th(${column.totalExpense}, 'row-value', 2)}">-</th>
                         </th:block>
                     </tr>
                 </tbody>
@@ -78,9 +79,9 @@
                 <!-- Net Income (Loss) -->
                 <tbody class="net-income-line">
                     <tr>
-                        <th>Net Income (Loss)</th>
+                        <th colspan="4">Net Income (Loss)</th>
                         <th:block th:each="column : ${incomeStatementView.columns}">
-                            <th th:replace="~{fragments/formatters :: amount-th(${column.netIncome})}">-</th>
+                            <th th:replace="~{fragments/formatters :: amount-th(${column.netIncome}, 'row-value', 2)}">-</th>
                         </th:block>
                     </tr>
                 </tbody>
