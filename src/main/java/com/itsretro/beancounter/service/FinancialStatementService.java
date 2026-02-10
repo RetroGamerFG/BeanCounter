@@ -48,11 +48,6 @@ public class FinancialStatementService
         this.businessInfo = businessInfo;
     }
 
-    public BusinessInfo getBusinessInfo()
-    {
-        return this.businessInfo;
-    }
-
     //
     // Repository Calls
     //
@@ -77,16 +72,16 @@ public class FinancialStatementService
     // Service Methods
     //
 
-    public IncomeStatementView getIncomeStatementView(FinancialStatement financialStatement)
+    public IncomeStatementView getIncomeStatementView(FinancialStatement fs)
     {
         IncomeStatementView isv = new IncomeStatementView();
         
         //determine the end date to query journal entries to. Should match the statement's range type (MTD, QTD, YTD).
-        LocalDate endDate = businessInfoLogic.determineEndDate(businessInfo, financialStatement);
+        LocalDate endDate = businessInfoLogic.determineEndDate(fs);
 
         //create the formatted date header based on the statement and range type.
         isv.setDateRangeString(financialStatementLogic.createDateRangeString(
-            financialStatement.getRangeType(),
+            fs.getRangeType(),
             endDate, 
             false
         ));
@@ -97,55 +92,35 @@ public class FinancialStatementService
         //  These next steps determine what queries to call, and what columns to create.
         //  Split into private methods to keep this method condensed.
 
-        //
-        // Include all months and quarters
-        if(financialStatement.getIncludeAllMonths() && financialStatement.getIncludeAllQuarters())
+        if("YTD".compareToIgnoreCase(fs.getRangeType()) == 0) //YTD, 12 months and/or 4 quarters
         {
-            //createColumnsForAllMonthsAndQuarters(isv, financialStatement, endDate);
+            if(fs.getIncludeAllMonths() && fs.getIncludeAllQuarters())
+            {
+
+            }
+            else if (fs.getIncludeAllMonths())
+            {
+
+            }
+            else if (fs.getIncludeAllQuarters())
+            {
+
+            }
+
+            createColumn(isv, fs, String.valueOf(endDate.getYear()), fs.getStartingDate(), endDate);
         }
-
-        //
-        // Include all months only
-        else if(financialStatement.getIncludeAllMonths())
+        else if ("QTD".compareToIgnoreCase(fs.getRangeType()) == 0) //QTD, 3 months
         {
-            createColumnsForAllMonths(isv, financialStatement, endDate);
+            if (fs.getIncludeAllMonths())
+            {
+
+            }
+
+            createColumn(isv, fs, "Q" + businessInfoLogic.getQuarterByMonth(endDate.getMonth()), fs.getStartingDate(), endDate);
         }
-
-        //
-        // Include all quarters only
-        else if(financialStatement.getIncludeAllQuarters())
+        else //MTD, one month only
         {
-            //createColumnsForAllQuarters(isv, financialStatement, endDate);
-        }
-
-        //
-        // Only include the financial statement's specified range.
-        else
-        {
-            //ASSUMES THIS IS A MTD
-            incomeStatementLogic.createColumn(isv, financialStatement.getStartingDate().getMonth().toString(), 0);
-
-            //call the journalEntry repository to get list of 'Revenue' account journal entries
-            List<FinancialStatementLine> queriedRev = fetchJournalEntries(
-                financialStatement.getStartingDate(), 
-                endDate,
-                financialStatement.getGeneratedDate(), 
-                "R"
-            );
-
-            //populate the fetched journal entries into the income statement view
-            incomeStatementLogic.addJournalEntriesToColumn(isv, queriedRev, "R", 0);
-
-            //call the journalEntry repository to get list of "Expense" account journal entries
-            List<FinancialStatementLine> queriedExp = fetchJournalEntries(
-                financialStatement.getStartingDate(), 
-                endDate,
-                financialStatement.getGeneratedDate(), 
-                "X"
-            );
-
-            //populate the fetched journal entries into the income statement view
-            incomeStatementLogic.addJournalEntriesToColumn(isv, queriedExp, "X", 0);
+            createColumn(isv, fs, fs.getStartingDate().getMonth().toString(), fs.getStartingDate(), endDate);
         }
 
         //calculate totals
@@ -166,7 +141,7 @@ public class FinancialStatementService
 
     private void createColumnsForAllMonths(IncomeStatementView isv, FinancialStatement fs, LocalDate endDate)
     {
-        int month = businessInfo.getIncorporationDate().getMonthValue();
+        int month = this.businessInfo.getIncorporationDate().getMonthValue();
         int year = endDate.getYear();
 
         //if the incorporation month is greater than the ending month (i.e. April > January), roll back one year
@@ -207,5 +182,34 @@ public class FinancialStatementService
             generatedDate,
             entryType
         );
+    }
+
+    private void createColumn(IncomeStatementView isv, FinancialStatement fs, String columnLabel, LocalDate startDate, LocalDate endDate)
+    {
+        int colIndex = isv.getColumnCount();
+
+        incomeStatementLogic.createColumn(isv, columnLabel, colIndex);
+
+        //call the journalEntry repository to get list of 'Revenue' account journal entries
+        List<FinancialStatementLine> queriedRev = fetchJournalEntries(
+            startDate,
+            endDate,
+            fs.getGeneratedDate(), 
+            "R"
+        );
+
+        //populate the fetched journal entries into the income statement view
+        incomeStatementLogic.addJournalEntriesToColumn(isv, queriedRev, "R", colIndex);
+
+        //call the journalEntry repository to get list of "Expense" account journal entries
+        List<FinancialStatementLine> queriedExp = fetchJournalEntries(
+            startDate,
+            endDate,
+            fs.getGeneratedDate(), 
+            "X"
+        );
+
+        //populate the fetched journal entries into the income statement view
+        incomeStatementLogic.addJournalEntriesToColumn(isv, queriedExp, "X", colIndex);
     }
 }

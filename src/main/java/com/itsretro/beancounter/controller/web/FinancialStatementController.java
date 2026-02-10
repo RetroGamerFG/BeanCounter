@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.itsretro.beancounter.model.FinancialStatement;
+import com.itsretro.beancounter.service.BusinessInfoService;
 import com.itsretro.beancounter.service.FinancialStatementService;
 import com.itsretro.beancounter.viewmodel.IncomeStatementView;
 
@@ -22,6 +23,9 @@ public class FinancialStatementController
 {
     @Autowired
     FinancialStatementService financialStatementService;
+
+    @Autowired
+    BusinessInfoService businessInfoService;
 
     @GetMapping("/statements")
     public String Statements(Model model)
@@ -58,7 +62,7 @@ public class FinancialStatementController
         IncomeStatementView incomeStatementView = financialStatementService.getIncomeStatementView(financialStatement);
 
         model.addAttribute("incomeStatementView", incomeStatementView);
-        model.addAttribute("businessInfo", financialStatementService.getBusinessInfo());
+        model.addAttribute("businessInfo", businessInfoService.getBusinessInfo());
         
         return "income_statement_view";
     }

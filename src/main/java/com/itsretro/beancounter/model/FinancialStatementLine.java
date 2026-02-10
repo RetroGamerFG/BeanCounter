@@ -39,8 +39,6 @@ public class FinancialStatementLine
             this.totalAmount = BigDecimal.ZERO;
             this.isCredit = false;
         }
-
-        System.out.println();
     }
 
     //
