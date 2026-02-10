@@ -28,124 +28,98 @@ public class BusinessInfoLogic
 
     public Month getQuarterStartMonth(int quarter)
     {
-        int monthValue = businessInfo.getIncorporationDate().getMonthValue();
-
-        System.out.println();
-
-        //example logic if the incorporation date was in January
-            //1st quarter: January - March
-            //2nd quarter: April - June
-            //3rd quarter: July - September
-            //4th quarter: October - December
-
-        switch(quarter)
+        if(quarter < 1 || quarter > 4)
         {
-            case 1 -> monthValue += 0;
-            case 2 -> monthValue += 3;
-            case 3 -> monthValue += 6;
-            case 4 -> monthValue += 9;
-
-            default -> { return null;}
+            return null;
         }
 
-        //force rollback if value exceeds 12 months
-        if(monthValue > 12)
-        {
-            monthValue -= 12;
-        }
+        int startMonth = getFiscalYearStartMonth();
+        int monthValue = ((startMonth - 1 + ((quarter - 1) * 3)) % 12) + 1;
 
         return Month.of(monthValue);
     }
 
-    //VALID
     public Month getQuarterEndMonth(int quarter)
     {
-        int monthValue = businessInfo.getIncorporationDate().getMonthValue();
-
-        //example logic if the incorporation date was in January
-            //1st quarter: January - March
-            //2nd quarter: April - June
-            //3rd quarter: July - September
-            //4th quarter: October - December
-
-        switch(quarter)
+        if(quarter < 1 || quarter > 4)
         {
-            case 1 -> monthValue += 2;
-            case 2 -> monthValue += 5;
-            case 3 -> monthValue += 8;
-            case 4 -> monthValue += 11;
-
-            default -> { return null;}
+            return null;
         }
 
-        //force rollback if value exceeds 12 months
-        if(monthValue > 12)
-        {
-            monthValue -= 12;
-        }
+        int startMonth = getFiscalYearStartMonth();
+        int monthValue = ((startMonth - 1 + ((quarter * 3) - 1)) % 12) + 1;
 
         return Month.of(monthValue);
     }
 
-    //VALID
     public int getQuarterByMonth(Month month)
     {
-        int businessMonthVal = businessInfo.getIncorporationDate().getMonthValue();
+        int startMonth = getFiscalYearStartMonth();
+        int offset = (month.getValue() - startMonth + 12) % 12;
 
-        for(int c = 0; c < 4; c++)
-        {
-            int monthPos = businessMonthVal + (c * 3);
-
-            if(monthPos >= 12)
-            {
-                monthPos -= 12;
-            }
-
-            for(int m = 0; m < 3; m++)
-            {
-                if((monthPos + m) == month.getValue())
-                {
-                    return c + 1;
-                }
-            }
-        }
-
-        return -1;
+        return (offset / 3) + 1;
     }
 
     public LocalDate determineEndDate(LocalDate startDate, boolean useQTD, boolean useYTD)
     {
-        int monthPos = startDate.getMonthValue();
-        int yearPos = startDate.getYear();
-
-        //mtd is the current month contained in startMonth, only need to get ending day.
-        //qtd and ytd require determining the current quarter and/or current fiscal year.
-
         if(useQTD)
         {
-            //determine the current quarter of the financial statement's starting date
             int matchedQuarter = getQuarterByMonth(startDate.getMonth());
 
-            //increment the month-end position based on the quarter's ending month
-            monthPos = getQuarterEndMonth(matchedQuarter).getValue();
-
-            System.out.println();
+            return getQuarterEndDate(startDate, matchedQuarter);
         }
         else if(useYTD)
         {
-            //determine the 4th quarter's month-end
-            monthPos = getQuarterEndMonth(4).getValue();
-
-            //if the last month of the fiscal year is less than the starting month, increment the year
-            if(monthPos < startDate.getMonthValue())
-            {
-                yearPos++;
-            }
-            
-            System.out.println();
+            return getFiscalYearEndDate(startDate);
         }
 
-        //return built result, rolling forward to last day of month
-        return LocalDate.of(yearPos, monthPos, 1).with(TemporalAdjusters.lastDayOfMonth());
-    }  
+        return startDate.with(TemporalAdjusters.lastDayOfMonth());
+    }
+
+    public int determineCurrentYearByQuarter(LocalDate startDate, int quarter)
+    {
+        return getQuarterStartDate(startDate, quarter).getYear();
+    }
+
+    public LocalDate getFiscalYearStartDate(LocalDate referenceDate)
+    {
+        int startMonth = getFiscalYearStartMonth();
+        int startYear = referenceDate.getYear();
+
+        if(referenceDate.getMonthValue() < startMonth)
+        {
+            startYear--;
+        }
+
+        return LocalDate.of(startYear, startMonth, 1);
+    }
+
+    public LocalDate getFiscalYearEndDate(LocalDate referenceDate)
+    {
+        return getFiscalYearStartDate(referenceDate).plusYears(1).minusDays(1);
+    }
+
+    public LocalDate getQuarterStartDate(LocalDate referenceDate, int quarter)
+    {
+        if(quarter < 1 || quarter > 4)
+        {
+            throw new IllegalArgumentException("Quarter must be 1-4");
+        }
+
+        return getFiscalYearStartDate(referenceDate).plusMonths((quarter - 1) * 3L);
+    }
+
+    public LocalDate getQuarterEndDate(LocalDate referenceDate, int quarter)
+    {
+        return getQuarterStartDate(referenceDate, quarter).plusMonths(3).minusDays(1);
+    }
+
+    //
+    // Private Methods
+    //
+
+    private int getFiscalYearStartMonth()
+    {
+        return businessInfo.getIncorporationDate().getMonthValue();
+    }
 }
