@@ -1,7 +1,7 @@
 package com.itsretro.beancounter.viewmodel;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,8 +9,8 @@ import com.itsretro.beancounter.model.IncomeStatementColumn;
 
 public class IncomeStatementView 
 {
-    private Set<String> revenueAccounts;
-    private Set<String> expenseAccounts;
+    private LinkedHashSet<String> revenueAccounts;
+    private LinkedHashSet<String> expenseAccounts;
 
     private List<IncomeStatementColumn> columns;
     private int columnCount;
@@ -23,8 +23,8 @@ public class IncomeStatementView
 
     public IncomeStatementView()
     {
-        this.revenueAccounts = new HashSet<>();
-        this.expenseAccounts = new HashSet<>();
+        this.revenueAccounts = new LinkedHashSet<>();
+        this.expenseAccounts = new LinkedHashSet<>();
 
         this.columns = new ArrayList<>();
         this.columnCount = 0;
@@ -41,17 +41,17 @@ public class IncomeStatementView
         return this.revenueAccounts;
     }
 
-    public void setRevenueAccounts(Set<String> revenueAccounts)
+    public void setRevenueAccounts(LinkedHashSet<String> revenueAccounts)
     {
         this.revenueAccounts = revenueAccounts;
     }
 
-    public Set<String> getExpenseAccounts()
+    public LinkedHashSet<String> getExpenseAccounts()
     {
         return this.expenseAccounts;
     }
 
-    public void setExpenseAccounts(Set<String> expenseAccounts)
+    public void setExpenseAccounts(LinkedHashSet<String> expenseAccounts)
     {
         this.expenseAccounts = expenseAccounts;
     }

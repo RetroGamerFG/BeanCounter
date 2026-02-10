@@ -33,6 +33,7 @@ public class IncomeStatementLogic
             else
             {
                 isv.getColumns().get(colIndex).getExpenseLines().put(fsl.getAccountName(), fsl);
+                System.out.println();
             }
         }
     }

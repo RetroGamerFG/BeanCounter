@@ -1,16 +1,15 @@
 package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedHashMap;
 
 public class IncomeStatementColumn 
 {
     private String columnLabel;
     private int columnIndex;
     
-    private Map<String, FinancialStatementLine> revenueLines;
-    private Map<String, FinancialStatementLine> expenseLines;
+    private LinkedHashMap<String, FinancialStatementLine> revenueLines;
+    private LinkedHashMap<String, FinancialStatementLine> expenseLines;
 
     private BigDecimal totalRevenue;
     private BigDecimal totalExpense;
@@ -25,8 +24,8 @@ public class IncomeStatementColumn
         this.columnLabel = null;
         this.columnIndex = -1;
 
-        this.revenueLines = new HashMap<>();
-        this.expenseLines = new HashMap<>();
+        this.revenueLines = new LinkedHashMap<>();
+        this.expenseLines = new LinkedHashMap<>();
 
         this.totalRevenue = BigDecimal.ZERO;
         this.totalExpense = BigDecimal.ZERO;
@@ -57,22 +56,22 @@ public class IncomeStatementColumn
         this.columnIndex = columnIndex;
     }
 
-    public Map<String, FinancialStatementLine> getRevenueLines()
+    public LinkedHashMap<String, FinancialStatementLine> getRevenueLines()
     {
         return this.revenueLines;
     }
 
-    public void setRevenueLines(Map<String, FinancialStatementLine> revenueLines)
+    public void setRevenueLines(LinkedHashMap<String, FinancialStatementLine> revenueLines)
     {
         this.revenueLines = revenueLines;
     }
 
-    public Map<String, FinancialStatementLine> getExpenseLines()
+    public LinkedHashMap<String, FinancialStatementLine> getExpenseLines()
     {
         return this.expenseLines;
     }
 
-    public void setExpenseLines(Map<String, FinancialStatementLine> expenseLines)
+    public void setExpenseLines(LinkedHashMap<String, FinancialStatementLine> expenseLines)
     {
         this.expenseLines = expenseLines;
     }

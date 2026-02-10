@@ -55,3 +55,29 @@
 .total-line {
 
 }
+
+@media print {
+    .table-block table {
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+    }
+
+    .table-block th,
+    .table-block td {
+        border: 1px solid #000 !important;
+    }
+
+    /* Add borders under revenue, expense, and net income sections */
+    #revenue-block tr:first-child th,
+    #revenue-block tr:first-child td,
+    #revenue-block tr:last-child th,
+    #revenue-block tr:last-child td,
+    #expense-block tr:first-child th,
+    #expense-block tr:first-child td,
+    #expense-block tr:last-child th,
+    #expense-block tr:last-child td,
+    .net-income-line tr th,
+    .net-income-line tr td {
+        border-bottom: 2px solid #000 !important;
+    }
+}

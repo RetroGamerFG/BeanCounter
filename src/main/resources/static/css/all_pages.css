@@ -141,3 +141,55 @@ tr.logs:nth-child(even) {
     grid-template-columns: 1fr; /* Stack the account fields vertically on smaller screens */
   }
 }
+
+@media print {
+  body {
+    padding: 0;
+    color: #000;
+    background: #fff;
+  }
+
+  .navigation-bar,
+  button {
+    display: none !important;
+  }
+
+  .table-block {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  table {
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table-block th,
+  .table-block td {
+    color: #000;
+    border: 1px solid #000 !important;
+  }
+
+  .table-block .header-label,
+  .table-block .header-date {
+    border: 1px solid #000 !important;
+  }
+
+  a {
+    text-decoration: underline;
+    color: #000;
+  }
+
+  thead,
+  tfoot {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+}
