@@ -75,9 +75,22 @@ public class FinancialStatementService
     public IncomeStatementView getIncomeStatementView(FinancialStatement fs)
     {
         IncomeStatementView isv = new IncomeStatementView();
+
+        LocalDate endDate = null;
         
         //determine the end date to query journal entries to. Should match the statement's range type (MTD, QTD, YTD).
-        LocalDate endDate = businessInfoLogic.determineEndDate(fs);
+        if("QTD".compareToIgnoreCase(fs.getRangeType()) == 0)
+        {
+            endDate = businessInfoLogic.determineEndDate(fs.getStartingDate(), true, false);
+        }
+        else if("YTD".compareToIgnoreCase(fs.getRangeType()) == 0)
+        {
+            endDate = businessInfoLogic.determineEndDate(fs.getStartingDate(), false, true);
+        }
+        else
+        {
+            endDate = businessInfoLogic.determineEndDate(fs.getStartingDate(), false, false);
+        }
 
         //create the formatted date header based on the statement and range type.
         isv.setDateRangeString(financialStatementLogic.createDateRangeString(
@@ -96,15 +109,32 @@ public class FinancialStatementService
         {
             if(fs.getIncludeAllMonths() && fs.getIncludeAllQuarters())
             {
+                createColumnsForMonthRange(isv, fs, 1);
+                createColumnForQuarter(isv, fs, 1);
 
+                createColumnsForMonthRange(isv, fs, 2);
+                createColumnForQuarter(isv, fs, 2);
+
+                createColumnsForMonthRange(isv, fs, 3);
+                createColumnForQuarter(isv, fs, 3);
+
+                createColumnsForMonthRange(isv, fs, 4);
+                createColumnForQuarter(isv, fs, 4);
             }
             else if (fs.getIncludeAllMonths())
             {
-
+                createColumnsForMonthRange(isv, fs, 1);
+                createColumnsForMonthRange(isv, fs, 2);
+                createColumnsForMonthRange(isv, fs, 3);
+                createColumnsForMonthRange(isv, fs, 4);
             }
             else if (fs.getIncludeAllQuarters())
             {
-
+                createColumnForQuarter(isv, fs, 1);
+                createColumnForQuarter(isv, fs, 2);
+                createColumnForQuarter(isv, fs, 3);
+                createColumnForQuarter(isv, fs, 4);
+                
             }
 
             createColumn(isv, fs, String.valueOf(endDate.getYear()), fs.getStartingDate(), endDate);
@@ -113,7 +143,7 @@ public class FinancialStatementService
         {
             if (fs.getIncludeAllMonths())
             {
-
+                createColumnsForMonthRange(isv, fs, businessInfoLogic.getQuarterByMonth(endDate.getMonth()));
             }
 
             createColumn(isv, fs, "Q" + businessInfoLogic.getQuarterByMonth(endDate.getMonth()), fs.getStartingDate(), endDate);
@@ -132,46 +162,6 @@ public class FinancialStatementService
         System.out.println(); //for breakpoint debugging
 
         return isv;
-    }
-
-    private void createColumnsForAllMonthsAndQuarters(IncomeStatementView isv, FinancialStatement fs, LocalDate endDate)
-    {
-        
-    }
-
-    private void createColumnsForAllMonths(IncomeStatementView isv, FinancialStatement fs, LocalDate endDate)
-    {
-        int month = this.businessInfo.getIncorporationDate().getMonthValue();
-        int year = endDate.getYear();
-
-        //if the incorporation month is greater than the ending month (i.e. April > January), roll back one year
-        if(month > endDate.getMonthValue())
-        {
-            year--;
-        }
-        
-        for(int m = 0; m < 12; m++)
-        {
-            int currentMonth = (month + m);
-
-            if(currentMonth > 12)
-            {
-                currentMonth -= 12;
-                month -= 12;
-                year++;
-            }
-
-            LocalDate currentStart = LocalDate.of(year, currentMonth, 1);
-            LocalDate currentEnd = LocalDate.of(year, currentMonth, 1).with(TemporalAdjusters.lastDayOfMonth());
-
-            incomeStatementLogic.createColumn(isv, currentStart.getMonth().toString(), m);
-
-            List<FinancialStatementLine> revenueQuery = fetchJournalEntries(currentStart, currentEnd, fs.getGeneratedDate(), "R");
-            incomeStatementLogic.addJournalEntriesToColumn(isv, revenueQuery, "R", m);
-
-            List<FinancialStatementLine> expenseQuery = fetchJournalEntries(currentStart, currentEnd, fs.getGeneratedDate(), "R");
-            incomeStatementLogic.addJournalEntriesToColumn(isv, expenseQuery, "X", m);
-        }
     }
 
     private List<FinancialStatementLine> fetchJournalEntries(LocalDate startDate, LocalDate endDate, LocalDate generatedDate, String entryType)
@@ -211,5 +201,58 @@ public class FinancialStatementService
 
         //populate the fetched journal entries into the income statement view
         incomeStatementLogic.addJournalEntriesToColumn(isv, queriedExp, "X", colIndex);
+    }
+
+    //needs revision in regard to year
+    private void createColumnsForMonthRange(IncomeStatementView isv, FinancialStatement fs, int quarter)
+    {
+        int startMonth = businessInfoLogic.getQuarterStartMonth(quarter).getValue();
+        int year = fs.getStartingDate().getYear();
+
+        if(startMonth >= fs.getStartingDate().getMonthValue())
+        {
+            year--;
+        }
+
+        for(int m = 0; m < 3; m++)
+        {
+            int currentMonth = (startMonth + m);
+
+            if(currentMonth > 12)
+            {
+                currentMonth -= 12;
+                startMonth -= 12;
+                year++;
+            }
+
+            LocalDate currentStart = LocalDate.of(year, currentMonth, 1);
+            LocalDate currentEnd = LocalDate.of(year, currentMonth, 1).with(TemporalAdjusters.lastDayOfMonth());
+
+            createColumn(isv, fs, currentStart.getMonth().toString(), currentStart, currentEnd);
+        }
+    }
+
+    private void createColumnForQuarter(IncomeStatementView isv, FinancialStatement fs, int quarter)
+    {
+        int startMonth = businessInfoLogic.getQuarterStartMonth(quarter).getValue();
+        int startYear = fs.getStartingDate().getYear();
+
+        if(startMonth >= fs.getStartingDate().getMonthValue())
+        {
+            startYear--;
+        }
+
+        int endMonth = businessInfoLogic.getQuarterEndMonth(quarter).getValue();
+        int endYear = startYear;
+
+        if(startMonth < fs.getStartingDate().getMonthValue())
+        {
+            endYear++;
+        }
+
+        LocalDate quarterStartDate = LocalDate.of(startYear, startMonth, 1);
+        LocalDate quarterEndDate = LocalDate.of(endYear, endMonth, 1).with(TemporalAdjusters.lastDayOfMonth());
+
+        createColumn(isv, fs, "Q" + quarter, quarterStartDate, quarterEndDate);
     }
 }

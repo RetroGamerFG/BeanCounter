@@ -7,7 +7,6 @@ import java.time.temporal.TemporalAdjusters;
 import org.springframework.stereotype.Component;
 
 import com.itsretro.beancounter.model.BusinessInfo;
-import com.itsretro.beancounter.model.FinancialStatement;
 
 @Component
 public class BusinessInfoLogic 
@@ -31,6 +30,8 @@ public class BusinessInfoLogic
     {
         int monthValue = businessInfo.getIncorporationDate().getMonthValue();
 
+        System.out.println();
+
         //example logic if the incorporation date was in January
             //1st quarter: January - March
             //2nd quarter: April - June
@@ -40,9 +41,9 @@ public class BusinessInfoLogic
         switch(quarter)
         {
             case 1 -> monthValue += 0;
-            case 2 -> monthValue += 2;
-            case 3 -> monthValue += 5;
-            case 4 -> monthValue += 8;
+            case 2 -> monthValue += 3;
+            case 3 -> monthValue += 6;
+            case 4 -> monthValue += 9;
 
             default -> { return null;}
         }
@@ -112,38 +113,36 @@ public class BusinessInfoLogic
         return -1;
     }
 
-    public LocalDate determineEndDate(FinancialStatement financialStatement)
+    public LocalDate determineEndDate(LocalDate startDate, boolean useQTD, boolean useYTD)
     {
-        int monthPos = financialStatement.getStartingDate().getMonthValue();
-        int yearPos = financialStatement.getStartingDate().getYear();
+        int monthPos = startDate.getMonthValue();
+        int yearPos = startDate.getYear();
 
         //mtd is the current month contained in startMonth, only need to get ending day.
         //qtd and ytd require determining the current quarter and/or current fiscal year.
 
-        if("QTD".compareToIgnoreCase(financialStatement.getRangeType()) == 0)
+        if(useQTD)
         {
             //determine the current quarter of the financial statement's starting date
-            int matchedQuarter = getQuarterByMonth(financialStatement.getStartingDate().getMonth());
+            int matchedQuarter = getQuarterByMonth(startDate.getMonth());
 
             //increment the month-end position based on the quarter's ending month
             monthPos = getQuarterEndMonth(matchedQuarter).getValue();
 
             System.out.println();
         }
-        else if("YTD".compareToIgnoreCase(financialStatement.getRangeType()) == 0)
+        else if(useYTD)
         {
             //determine the 4th quarter's month-end
-            int fourthQuarterMonthEnd = getQuarterEndMonth(4).getValue();
+            monthPos = getQuarterEndMonth(4).getValue();
 
-            //increment the month-end position based on the fourth quarter's ending month
-            monthPos = getQuarterEndMonth(fourthQuarterMonthEnd).getValue();
-        }
-
-        //if the calculated month-end is greater than 12 (past December), roll back and increment year
-        if(monthPos > 12)
-        {
-            monthPos -= 12;
-            yearPos += 1;
+            //if the last month of the fiscal year is less than the starting month, increment the year
+            if(monthPos < startDate.getMonthValue())
+            {
+                yearPos++;
+            }
+            
+            System.out.println();
         }
 
         //return built result, rolling forward to last day of month
