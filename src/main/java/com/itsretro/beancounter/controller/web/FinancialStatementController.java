@@ -1,3 +1,10 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// FinancialStatementController: a Spring Boot @Controller used to create and view financial statements.
+//
+
 package com.itsretro.beancounter.controller.web;
 
 import java.time.LocalDate;
@@ -27,8 +34,11 @@ public class FinancialStatementController
     @Autowired
     BusinessInfoService businessInfoService;
 
+    //statements() - the main view for the statements page.
+    //inputs - model: the page model to load values into.
+    //output - the statements page loaded into view.
     @GetMapping("/statements")
-    public String Statements(Model model)
+    public String statements(Model model)
     {
         model.addAttribute("financialStatement", new FinancialStatement());
         model.addAttribute("allFinancialStatements", financialStatementService.getAllFinancialStatements());
@@ -36,6 +46,12 @@ public class FinancialStatementController
         return "statements";
     }
 
+    //createAccountDetailEntry() - takes the user's inputs from the statements page and attempts to store into the database.
+    //inputs -
+        //financialStatement: a @ModelAttribute instance of a financial statement created from the front-end. Uses the @Valid attribute.
+        //bindingResult: a BindingResult used to validate the instance for saving into the database.
+        //model: the page model to load values into if saving is unsuccessful.
+    //output - reloads the page with error handling if unsuccessful, or reloads the statements page otherwise.
     @PostMapping("/create_financial_statement")
     public String createAccountDetailEntry(@Valid @ModelAttribute("financialStatement") FinancialStatement financialStatement, BindingResult bindingResult, Model model)
     {
@@ -54,6 +70,11 @@ public class FinancialStatementController
         return "redirect:/statements";
     }
 
+    //incomeStatementView() - takes the user's selection and presents an income statement form.
+    //inputs -
+        //id: a @PathVariable instance of a long representing the FinancialStatement to view.
+        //model: the page model to load values into.
+    //output - the income statement page loaded into view
     @GetMapping("/statements/view/income_statement/{id}")
     public String incomeStatementView(@PathVariable("id") Long id, Model model)
     {
@@ -67,6 +88,11 @@ public class FinancialStatementController
         return "income_statement_view";
     }
 
+    //reloadView() - a helper function used if a FinancialStatement fails to generate.
+    //inputs -
+        //model: the page model to load values into.
+        //financialStatement: the FinancialStatement instance to reload into model.
+    //output - reloads the page with previous selections from financialStatement.
     private String reloadView(Model model, FinancialStatement financialStatement) 
     {
         model.addAttribute("financialStatement", financialStatement);

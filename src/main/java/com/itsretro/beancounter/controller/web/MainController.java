@@ -30,6 +30,9 @@ public class MainController
         return "main";
     }
 
+    //setup() - confirms BusinessInfo was created, or returns the first time setup page.
+    //inputs - none.
+    //output - the setup page loaded into view, or an error for unknown issue.
     @GetMapping("/setup")
     public String setup()
     {
@@ -44,6 +47,9 @@ public class MainController
         return "setup";
     }
 
+    //setup() - POST version of setup, used when the setup is completed to save the inputs as a BusinessInfo instance.
+    //inputs - businessInfo: a BusinessInfo instance with values to be written to data.
+    //output - the main page loaded into view, or an error for a write issue.
     @PostMapping("/setup")
     public String finalizeSetup(BusinessInfo businessInfo)
     {
@@ -65,6 +71,6 @@ public class MainController
             return "error";
         }
         
-        return "redirect:/dashboard";
+        return "redirect:/";
     }
 }

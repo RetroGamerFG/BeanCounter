@@ -3,7 +3,7 @@
 // Copyright (c) 2026 Bailey Manczko
 //
 // AccountDetailLogic: a logic class for AccountDetail and related classes.
-// Includes methods related to class member assignment and computation of amounts.
+//  Includes methods related to class member assignment and computation of amounts.
 //
 
 package com.itsretro.beancounter.logic;
@@ -31,6 +31,10 @@ import com.itsretro.beancounter.viewmodel.AccountDetailView;
 @Component
 public class AccountDetailLogic 
 {
+    //
+    // Public Methods
+    //
+
     //buildEmptyAccountDetailView() - called first, initializes an AccountDetailView instance with a list of accounts and valid
         //attributes passed. Assumes passed attributes are valid.
     //inputs -
@@ -164,6 +168,10 @@ public class AccountDetailLogic
 
         System.out.println();
     }
+
+    //
+    // Private Methods
+    //
 
     //createDateString() - given a valid accountDetail, initializes the dateString member with passed values.
     //inputs - ad: an AccountDetail instance.

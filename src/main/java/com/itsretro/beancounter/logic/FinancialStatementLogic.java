@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// FinancialStatementLogic: a logic class for FinancialStatement and related classes.
+// Includes methods related to class member assignment and computation of amounts.
+//
+
 package com.itsretro.beancounter.logic;
 
 import java.time.LocalDate;
@@ -7,6 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class FinancialStatementLogic 
 {
+    //createDateRangeString() - creates a formatted string display the statement date for a given financial statement type and range.
+    //inputs -
+        //rangeType - the range of the statement (i.e. MTD, QTD, YTD).
+        //endingDate - the ending date of the statement.
+        //dateOnly - enabled to ignore the intro text (i.e. "For the Month Ended...").
+    //output - a string containing the formatted statement date.
     public String createDateRangeString(String rangeType, LocalDate endingDate, boolean dateOnly)
     {
         String output = "";

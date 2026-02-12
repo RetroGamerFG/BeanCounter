@@ -29,7 +29,7 @@ public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLi
         JOIN j.lines l
         JOIN l.account a
         WHERE j.postDate BETWEEN :startDate AND :endDate
-        AND j.creationDate < :cutoffDate
+        AND j.creationDate <= :cutoffDate
         AND a.accountType = :accountType
         GROUP BY a.accountID, a.accountName
     """)

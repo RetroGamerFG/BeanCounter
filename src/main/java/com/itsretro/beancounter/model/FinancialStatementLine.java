@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// FinancialStatementLine: a model used for extracted repository data regarding amounts of accounts. Utilized by
+//  FinancialStatement and the different statement views.
+//
+
 package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;

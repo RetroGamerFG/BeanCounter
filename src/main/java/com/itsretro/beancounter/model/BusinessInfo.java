@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// BusinessInfo: a model used for information about the business. Includes required members that
+//  determine program operation and the generation of statement dates.
+//
+
 package com.itsretro.beancounter.model;
 
 import java.io.Serializable;

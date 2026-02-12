@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// IncomeStatementColumn: a model used for columns used by the IncomeStatementView. Includes separated maps for revenue and expense
+//  accounts, and members for respective totals.
+//
+
 package com.itsretro.beancounter.model;
 
 import java.math.BigDecimal;

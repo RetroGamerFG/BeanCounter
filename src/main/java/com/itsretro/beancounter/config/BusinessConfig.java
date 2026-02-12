@@ -1,3 +1,10 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// BusinessConfig: a Spring Boot @Configuration that loads "business.dat" to use as an object instance.
+//
+
 package com.itsretro.beancounter.config;
 
 import java.io.File;

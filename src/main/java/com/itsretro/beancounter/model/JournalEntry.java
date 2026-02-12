@@ -51,7 +51,7 @@ public class JournalEntry
 
     @NotEmpty(message = "A journal entry must have at least two lines")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "journal_entry_id")
+    @JoinColumn(name = "JOURNAL_ENTRY_ID")
     private List<JournalEntryLine> lines = new ArrayList<>();
 
     @NotNull(message = "Status is required")

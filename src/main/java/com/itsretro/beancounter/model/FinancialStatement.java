@@ -1,3 +1,10 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// FinancialStatement: a JPA model used to store information for financial statements.
+//
+
 package com.itsretro.beancounter.model;
 
 import java.time.LocalDate;

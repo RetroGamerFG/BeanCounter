@@ -3,8 +3,9 @@
 // Copyright (c) 2026 Bailey Manczko
 //
 // AccountDetailView: a ViewModel used to process and store initialized instances of 'AccountDetailLine'. Creates a form that
-// displays journal entries in blocks, including by year and by month.
-//   Includes the following models to create: AccountDetailBlockYear, AccountDetailBlockMonth, AccountDetailLine
+//  displays journal entries in blocks, including by year and by month.
+//  
+//  Includes the following models to create: AccountDetailBlockYear, AccountDetailBlockMonth, AccountDetailLine
 //
 
 package com.itsretro.beancounter.viewmodel;

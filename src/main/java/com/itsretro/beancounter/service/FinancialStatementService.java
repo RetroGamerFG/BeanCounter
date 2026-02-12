@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// FinancialStatementService: a service class used to link the FinancialStatement repository and FinancialStatement logic.
+//  Includes methods for creating views and building columns to store within the views.
+//
+
 package com.itsretro.beancounter.service;
 
 import java.time.LocalDate;
@@ -180,7 +188,7 @@ public class FinancialStatementService
         );
 
         //populate the fetched journal entries into the income statement view
-        incomeStatementLogic.addJournalEntriesToColumn(isv, queriedRev, "R", colIndex);
+        incomeStatementLogic.addLinesToColumn(isv, queriedRev, "R", colIndex);
 
         //call the journalEntry repository to get list of "Expense" account journal entries
         List<FinancialStatementLine> queriedExp = fetchJournalEntries(
@@ -191,7 +199,7 @@ public class FinancialStatementService
         );
 
         //populate the fetched journal entries into the income statement view
-        incomeStatementLogic.addJournalEntriesToColumn(isv, queriedExp, "X", colIndex);
+        incomeStatementLogic.addLinesToColumn(isv, queriedExp, "X", colIndex);
 
         System.out.println();
     }

@@ -1,3 +1,11 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// SetupInterceptor: an interceptor that checks a business has been set up, which is required for functions of the
+//  program to run correctly.
+//
+
 package com.itsretro.beancounter.interceptor;
 
 import java.io.File;
@@ -12,8 +20,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SetupInterceptor implements HandlerInterceptor 
 {
     //preHandle() - will prevent any pages from continuing if business info does not exist (required for specific modules to run BeanCounter).
-    //
-    //
+    //inputs -
+        //request: the http request, used to get the URL path of the user.
+        //response: the http response, used to return the redirect URL on false.
+        //handler: an object instance. Not used in this overridden method.
+    //output - a boolean based on the result; will redirect to first time setup if false.
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception 
     {

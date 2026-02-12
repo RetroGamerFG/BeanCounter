@@ -1,3 +1,13 @@
+//
+// BeanCounter
+// Copyright (c) 2026 Bailey Manczko
+//
+// IncomeStatementView: a ViewModel used to process and store initialized instances of FinancialStatement.
+//  Creates a form that displays summarized account totals in the form of an income statement.
+//  
+//  Includes the following models to create: IncomeStatementColumn, FinancialStatementLine
+//
+
 package com.itsretro.beancounter.viewmodel;
 
 import java.util.ArrayList;

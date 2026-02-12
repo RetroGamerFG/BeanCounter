@@ -3,7 +3,7 @@
 // Copyright (c) 2026 Bailey Manczko
 //
 // AccountDetailService: a service class used to link the AccountDetail repository and the AccountDetail logic.
-// Includes methods for retrieving and storing AccountDetail, and building AccountDetailView. 
+//  Includes methods for retrieving and storing AccountDetail, and building AccountDetailView. 
 //
 
 package com.itsretro.beancounter.service;
