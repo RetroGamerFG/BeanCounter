@@ -1,5 +1,6 @@
 /*
     The following is an H2-schema utilized by the models in this project.
+    This is currently unused, as JPA handles the tables based on the current models.
 */
 
 /*

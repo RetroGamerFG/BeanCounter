@@ -1,0 +1,83 @@
+.header-label {
+    text-align: center;     /* Centers text within the header */
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 10px 0;
+    background-color: lightgreen;
+    color: white;
+    border: none;
+}
+
+.header-date {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 0;
+    background-color: lightgreen;
+    color: white;
+    border-bottom: 2px solid #333;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.block {
+    padding: 10px;
+}
+
+.column-label {
+
+}
+
+.row-label {
+    font-size: 1.05rem;
+	font-weight: 600;
+    max-width: 420px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.row-value {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    min-width: 90px;
+}
+
+.table-block th,
+.table-block td {
+    white-space: nowrap;
+}
+
+.table-block td.row-label {
+    white-space: normal;
+}
+
+.total-line {
+
+}
+
+@media print {
+    .table-block table {
+        border-collapse: collapse !important;
+        border-spacing: 0 !important;
+    }
+
+    .table-block th,
+    .table-block td {
+        border: 1px solid #000 !important;
+    }
+
+    /* Add borders under revenue, expense, and net income sections */
+    #revenue-block tr:first-child th,
+    #revenue-block tr:first-child td,
+    #revenue-block tr:last-child th,
+    #revenue-block tr:last-child td,
+    #expense-block tr:first-child th,
+    #expense-block tr:first-child td,
+    #expense-block tr:last-child th,
+    #expense-block tr:last-child td,
+    .net-income-line tr th,
+    .net-income-line tr td {
+        border-bottom: 2px solid #000 !important;
+    }
+}

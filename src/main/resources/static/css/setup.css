@@ -1,0 +1,6 @@
+.setup-page {
+    display: none;
+}
+.setup-page.active {
+    display: block;
+}

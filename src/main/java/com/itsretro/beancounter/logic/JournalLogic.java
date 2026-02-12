@@ -3,7 +3,7 @@
 // Copyright (c) 2026 Bailey Manczko
 //
 // JournalLogic: a logic class for JournalEntry and related classes.
-// Includes methods related to class member assignment and validation of amounts.
+//  Includes methods related to class member assignment and validation of amounts.
 //
 
 package com.itsretro.beancounter.logic;

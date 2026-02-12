@@ -28,12 +28,15 @@ label {
 }
 
 .table-block {
-    width: 80%;             /* Adjust width as needed */
-    max-width: 900px;
-    background: white;
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-radius: 8px;
+  background: white;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  width: fit-content;
+  min-width: 800px;
+  max-width: 100%;
+  margin: 0;
+  overflow-x: auto;
 }
 
 /* Inline layout for the DatePicker and Description fields */
@@ -105,7 +108,8 @@ a:focus {
 /* Tables */
 
 table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
 }
 
@@ -135,5 +139,57 @@ tr.logs:nth-child(even) {
 
   .account-fields {
     grid-template-columns: 1fr; /* Stack the account fields vertically on smaller screens */
+  }
+}
+
+@media print {
+  body {
+    padding: 0;
+    color: #000;
+    background: #fff;
+  }
+
+  .navigation-bar,
+  button {
+    display: none !important;
+  }
+
+  .table-block {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  table {
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table-block th,
+  .table-block td {
+    color: #000;
+    border: 1px solid #000 !important;
+  }
+
+  .table-block .header-label,
+  .table-block .header-date {
+    border: 1px solid #000 !important;
+  }
+
+  a {
+    text-decoration: underline;
+    color: #000;
+  }
+
+  thead,
+  tfoot {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
   }
 }

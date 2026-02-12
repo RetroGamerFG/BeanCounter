@@ -3,7 +3,7 @@
 // Copyright (c) 2026 Bailey Manczko
 //
 // FinancialBlock: an interface model used by AccountDetail models which associates totals
-//   and streamlines computations for grand totals.
+//  and streamlines computations for grand totals.
 //
 
 package com.itsretro.beancounter.model;

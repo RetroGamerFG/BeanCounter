@@ -3,7 +3,7 @@
 // Copyright (c) 2026 Bailey Manczko
 //
 // AccountDetailBlockMonth: a model used to store AccountDetailLine instances for a given month.
-//   Used by AccountDetailBlockYear to create AccountDetailView.
+//  Used by AccountDetailBlockYear to create AccountDetailView.
 //
 
 package com.itsretro.beancounter.model;

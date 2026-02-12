@@ -3,7 +3,7 @@
 // Copyright (c) 2026 Bailey Manczko
 //
 // AccountDetailLine: a model used to display journal entries that match filter criteria for an account detail.
-//   Used by AccountDetailYear and AccountDetailBlockMonth to create AccountDetailView.
+//  Used by AccountDetailYear and AccountDetailBlockMonth to create AccountDetailView.
 //
 
 package com.itsretro.beancounter.model;

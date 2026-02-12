@@ -3,7 +3,7 @@
 // Copyright (c) 2026 Bailey Manczko
 //
 // AccountService: a service class used to link the Account repository.
-// Includes methods for retrieving and storing Account. 
+//  Includes methods for retrieving and storing Account. 
 //
 
 package com.itsretro.beancounter.service;
@@ -45,7 +45,7 @@ public class AccountService
     //getAllAccountsForDropdown() - fetches all Account data saved in the Account repository. This is primarily used for HTML inputs.
     //inputs - none.
     //output - a list containing all accounts (should be at least one for program to function...).
-    public List<Account> getAllAccountsForDropdown()
+    public List<Account> getAllAccounts()
     {
         return accountRepository.findAll();
     }

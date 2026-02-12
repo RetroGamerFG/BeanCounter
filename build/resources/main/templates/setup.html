@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <link rel="stylesheet" th:href="@{/css/all_pages.css}">
+        <link rel="stylesheet" th:href="@{/css/setup.css}">
+        <script src="/js/setup.js"></script>
+    </head>
+    <body>
+        <form id="businessEntry" method="post" th:action="@{/setup}">
+            <div class="table-block">
+            <div class="setup-page active">
+                <h1>Welcome to BeanCounter!</h1>
+                <p>Follow the onscreen instructions for first-time setup.</p>
+            </div>
+            <div class="setup-page">
+                <h1>Business Info</h1>
+                <p>Enter the following details about your business.</p>
+                <div class="entry-line">
+                    <label>Business Name:</label>
+                    <input id="businessName" name="name" type="text"/>
+                </div>
+                <div class="entry-line">
+                    <label>Address:</label>
+                    <input id="businessAddress" name="address" type="text"/>
+                </div>
+                <div class="entry-line">
+                    <label>City:</label>
+                    <input id="businessCity" name="city" type="text"/>
+                </div>
+                <div class="entry-line">
+                    <label>State:</label>
+                    <input id="businessState" name="state" type="text"/>
+                </div>
+                <div class="entry-line">
+                    <label>Zipcode:</label>
+                    <input id="businessZipcode" name="zipcode" type="text"/>
+                </div>
+                <div class="entry-line">
+                    <label>Phone:</label>
+                    <input id="businessPhone" name="phone" type="text"/>
+                </div>
+            </div>
+            <div class="setup-page">
+                <h1>Incorporation Date</h1>
+                <p>Enter the business incorporation month and year.</p>
+                <div class="entry-line">
+                    <label>Date:</label>
+                    <input id="businessStartDate" name="incorporationDate" type="date"/>
+                </div>
+            </div>
+            <div class="setup-page">
+                <h1>Usage Type</h1>
+                <p>How many users will access this program?</p>
+                <div class="entry-line">
+                    <input id="usageTypeM" type="radio" name="usageType" value="true">Multiple Users</input>
+                    <input id="usageTypeS" type="radio" name="usageType" value="false">Single User</input>
+                </div>
+            </div>
+            <div class="setup-page">
+                <h1>Complete</h1>
+                <p>Setup complete. Press 'Finish' to start the program.</p>
+            </div>
+            <input id="prevButton" type="button" name="Previous" value="Previous" onclick="navigatePrev()"></input>
+            <input id="nextButton" type="button" name="Next" onclick="navigateNext()"></input>
+            </div>
+        </form>
+    </body>
+</html>

@@ -11,11 +11,19 @@ public class BusinessValidationException extends RuntimeException
 {
     private final String fieldName;
 
+    //
+    // Initializer(s)
+    //
+
     public BusinessValidationException(String fieldName, String message)
     {
         super(message);
         this.fieldName = fieldName;
     }
+
+    //
+    // Getters & Setters
+    //
 
     public String getFieldName()
     { 
