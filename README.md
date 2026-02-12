@@ -9,13 +9,13 @@ Log transactions, generate statements, and perform additional functions for your
 
 • [-] Lookup posted entries
 
-• [ ] Add custom new account codes
+• [-] Add custom new account codes
 
-• [ ] Generate statements such as income, balance sheet, etc.
+• [-] Generate statements such as income, balance sheet, etc.
 
 • [ ] Manual backup of all transactions and generated 
 
-• [ ] Business setup for name and fiscal year setup used by statements
+• [X] Business setup for name and fiscal year setup used by statements
 
 • [-] (Optional) RESTfulAPI integration that utilizes AI agents and MCP servers.
 
@@ -24,8 +24,11 @@ Log transactions, generate statements, and perform additional functions for your
 <h2>Testers Wanted!</h2>
 I'm looking for users that can test out the program. This includes general usage, bug finding, possible calculation errors, and anything else that throws a wrench into the machine. Any feedback during development is valuable, and is greatly appreciated.
 
+<h2>Lastest Version</h2>
+An early version of the first-time setup has been created, and the income statement is completed. It includes the ability to generate income statements by month, quarter, and year, with the extra option to include the months in a quarter, and the quarters in a year.
+
 <h2>Next Update</h2>
-Up next is the statements module, and first focus will be on the income statement. To properly implement it, I will first need to add the business information setup for the incorporation date. This will take some time, but with the work done on the Account Detail module, the general structure to proceed with should follow the same process once the setup page is completed.
+Next will be the balance sheet. It follows the same logic as the income statement, so I don't expect it to take too long. Eventually I want to revisit both to better order accounts, such as specifying 'cost of goods sold' as a contra to sales revenue instead of as an expense line. It will require rewriting the Account class, so my focus for now will be proceeding with major features.
 
 <h2>MCP & Agent Functionality</h2>
 I am looking into optional packages that can utilize AI agents and MCP servers. However, I am still debating whether to include the prepared tools in this version. This functionality goes beyond the initial scope of the project, so I am still considering whether this will be part of a premium version of BeanCounter for the future. To be clear, the RESTful API will be included and is completely optional, but the tools/resources/prompts will not.
