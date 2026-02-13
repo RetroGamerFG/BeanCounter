@@ -32,20 +32,30 @@ public class FinancialStatementLine
     {
         this.accountName = accountName;
 
-        if(debitAmount.compareTo(creditAmount) > 0)
+        if(debitAmount.compareTo(BigDecimal.ZERO) > 0 && creditAmount.compareTo(BigDecimal.ZERO) > 0)
+        {
+            this.totalAmount = debitAmount.subtract(creditAmount);
+
+            if(this.totalAmount.compareTo(BigDecimal.ZERO) > 0)
+            {
+                this.isCredit = false;
+            }
+            else
+            {
+                this.isCredit = true;
+            }
+
+            this.totalAmount = this.totalAmount.abs();
+        }
+        else if(creditAmount.compareTo(BigDecimal.ZERO) == 0)
         {
             this.totalAmount = debitAmount;
             this.isCredit = false;
         }
-        else if (debitAmount.compareTo(creditAmount) < 0)
+        else
         {
             this.totalAmount = creditAmount;
             this.isCredit = true;
-        }
-        else
-        {
-            this.totalAmount = BigDecimal.ZERO;
-            this.isCredit = false;
         }
     }
 

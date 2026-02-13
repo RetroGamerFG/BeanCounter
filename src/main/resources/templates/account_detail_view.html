@@ -39,51 +39,67 @@
                                 <td th:if="${entryLine.postSignature} != null" th:text="${entryLine.postSignature}"></td>
                                 <td th:unless="${entryLine.postSignature} != null">Error</td>
                                 <td th:text="${entryLine.postDate}"></td>
-                                <td th:if="${entryLine.type} == 'D'" th:text="${entryLine.amount}" class="debit-amount"></td>
-                                <td th:unless="${entryLine.type} != 'D'"></td>
-                                <td th:if="${entryLine.type} == 'C'" th:text="${entryLine.amount}" class="credit-amount"></td>
-                                <td th:unless="${entryLine.type} != 'C'"></td>
+                                <th:block th:if="${entryLine.type} == 'D'">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${entryLine.amount}, 'debit-amount', 2)}">-</td>
+                                    <td class="credit-amount">-</td>
+                                </th:block>
+                                <th:block th:unless="${entryLine.type} == 'D'">
+                                    <td class="debit-amount">-</td>
+                                    <td th:replace="~{fragments/formatters :: amount-td(${entryLine.amount}, 'credit-amount', 2)}">-</td>
+                                </th:block>
                             </tr>
                             <tr class="mtd-totals-line" th:attr="data-year=${yearEntry.key},data-month=${monthEntry.key}">
                                 <td colspan="3"></td>
                                 <td>Totals:</td>
-                                <td class="total month-total-debit" th:text="${monthEntry.value.totalDebits}">Err</td>
-                                <td class="total month-total-credit" th:text="${monthEntry.value.totalCredits}">Err</td>
+                                <td th:replace="~{fragments/formatters :: amount-td(${monthEntry.value.totalDebits}, 'total month-total-debit', 2)}">-</td>
+                                <td th:replace="~{fragments/formatters :: amount-td(${monthEntry.value.totalCredits}, 'total month-total-credit', 2)}">-</td>
                             </tr>
                             <tr class="mtd-totals-line" th:attr="data-year=${yearEntry.key},data-month=${monthEntry.key}">
                                 <td colspan="4"></td>
-                                <td class="grand-total month-grand-total" th:if="${monthEntry.value.grandTotalType} == 'D'" th:text="${monthEntry.value.grandTotal}" th:attr="data-type='debit'"></td>
-                                <td class="grand-total month-grand-total" th:unless="${monthEntry.value.grandTotalType} == 'D'"></td>
-                                <td class="grand-total month-grand-total" th:if="${monthEntry.value.grandTotalType} == 'C'" th:text="${monthEntry.value.grandTotal}" th:attr="data-type='credit'"></td>
-                                <td class="grand-total month-grand-total" th:unless="${monthEntry.value.grandTotalType} == 'C'"></td>
+                                <th:block th:if="${monthEntry.value.grandTotalType} == 'D'">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${monthEntry.value.grandTotal}, 'grand-total month-grand-total', 2)}">-</td>
+                                    <td>-</td>
+                                </th:block>
+                                <th:block th:unless="${monthEntry.value.grandTotalType} == 'D'">
+                                    <td>-</td>
+                                    <td th:replace="~{fragments/formatters :: amount-td(${monthEntry.value.grandTotal}, 'grand-total month-grand-total', 2)}">-</td>
+                                </th:block>
                             </tr>
                         </th:block>
                         <tr class="ytd-totals-line" th:attr="data-year=${yearEntry.key}">
                             <td colspan="3"></td>
                             <td>YTD:</td>
-                            <td class="total year-total-debit" th:text="${yearEntry.value.totalDebits}">Err</td>
-                            <td class="total year-total-credit" th:text="${yearEntry.value.totalCredits}">Err</td>
+                            <td th:replace="~{fragments/formatters :: amount-td(${yearEntry.value.totalDebits}, 'total year-total-debit', 2)}">-</td>
+                            <td th:replace="~{fragments/formatters :: amount-td(${yearEntry.value.totalCredits}, 'total year-total-credit', 2)}">-</td>
                         </tr>
                         <tr class="ytd-totals-line" th:attr="data-year=${yearEntry.key}">
                             <td colspan="4"></td>
-                            <td class="grand-total year-grand-total" th:if="${yearEntry.value.grandTotalType} == 'D'" th:text="${yearEntry.value.grandTotal}" th:attr="data-type='debit'"></td>
-                            <td class="grand-total year-grand-total" th:unless="${yearEntry.value.grandTotalType} == 'D'"></td>
-                            <td class="grand-total year-grand-total" th:if="${yearEntry.value.grandTotalType} == 'C'" th:text="${yearEntry.value.grandTotal}" th:attr="data-type='credit'"></td>
-                            <td class="grand-total year-grand-total" th:unless="${yearEntry.value.grandTotalType} == 'C'"></td>
+                            <th:block th:if="${yearEntry.value.grandTotalType} == 'D'">
+                                <td th:replace="~{fragments/formatters :: amount-td(${yearEntry.value.grandTotal}, 'grand-total year-grand-total', 2)}">-</td>
+                                <td>-</td>
+                            </th:block>
+                            <th:block th:unless="${yearEntry.value.grandTotalType} == 'D'">
+                                <td>-</td>
+                                <td th:replace="~{fragments/formatters :: amount-td(${yearEntry.value.grandTotal}, 'grand-total year-grand-total', 2)}">-</td>
+                            </th:block>
                         </tr>
                     </th:block>
                     <tr class="grand-total-line" data-level="account">
                         <td colspan="3"></td>
                         <td>Report Total:</td>
-                        <td class="total account-total-debit" th:text="${accountDetailView.totalDebits}">Err</td>
-                        <td class="total account-total-credit" th:text="${accountDetailView.totalCredits}">Err</td>
+                        <td th:replace="~{fragments/formatters :: amount-td(${accountDetailView.totalDebits}, 'total account-total-debit', 2)}">-</td>
+                        <td th:replace="~{fragments/formatters :: amount-td(${accountDetailView.totalCredits}, 'total account-total-credit', 2)}">-</td>
                     </tr>
                     <tr class="grand-total-line" data-level="account">
                         <td colspan="4"></td>
-                        <td class="grand-total account-grand-total" th:if="${accountDetailView.grandTotalType} == 'D'" th:text="${accountDetailView.grandTotal}" data-type="debit"></td>
-                        <td class="grand-total account-grand-total" th:unless="${accountDetailView.grandTotalType} == 'D'"></td>
-                        <td class="grand-total account-grand-total" th:if="${accountDetailView.grandTotalType} == 'C'" th:text="${accountDetailView.grandTotal}" data-type="credit"></td>
-                        <td class="grand-total account-grand-total" th:unless="${accountDetailView.grandTotalType} == 'C'"></td>
+                        <th:block th:if="${accountDetailView.grandTotalType} == 'D'">
+                            <td th:replace="~{fragments/formatters :: amount-td(${accountDetailView.grandTotal}, 'grand-total account-grand-total', 2)}">-</td>
+                            <td>-</td>
+                        </th:block>
+                        <th:block th:unless="${accountDetailView.grandTotalType} == 'D'">
+                            <td>-</td>
+                            <td th:replace="~{fragments/formatters :: amount-td(${accountDetailView.grandTotal}, 'grand-total account-grand-total', 2)}">-</td>
+                        </th:block>
                     </tr>
                 </tbody>
             </table>

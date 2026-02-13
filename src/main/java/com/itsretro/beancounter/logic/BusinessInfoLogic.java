@@ -148,6 +148,46 @@ public class BusinessInfoLogic
         return getQuarterStartDate(referenceDate, quarter).plusMonths(3).minusDays(1);
     }
 
+    public LocalDate getPreviousQuarterStartDate(LocalDate referenceDate, int currentQuarter)
+    {
+        if(currentQuarter < 1 || currentQuarter > 4)
+        {
+            throw new IllegalArgumentException("Quarter must be 1-4");
+        }
+
+        if(currentQuarter > 1)
+        {
+            // Previous quarter is in the same fiscal year
+            return getQuarterStartDate(referenceDate, currentQuarter - 1);
+        }
+        else
+        {
+            // Current quarter is 1, so previous quarter is 4 of the previous fiscal year
+            LocalDate previousFiscalYearStart = getFiscalYearStartDate(referenceDate).minusYears(1);
+            return getQuarterStartDate(previousFiscalYearStart, 4);
+        }
+    }
+
+    public LocalDate getPreviousQuarterEndDate(LocalDate referenceDate, int currentQuarter)
+    {
+        if(currentQuarter < 1 || currentQuarter > 4)
+        {
+            throw new IllegalArgumentException("Quarter must be 1-4");
+        }
+
+        if(currentQuarter > 1)
+        {
+            // Previous quarter is in the same fiscal year
+            return getQuarterEndDate(referenceDate, currentQuarter - 1);
+        }
+        else
+        {
+            // Current quarter is 1, so previous quarter is 4 of the previous fiscal year
+            LocalDate previousFiscalYearStart = getFiscalYearStartDate(referenceDate).minusYears(1);
+            return getQuarterEndDate(previousFiscalYearStart, 4);
+        }
+    }
+
     //
     // Private Methods
     //

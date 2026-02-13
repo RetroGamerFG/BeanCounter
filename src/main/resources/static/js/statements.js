@@ -33,8 +33,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-//correct later for other statement types
 function viewStatement(button)
 {
-    window.location.href = 'http://localhost:8080/statements/view/income_statement/' + button.value;
+    const statementTypeCode = button.getAttribute('data-statement-type');
+    
+    // Map statement type codes to URL paths
+    const statementTypeMap = {
+        'IS': 'income_statement',
+        'BS': 'balance_sheet',
+        'RE': 'retained_earnings'
+    };
+    
+    const statementType = statementTypeMap[statementTypeCode] || 'income_statement';
+    window.location.href = 'http://localhost:8080/statements/view/' + statementType + '/' + button.value;
 }

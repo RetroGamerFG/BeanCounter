@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.itsretro.beancounter.model.FinancialStatement;
+import com.itsretro.beancounter.service.BalanceSheetService;
 import com.itsretro.beancounter.service.BusinessInfoService;
 import com.itsretro.beancounter.service.FinancialStatementService;
+import com.itsretro.beancounter.service.IncomeStatementService;
+import com.itsretro.beancounter.viewmodel.BalanceSheetView;
 import com.itsretro.beancounter.viewmodel.IncomeStatementView;
 
 import jakarta.validation.Valid;
@@ -32,7 +35,17 @@ public class FinancialStatementController
     FinancialStatementService financialStatementService;
 
     @Autowired
+    IncomeStatementService incomeStatementService;
+
+    @Autowired
+    BalanceSheetService balanceSheetService;
+
+    @Autowired
     BusinessInfoService businessInfoService;
+
+    //
+    // Public Methods
+    //
 
     //statements() - the main view for the statements page.
     //inputs - model: the page model to load values into.
@@ -80,13 +93,30 @@ public class FinancialStatementController
     {
         FinancialStatement financialStatement = financialStatementService.getFinancialStatementByID(id);
 
-        IncomeStatementView incomeStatementView = financialStatementService.getIncomeStatementView(financialStatement);
+        IncomeStatementView incomeStatementView = incomeStatementService.getIncomeStatementView(financialStatement);
 
         model.addAttribute("incomeStatementView", incomeStatementView);
         model.addAttribute("businessInfo", businessInfoService.getBusinessInfo());
         
         return "income_statement_view";
     }
+
+    @GetMapping("/statements/view/balance_sheet/{id}")
+    public String balanceSheetView(@PathVariable("id") Long id, Model model)
+    {
+        FinancialStatement financialStatement = financialStatementService.getFinancialStatementByID(id);
+
+        BalanceSheetView balanceSheetView = balanceSheetService.getBalanceSheetView(financialStatement);
+
+        model.addAttribute("balanceSheetView", balanceSheetView);
+        model.addAttribute("businessInfo", businessInfoService.getBusinessInfo());
+
+        return "balance_sheet_view";
+    }
+
+    //
+    // Private Methods
+    //
 
     //reloadView() - a helper function used if a FinancialStatement fails to generate.
     //inputs -

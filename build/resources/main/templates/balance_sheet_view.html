@@ -1,0 +1,134 @@
+<html>
+    <head>
+        <link rel="stylesheet" th:href="@{/css/all_pages.css}">
+        <link rel="stylesheet" th:href="@{/css/all_statements.css}">
+        <link rel="stylesheet" th:href="@{/css/balance_sheet_view.css}">
+        <script th:src="@{/js/balance_sheet_view.js}"></script>
+    </head>
+    <body>
+        <div class="table-block">
+            <table>
+                <thead class="statement-header">
+                    <tr>
+                        <th class="header-label" th:colspan="${4 + (balanceSheetView.columns.size() * 2)}" th:text="${businessInfo.name}">Error Getting Business Name</th>
+                    </tr>
+                    <tr>
+                        <th class="header-label" th:colspan="${4 + (balanceSheetView.columns.size() * 2)}">Balance Sheet</th>
+                    </tr>
+                    <tr>
+                        <th class="header-date" th:colspan="${4 + (balanceSheetView.columns.size() * 2)}" th:text="${balanceSheetView.dateRangeString}">Error Getting Formatted Date</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <!-- Assets -->
+            <table>
+                <tbody class="block" id="asset-block">
+                    <tr>
+                        <th colspan="4">Assets</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan="4">Current</th>
+                    </tr>
+                    <th:block th:each="accountName : ${balanceSheetView.currentAssetAccounts}">
+                        <tr>
+                            <td class="row-label" colspan="4" th:text="${accountName}"></td>
+                            <th:block th:each="column : ${balanceSheetView.columns}">
+                                <th:block th:if="${column.currentAssetLines != null and column.currentAssetLines.containsKey(accountName)}" th:with="amount=${column.currentAssetLines.get(accountName).totalAmount}">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${amount}, 'row-value', 2)}">-</td>
+                                </th:block>
+                                <td class="row-value" colspan="2" th:unless="${column.currentAssetLines != null and column.currentAssetLines.containsKey(accountName)}">-</td>
+                            </th:block>
+                        </tr>
+                    </th:block>
+
+                    <tr>
+                        <th colspan="4">Long-Term</th>
+                    </tr>
+                    <th:block th:each="accountName : ${balanceSheetView.longTermAssetAccounts}">
+                        <tr>
+                            <td class="row-label" colspan="4" th:text="${accountName}"></td>
+                            <th:block th:each="column : ${balanceSheetView.columns}">
+                                <th:block th:if="${column.longTermAssetLines != null and column.longTermAssetLines.containsKey(accountName)}" th:with="longTermAssetLine=${column.longTermAssetLines.get(accountName)}">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${longTermAssetLine.isCredit ? -longTermAssetLine.totalAmount : longTermAssetLine.totalAmount}, 'row-value', 2)}">-</td>
+                                </th:block>
+                                <td class="row-value" colspan="2" th:unless="${column.longTermAssetLines != null and column.longTermAssetLines.containsKey(accountName)}">-</td>
+                            </th:block>
+                        </tr>
+                    </th:block>
+
+                    <tr>
+                        <th colspan="4">Total Assets</th>
+                        <th:block th:each="column : ${balanceSheetView.columns}">
+                            <th th:replace="~{fragments/formatters :: amount-th(${column.totalAssets}, 'row-value', 2)}">-</th>
+                        </th:block>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <!-- Liabilities & Equity -->
+            <table>
+                <tbody class="block" id="liability-equity-block">
+                    <tr>
+                        <th colspan="4">Liabilities</th>
+                    </tr>
+
+                    <tr>
+                        <th colspan="4">Current</th>
+                    </tr>
+                    <th:block th:each="accountName : ${balanceSheetView.currentLiabilityAccounts}">
+                        <tr>
+                            <td class="row-label" colspan="4" th:text="${accountName}"></td>
+                            <th:block th:each="column : ${balanceSheetView.columns}">
+                                <th:block th:if="${column.currentLiabilityLines != null and column.currentLiabilityLines.containsKey(accountName)}" th:with="amount=${column.currentLiabilityLines.get(accountName).totalAmount}">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${amount}, 'row-value', 2)}">-</td>
+                                </th:block>
+                                <td class="row-value" colspan="2" th:unless="${column.currentLiabilityLines != null and column.currentLiabilityLines.containsKey(accountName)}">-</td>
+                            </th:block>
+                        </tr>
+                    </th:block>
+
+                    <tr>
+                        <th colspan="4">Long-Term</th>
+                    </tr>
+                    <th:block th:each="accountName : ${balanceSheetView.longTermLiabilityAccounts}">
+                        <tr>
+                            <td class="row-label" colspan="4" th:text="${accountName}"></td>
+                            <th:block th:each="column : ${balanceSheetView.columns}">
+                                <th:block th:if="${column.longTermLiabilityLines != null and column.longTermLiabilityLines.containsKey(accountName)}" th:with="longTermLiabilityLine=${column.longTermLiabilityLines.get(accountName)}">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${longTermLiabilityLine.isCredit ? -longTermLiabilityLine.totalAmount : longTermLiabilityLine.totalAmount}, 'row-value', 2)}">-</td>
+                                </th:block>
+                                <td class="row-value" colspan="2" th:unless="${column.longTermLiabilityLines != null and column.longTermLiabilityLines.containsKey(accountName)}">-</td>
+                            </th:block>
+                        </tr>
+                    </th:block>
+
+                    <tr>
+                        <th colspan="4">Equity</th>
+                    </tr>
+                    <th:block th:each="accountName : ${balanceSheetView.equityAccounts}">
+                        <tr>
+                            <td class="row-label" colspan="4" th:text="${accountName}"></td>
+                            <th:block th:each="column : ${balanceSheetView.columns}">
+                                <th:block th:if="${column.equityLines != null and column.equityLines.containsKey(accountName)}" th:with="equityLine=${column.equityLines.get(accountName)}">
+                                    <td th:replace="~{fragments/formatters :: amount-td(${equityLine.isCredit ? -equityLine.totalAmount : equityLine.totalAmount}, 'row-value', 2)}">-</td>
+                                </th:block>
+                                <td class="row-value" colspan="2" th:unless="${column.equityLines != null and column.equityLines.containsKey(accountName)}">-</td>
+                            </th:block>
+                        </tr>
+                    </th:block>
+
+                    <tr>
+                        <th colspan="4">Total Liabilities & Equity</th>
+                        <th:block th:each="column : ${balanceSheetView.columns}">
+                            <th th:replace="~{fragments/formatters :: amount-th(${column.totalLiabilityAndEquity}, 'row-value', 2)}">-</th>
+                        </th:block>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

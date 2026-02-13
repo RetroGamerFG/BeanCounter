@@ -30,6 +30,7 @@ public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLi
         JOIN l.account a
         WHERE j.postDate BETWEEN :startDate AND :endDate
         AND j.creationDate <= :cutoffDate
+        AND j.status = 'Posted'
         AND a.accountType = :accountType
         GROUP BY a.accountID, a.accountName
     """)
@@ -42,3 +43,22 @@ public interface JournalEntryLineRepository extends JpaRepository<JournalEntryLi
 
     List<JournalEntryLine> findByAccount_AccountID(Integer accountID);
 }
+
+/*
+For external testing:
+
+SELECT 
+    a.account_name,
+    SUM(COALESCE(l.debit_amount, 0)) AS total_debit, 
+    SUM(COALESCE(l.credit_amount, 0)) AS total_credit
+FROM journal_entry j
+JOIN journal_entry_line l ON j.journal_entryid = l.journal_entry_id
+JOIN account a ON l.accountid = a.ACCOUNTID
+WHERE j.post_date BETWEEN '2025-01-01' AND '2026-12-31'
+    AND j.creation_date <= '2026-02-13'
+    AND j.status = 'Posted'
+    AND a.ACCOUNT_TYPE = 'A'
+GROUP BY a.ACCOUNTID, a.account_name
+ORDER BY a.account_name;
+
+*/

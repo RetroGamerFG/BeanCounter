@@ -73,7 +73,11 @@
                         <td th:text="${line.generatedDate}"></td>
                         <td th:text="${#temporals.format(line.startingDate, 'MMMM yyyy')}"></td>
                         <td th:text="${line.rangeType}"></td>
-                        <td><button th:value="${line.financialStatementID}" onclick="viewStatement(this)">View</button></td>
+                        <td>
+                            <button th:value="${line.financialStatementID}" 
+                                    th:attr="data-statement-type=${line.statementType}"
+                                    onclick="viewStatement(this)">View</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>

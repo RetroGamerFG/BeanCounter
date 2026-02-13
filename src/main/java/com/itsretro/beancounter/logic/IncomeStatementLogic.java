@@ -69,7 +69,7 @@ public class IncomeStatementLogic
     {
         for(int c = 0; c < isv.getColumnCount(); c++)
         {
-            calculateIncomeStatementColumn(isv.getColumns().get(c));
+            calculateColumn(isv.getColumns().get(c));
         }
     }
 
@@ -100,7 +100,7 @@ public class IncomeStatementLogic
     //calculateIncomeStatementColumn() - iterates through revenue and expense lines and performs calculations to find net income.
     //inputs - isc: the IncomeStatementColumn to perform the calculation on.
     //output - none; updates values within the column.
-    private void calculateIncomeStatementColumn(IncomeStatementColumn isc)
+    private void calculateColumn(IncomeStatementColumn isc)
     {
         //revenue is reported as credits, so reverse amount when calculating total
         for(FinancialStatementLine fsl : isc.getRevenueLines().values())
