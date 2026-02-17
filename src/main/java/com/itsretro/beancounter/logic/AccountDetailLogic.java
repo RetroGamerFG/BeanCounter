@@ -12,14 +12,12 @@ import java.math.BigDecimal;
 import java.time.Month;
 import java.time.Year;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.springframework.stereotype.Component;
 
 import com.itsretro.beancounter.model.Account;
 import com.itsretro.beancounter.model.AccountDetail;
+import com.itsretro.beancounter.model.AccountDetailBlock;
 import com.itsretro.beancounter.model.AccountDetailBlockMonth;
 import com.itsretro.beancounter.model.AccountDetailBlockYear;
 import com.itsretro.beancounter.model.AccountDetailLine;
@@ -53,9 +51,9 @@ public class AccountDetailLogic
         }
 
         for(Account account : accounts)
-        {
-            SortedMap<Year, AccountDetailBlockYear> adbyMap = new TreeMap<>();
-            
+        {   
+            AccountDetailBlock detailBlock = new AccountDetailBlock();
+
             //determine the number of years and months from the start and end date
             for(int y = accountDetail.getStartingDate().getYear(); y <= accountDetail.getEndingDate().getYear(); y++)
             {
@@ -91,10 +89,10 @@ public class AccountDetailLogic
                     }
                 }
 
-                adbyMap.put(Year.of(y), adby);
+                detailBlock.getYearBlocks().put(Year.of(y), adby);
             }
 
-            adv.getAccountDetailBlocks().put(account, adbyMap);
+            adv.getAccountDetailBlocks().put(account, detailBlock);
         }
 
         return adv;
@@ -118,13 +116,13 @@ public class AccountDetailLogic
             AccountDetailLine adl = mapToLine(je, jel);
 
             //navigate the structure to insert the account detail line to the appropriate account->year->month
-            Map<Year, AccountDetailBlockYear> yearMap = adv.getAccountDetailBlocks().get(account);
-            if (yearMap == null)
+            AccountDetailBlock block = adv.getAccountDetailBlocks().get(account);
+            if (block == null)
             {
                 continue; // Skip if account isn't in the view
             }
 
-            AccountDetailBlockYear yearBlock = yearMap.get(Year.of(je.getPostDate().getYear()));
+            AccountDetailBlockYear yearBlock = block.getYearBlocks().get(Year.of(je.getPostDate().getYear()));
             if (yearBlock == null) 
             {
                 continue; // Skip if year is out of range
@@ -149,24 +147,17 @@ public class AccountDetailLogic
         adv.setGrandTotal(BigDecimal.ZERO);
 
         //iterate the account detail view to perform total calculations for each year and each month
-        for(SortedMap<Year, AccountDetailBlockYear> yearMap : adv.getAccountDetailBlocks().values())
+        for(AccountDetailBlock adb : adv.getAccountDetailBlocks().values())
         {
-            //iterate through each account
-            for(AccountDetailBlockYear yearBlock : yearMap.values())
-            {
-                //process the current yearBlock and it's child values
-                calculateYearTotals(yearBlock);
+            calculateAccountTotals(adb);
 
-                //increment the view totals from calculated values
-                adv.setTotalDebits(adv.getTotalDebits().add(yearBlock.getTotalDebits()));
-                adv.setTotalCredits(adv.getTotalCredits().add(yearBlock.getTotalCredits()));
-            }
-
-            //perform the grand total calculation
-            finalizeGrandTotal(adv);
+            //increment the view totals from calculated values
+            adv.setTotalDebits(adv.getTotalDebits().add(adb.getTotalDebits()));
+            adv.setTotalCredits(adv.getTotalCredits().add(adb.getTotalCredits()));
         }
 
-        System.out.println();
+        //perform the grand total calculation
+        finalizeGrandTotal(adv);
     }
 
     //
@@ -207,6 +198,28 @@ public class AccountDetailLogic
         }
 
         return adl;
+    }
+
+    private void calculateAccountTotals(AccountDetailBlock block)
+    {
+        //reset values to zero
+        block.setTotalDebits(BigDecimal.ZERO);
+        block.setTotalCredits(BigDecimal.ZERO);
+        block.setGrandTotal(BigDecimal.ZERO);
+
+        //iterate through each yearBlock to calculate each containing monthBlock
+        for(AccountDetailBlockYear yearBlock : block.getYearBlocks().values())
+        {
+            //process the current monthBlock and it's child values
+            calculateYearTotals(yearBlock);
+
+            //increment the yearBlock totals from calculated values
+            block.setTotalDebits(block.getTotalDebits().add(yearBlock.getTotalDebits()));
+            block.setTotalCredits(block.getTotalCredits().add(yearBlock.getTotalCredits()));
+        }
+
+        //perform the grand total calculation
+        finalizeGrandTotal(block);
     }
 
     //calculateYearTotals() - helper function to calculate totals for the AccountDetailBlockYear instance.

@@ -11,22 +11,21 @@
 package com.itsretro.beancounter.viewmodel;
 
 import java.math.BigDecimal;
-import java.time.Year;
 import java.util.Comparator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.itsretro.beancounter.model.Account;
-import com.itsretro.beancounter.model.AccountDetailBlockYear;
+import com.itsretro.beancounter.model.AccountDetailBlock;
 import com.itsretro.beancounter.model.FinancialBlock;
 
 public class AccountDetailView implements FinancialBlock
 {
-    private SortedMap<Account, SortedMap<Year, AccountDetailBlockYear>> accountDetailBlocks;
+    private SortedMap<Account, AccountDetailBlock> accountDetailBlocks;
     
-    private BigDecimal totalDebits;
-    private BigDecimal totalCredits;
-    private BigDecimal grandTotal;
+    private BigDecimal totalReportDebits;
+    private BigDecimal totalReportCredits;
+    private BigDecimal totalReportAmount;
 
     private String grandTotalType;
 
@@ -42,9 +41,9 @@ public class AccountDetailView implements FinancialBlock
             Comparator.comparing(Account::getAccountCode)
         );
 
-        this.totalDebits = BigDecimal.ZERO;
-        this.totalCredits = BigDecimal.ZERO;
-        this.grandTotal = BigDecimal.ZERO;
+        this.totalReportDebits = BigDecimal.ZERO;
+        this.totalReportCredits = BigDecimal.ZERO;
+        this.totalReportAmount = BigDecimal.ZERO;
 
         this.grandTotalType = null;
 
@@ -55,12 +54,12 @@ public class AccountDetailView implements FinancialBlock
     // Getters & Setters
     //
 
-    public SortedMap<Account, SortedMap<Year, AccountDetailBlockYear>> getAccountDetailBlocks()
+    public SortedMap<Account, AccountDetailBlock> getAccountDetailBlocks()
     {
         return this.accountDetailBlocks;
     }
 
-    public void setAccountDetailBlocks(SortedMap<Account, SortedMap<Year, AccountDetailBlockYear>> accountDetailBlocks)
+    public void setAccountDetailBlocks(SortedMap<Account, AccountDetailBlock> accountDetailBlocks)
     {
         this.accountDetailBlocks = accountDetailBlocks;
     }
@@ -68,35 +67,35 @@ public class AccountDetailView implements FinancialBlock
     @Override
     public BigDecimal getTotalDebits()
     {
-        return this.totalDebits;
+        return this.totalReportDebits;
     }
 
     public void setTotalDebits(BigDecimal totalDebits)
     {
-        this.totalDebits = totalDebits;
+        this.totalReportDebits = totalDebits;
     }
 
     @Override
     public BigDecimal getTotalCredits()
     {
-        return this.totalCredits;
+        return this.totalReportCredits;
     }
 
     public void setTotalCredits(BigDecimal totalCredits)
     {
-        this.totalCredits = totalCredits;
+        this.totalReportCredits = totalCredits;
     }
 
     @Override
     public BigDecimal getGrandTotal()
     {
-        return this.grandTotal;
+        return this.totalReportAmount;
     }
 
     @Override
     public void setGrandTotal(BigDecimal grandTotal)
     {
-        this.grandTotal = grandTotal;
+        this.totalReportAmount = grandTotal;
     }
 
     public String getGrandTotalType()

@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <th:block th:each="yearEntry : ${accountEntry.value}">
+                    <th:block th:each="yearEntry : ${accountEntry.value.yearBlocks}">
                         <tr class="year-block" th:attr="data-year=${yearEntry.key}">
                             <td colspan="6" class="year-header" th:text="${yearEntry.key}"></td>
                         </tr>
@@ -87,18 +87,18 @@
                     <tr class="grand-total-line" data-level="account">
                         <td colspan="3"></td>
                         <td>Report Total:</td>
-                        <td th:replace="~{fragments/formatters :: amount-td(${accountDetailView.totalDebits}, 'total account-total-debit', 2)}">-</td>
-                        <td th:replace="~{fragments/formatters :: amount-td(${accountDetailView.totalCredits}, 'total account-total-credit', 2)}">-</td>
+                        <td th:replace="~{fragments/formatters :: amount-td(${accountEntry.value.totalDebits}, 'total account-total-debit', 2)}">-</td>
+                        <td th:replace="~{fragments/formatters :: amount-td(${accountEntry.value.totalCredits}, 'total account-total-credit', 2)}">-</td>
                     </tr>
                     <tr class="grand-total-line" data-level="account">
                         <td colspan="4"></td>
-                        <th:block th:if="${accountDetailView.grandTotalType} == 'D'">
-                            <td th:replace="~{fragments/formatters :: amount-td(${accountDetailView.grandTotal}, 'grand-total account-grand-total', 2)}">-</td>
+                        <th:block th:if="${accountEntry.value.grandTotalType} == 'D'">
+                            <td th:replace="~{fragments/formatters :: amount-td(${accountEntry.value.grandTotal}, 'grand-total account-grand-total', 2)}">-</td>
                             <td>-</td>
                         </th:block>
-                        <th:block th:unless="${accountDetailView.grandTotalType} == 'D'">
+                        <th:block th:unless="${accountEntry.value.grandTotalType} == 'D'">
                             <td>-</td>
-                            <td th:replace="~{fragments/formatters :: amount-td(${accountDetailView.grandTotal}, 'grand-total account-grand-total', 2)}">-</td>
+                            <td th:replace="~{fragments/formatters :: amount-td(${accountEntry.value.grandTotal}, 'grand-total account-grand-total', 2)}">-</td>
                         </th:block>
                     </tr>
                 </tbody>
